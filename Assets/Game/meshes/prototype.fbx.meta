@@ -13,6 +13,11 @@ ModelImporter:
     100010: Cube.005
     100012: //RootNode
     100014: Cube.006
+    100016: Cube.007
+    100018: Plane
+    100020: Plane.001
+    100022: Plane.002
+    100024: Plane.003
     400000: Cube
     400002: Cube.001
     400004: Cube.002
@@ -21,6 +26,11 @@ ModelImporter:
     400010: Cube.005
     400012: //RootNode
     400014: Cube.006
+    400016: Cube.007
+    400018: Plane
+    400020: Plane.001
+    400022: Plane.002
+    400024: Plane.003
     2300000: Cube
     2300002: Cube.001
     2300004: Cube.002
@@ -28,6 +38,11 @@ ModelImporter:
     2300008: Cube.004
     2300010: Cube.005
     2300012: Cube.006
+    2300014: Cube.007
+    2300016: Plane
+    2300018: Plane.001
+    2300020: Plane.002
+    2300022: Plane.003
     3300000: Cube
     3300002: Cube.001
     3300004: Cube.002
@@ -35,6 +50,11 @@ ModelImporter:
     3300008: Cube.004
     3300010: Cube.005
     3300012: Cube.006
+    3300014: Cube.007
+    3300016: Plane
+    3300018: Plane.001
+    3300020: Plane.002
+    3300022: Plane.003
     4300000: Cube.005
     4300002: Cube.004
     4300004: Cube.003
@@ -42,6 +62,11 @@ ModelImporter:
     4300008: Cube.001
     4300010: Cube
     4300012: Cube.006
+    4300014: Cube.007
+    4300016: Plane.002
+    4300018: Plane.001
+    4300020: Plane
+    4300022: Plane.003
     6400000: Cube
     6400002: Cube.001
     6400004: Cube.002
@@ -49,6 +74,11 @@ ModelImporter:
     6400008: Cube.004
     6400010: Cube.005
     6400012: Cube.006
+    6400014: Cube.007
+    6400016: Plane
+    6400018: Plane.001
+    6400020: Plane.002
+    6400022: Plane.003
   materials:
     importMaterials: 1
     materialName: 0

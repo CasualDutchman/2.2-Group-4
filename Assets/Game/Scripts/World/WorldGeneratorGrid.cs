@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WorldGenerator : MonoBehaviour {
+public class WorldGeneratorGrid : MonoBehaviour {
 
-    public static WorldGenerator instance;
+    public static WorldGeneratorGrid instance;
 
-    public Block beginBlock;
+    public Room beginBlock;
 
     public int maxIterations;
     public int iterations;
@@ -16,7 +16,7 @@ public class WorldGenerator : MonoBehaviour {
 
     GameObject veryLastPiece; 
 
-    List<Block> todo = new List<Block>();
+    List<Room> todo = new List<Room>();
     List<GameObject> added = new List<GameObject>();
     bool generating = true;
 
@@ -37,18 +37,18 @@ public class WorldGenerator : MonoBehaviour {
     }
 
     void Start () {
-        foreach (GameObject go in Resources.LoadAll<GameObject>("generation")) {
-            Block b = go.GetComponent<Block>();
+        foreach (GameObject go in Resources.LoadAll<GameObject>("rooms")) {
+            Room b = go.GetComponent<Room>();
             if (b.isTunnel) {
                 if (b.isEnd) {
                     endPieces.Add(go);
-                    veryLastPiece = go;
                 }else {
                     pieces.Add(go);
                 }
             }else {
                 if (b.isEnd) {
                     endPieces.Add(go);
+                    veryLastPiece = go;
                 } else {
                     pieces.Add(go);
                 }
@@ -67,7 +67,7 @@ public class WorldGenerator : MonoBehaviour {
         if (todolist.Count > 0) {
             timer += Time.deltaTime;
 
-            if (timer >= 0.1f) {
+            if (timer >= 3.1f) {
                 Generate(todolist[0]);
                 timer = 0;
             }
@@ -80,14 +80,14 @@ public class WorldGenerator : MonoBehaviour {
             return;
         }
 
-        Block block = trans.parent.GetComponent<Block>();
+        Room room = trans.parent.GetComponent<Room>();
 
         bool inIteration = iterations < maxIterations;
         int max = inIteration ? pieces.Count : endPieces.Count;
 
         int index = Random.Range(0, max);
 
-        print(tries);
+        //print(tries);
 
         GameObject objectToSpawn = null;
         if (inIteration && tries < max) {
@@ -116,50 +116,54 @@ public class WorldGenerator : MonoBehaviour {
 
         objectToSpawn.transform.SetParent(trans.parent);
 
-        Block b = objectToSpawn.GetComponent<Block>();
+        Room roo = objectToSpawn.GetComponent<Room>();
 
         int ind = 0;
 
-        if (b.entrances.Length > 0) {
-            ind = Random.Range(0, b.entrances.Length);
+        if (roo.entrances.Length > 0) {
+            ind = Random.Range(0, roo.entrances.Length);
 
-            Transform connection = b.entrances[ind];
+            Transform connection = roo.entrances[ind];
 
             objectToSpawn.transform.eulerAngles = (trans.eulerAngles - connection.eulerAngles) + new Vector3(0, 180, 0);
 
             objectToSpawn.transform.position = trans.position + (objectToSpawn.transform.position - connection.position);
         }
 
-        MeshCollider col = objectToSpawn.GetComponent<MeshCollider>();
-
-        Bounds bounds = col.bounds;
+        objectToSpawn.SetActive(false);
 
         //RaycastHit[] colliderHitssss = Physics.BoxCastAll(col.bounds.center, col.bounds.size - (Vector3.one * 0.05f), trans.forward);
-        bool isColliding = Physics.CheckBox(bounds.center, bounds.extents - (Vector3.one * 0.05f), Quaternion.Euler(objectToSpawn.transform.eulerAngles), LayerMask.GetMask("Room"));
+        bool isColliding = Physics.CheckBox(roo.centerTransform.position, roo.bounds.extents - (Vector3.one), Quaternion.Euler(objectToSpawn.transform.eulerAngles));
+
+        position = roo.centerTransform.position;
+        size = roo.bounds.extents * 2 - (Vector3.one);
+        euler = objectToSpawn.transform.eulerAngles;
+
+        print(isColliding);
 
         if (isColliding) {
             Destroy(objectToSpawn);
             tries++;
             return;
         }else {
-            b.entrances[ind] = null;
+            roo.entrances[ind] = null;
         }
 
-        objectToSpawn.layer = LayerMask.NameToLayer("Room");
+        objectToSpawn.SetActive(true);
 
-        position = col.bounds.center;
-        size = col.bounds.size - (Vector3.one * 0.05f);
-        euler = objectToSpawn.transform.eulerAngles;
+        print("nice");
+
+        //objectToSpawn.layer = LayerMask.NameToLayer("Room");
 
         todolist.Remove(trans);
-        Destroy(trans.gameObject);
+        //Destroy(trans.gameObject);
 
-        foreach (Transform t in b.entrances) {
+        foreach (Transform t in roo.entrances) {
             if (t != null)
                 todolist.Add(t);
         }
 
-        previousPiece = objectToSpawn;
+        //previousPiece = objectToSpawn;
 
         tries = 0;
 
