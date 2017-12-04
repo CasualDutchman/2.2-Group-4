@@ -203,7 +203,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   beginBlock: {fileID: 1945871161}
-  maxIterations: 5
+  maxIterations: 15
   iterations: 0
   endPieces: []
   pieces: []
@@ -364,10 +364,6 @@ Prefab:
     - target: {fileID: 4121702081340056, guid: 5360c663e69a2d84db18ab9af9516f47, type: 2}
       propertyPath: m_RootOrder
       value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 4121702081340056, guid: 5360c663e69a2d84db18ab9af9516f47, type: 2}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 5360c663e69a2d84db18ab9af9516f47, type: 2}

@@ -128,16 +128,18 @@ public class WorldGeneratorGrid : MonoBehaviour {
             objectToSpawn.transform.eulerAngles = (trans.eulerAngles - connection.eulerAngles) + new Vector3(0, 180, 0);
 
             objectToSpawn.transform.position = trans.position + (objectToSpawn.transform.position - connection.position);
-        }
+
+        }  
 
         objectToSpawn.SetActive(false);
 
-        //RaycastHit[] colliderHitssss = Physics.BoxCastAll(col.bounds.center, col.bounds.size - (Vector3.one * 0.05f), trans.forward);
         bool isColliding = Physics.CheckBox(roo.centerTransform.position, roo.bounds.extents - (Vector3.one), Quaternion.Euler(objectToSpawn.transform.eulerAngles));
 
-        position = roo.centerTransform.position;
-        size = roo.bounds.extents * 2 - (Vector3.one);
-        euler = objectToSpawn.transform.eulerAngles;
+
+        objectToSpawn.SetActive(true);
+        //position = roo.centerTransform.position;
+        //size = roo.bounds.extents * 2 - (Vector3.one);
+        //euler = objectToSpawn.transform.eulerAngles;
 
         print(isColliding);
 
@@ -147,11 +149,34 @@ public class WorldGeneratorGrid : MonoBehaviour {
             return;
         }else {
             roo.entrances[ind] = null;
+
+            foreach (Transform t in roo.entrances) {
+                if (t == null)
+                    continue;
+
+                RaycastHit[] colliderHitssss = Physics.BoxCastAll(t.position + (t.forward * 2), Vector3.one * 1.95f, t.forward * 2);
+
+                position = t.position + (t.forward * 2);
+                size = Vector3.one * 3.9f;
+
+                foreach (RaycastHit hit in colliderHitssss) {
+                    if (hit.collider.GetComponent<Wall>()) {
+                        if (hit.collider.GetComponent<Wall>().canBeEntrance) {
+                            Vector3 pos = hit.collider.transform.position;
+                            Vector3 eul = hit.collider.transform.eulerAngles;
+
+                            print(hit.collider.name);
+                            print(pos);
+
+                            GameObject g = Instantiate(t.parent.gameObject);
+
+                            g.transform.position = pos;
+                            g.transform.eulerAngles = eul;
+                        }
+                    }
+                }
+            }
         }
-
-        objectToSpawn.SetActive(true);
-
-        print("nice");
 
         //objectToSpawn.layer = LayerMask.NameToLayer("Room");
 
