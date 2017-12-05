@@ -24,6 +24,8 @@ public class GridWorld : MonoBehaviour {
     public int maxElements = 0;
     public float covered = 0;
 
+    public int amount = 20;
+
     void Start () {
         grid = new Element[gridSize, gridSize];
         GenerateGrid();
@@ -40,12 +42,137 @@ public class GridWorld : MonoBehaviour {
 
         GenerateRooms();
 
-        GenerateHallways();
+        CheckEntrances();
 
-        GenerateHalls();
+        FillRemaining();
+
+        CreateMaze();
+
+        //add doors to the maze
+
+        //remove dead ends
+
+        //===============================================
+
+        //GenerateHallways();
+
+        //GenerateHalls();
 
         if (spawnObjects)
             Spawn();
+    }
+
+    Vector2Int[] checking = new Vector2Int[] { new Vector2Int(0, 1), new Vector2Int(0, -1), new Vector2Int(1, 0), new Vector2Int(-1, 0) };
+
+    void CreateMaze() {
+
+        for (int y = 0; y < gridSize; y++) {
+            for (int x = 0; x < gridSize; x++) {
+                if (grid[x, y].floor && grid[x, y].roomID == -1) {
+                    if(openList.Count == 0)
+                        openList.Add(new Vector2Int(x, y));
+                }
+            }
+        }
+        /*
+        while (open.Count > 0) {
+
+            Vector2Int currentCheckPos = open[0];
+
+            closedList.Add(currentCheckPos);
+            open.Remove(currentCheckPos);
+
+            List<Vector2Int> possibleChecks = new List<Vector2Int>();
+
+            if (currentCheckPos.x - 1 >= 0 && !closedList.Contains(currentCheckPos + new Vector2Int(-1, 0)) && grid[currentCheckPos.x - 1, currentCheckPos.y].roomID <= 0)
+                possibleChecks.Add(new Vector2Int(-1, 0));
+
+            if (currentCheckPos.x + 1 < gridSize && !closedList.Contains(currentCheckPos + new Vector2Int(1, 0)) && grid[currentCheckPos.x + 1, currentCheckPos.y].roomID <= 0)
+                possibleChecks.Add(new Vector2Int(1, 0));
+
+            if (currentCheckPos.y - 1 >= 0 && !closedList.Contains(currentCheckPos + new Vector2Int(0, -1)) && grid[currentCheckPos.x, currentCheckPos.y - 1].roomID <= 0)
+                possibleChecks.Add(new Vector2Int(0, -1));
+
+            if (currentCheckPos.y + 1 < gridSize && !closedList.Contains(currentCheckPos + new Vector2Int(0, 1)) && grid[currentCheckPos.x, currentCheckPos.y + 1].roomID <= 0)
+                possibleChecks.Add(new Vector2Int(0, 1));
+
+            Vector2Int randomCheck = possibleChecks[Random.Range(0, possibleChecks.Count)];
+            Vector2Int neighbourCheck = currentCheckPos + randomCheck;
+
+            Element neighbour = grid[neighbourCheck.x, neighbourCheck.y];
+
+            if(neighbour.roomID <= 0)
+                open.Add(neighbourCheck);
+        }*/
+    }
+
+    void FillRemaining() {
+        for (int y = 0; y < gridSize; y++) {
+            for (int x = 0; x < gridSize; x++) {
+                if (grid[x, y].floor)
+                    continue;
+
+                grid[x, y] = Element.justFloor;
+            }
+        }
+    }
+
+    void CheckEntrances() {
+        for (int y = 0; y < gridSize; y++) {
+            for (int x = 0; x < gridSize; x++) {
+                if (!grid[x, y].floor)
+                    continue;
+
+                if (grid[x, y].entrancewest) {
+                    if (x - 1 >= 0) {
+                        if (grid[x - 1, y].entranceeast) {
+                            continue;
+                        }
+                        else if (grid[x - 1, y].entranceposiblilityeast) {
+                            grid[x - 1, y].entranceeast = true;
+                        } 
+                        else if (grid[x - 1, y ].walleast) {
+                            grid[x, y].entrancewest = false;
+                        }
+                    } 
+                    else {
+                        grid[x, y].entrancewest = false;
+                    }
+                }
+
+                if (grid[x, y].entranceeast) {
+                    if (x + 1 < gridSize) {
+                        if (grid[x + 1, y].entrancewest) {
+                            continue;
+                        } 
+                        else if (grid[x + 1, y].entranceposiblilitywest) {
+                            grid[x + 1, y].entrancewest = true;
+                        } 
+                        else if (grid[x + 1, y].wallwest) {
+                            grid[x, y].entranceeast = false;
+                        }
+                    } else {
+                        grid[x, y].entranceeast = false;
+                    }
+                }
+
+                if (grid[x, y].entrancenorth) {
+                    if (y + 1 < gridSize) {
+                        if (grid[x, y + 1].entrancesouth) {
+                            continue;
+                        } 
+                        else if (grid[x, y + 1].entranceposiblilitysouth) {
+                            grid[x, y + 1].entrancesouth = true;
+                        } 
+                        else if (grid[x, y + 1].wallsouth) {
+                            grid[x, y].entrancenorth = false;
+                        }
+                    } else {
+                        grid[x, y].entrancenorth = false;
+                    }
+                }
+            }
+        }
     }
 
     void Addwalls() {
@@ -141,7 +268,7 @@ public class GridWorld : MonoBehaviour {
         } 
     }
 
-    Vector2Int[] checking = new Vector2Int[] { new Vector2Int(0, 1), new Vector2Int(0, -1), new Vector2Int(1, 0), new Vector2Int(-1, 0) };
+    
 
     void ChangeGrid(int x, int y, int i, bool b) {
         switch (i) {
@@ -162,6 +289,42 @@ public class GridWorld : MonoBehaviour {
     }
 
     void Update() {
+
+        int lookfor = -1;
+
+        if (openList.Count > 0) {
+
+            Vector2Int currentCheckPos = openList[0];
+
+            closedList.Add(currentCheckPos);
+            openList.Remove(currentCheckPos);
+
+            List<Vector2Int> possibleChecks = new List<Vector2Int>();
+
+            if (currentCheckPos.x - 1 >= 0 && !closedList.Contains(currentCheckPos + new Vector2Int(-1, 0)) && grid[currentCheckPos.x - 1, currentCheckPos.y].roomID <= 0)
+                possibleChecks.Add(new Vector2Int(-1, 0));
+
+            if (currentCheckPos.x + 1 < gridSize && !closedList.Contains(currentCheckPos + new Vector2Int(1, 0)) && grid[currentCheckPos.x + 1, currentCheckPos.y].roomID <= 0)
+                possibleChecks.Add(new Vector2Int(1, 0));
+
+            if (currentCheckPos.y - 1 >= 0 && !closedList.Contains(currentCheckPos + new Vector2Int(0, -1)) && grid[currentCheckPos.x, currentCheckPos.y - 1].roomID <= 0)
+                possibleChecks.Add(new Vector2Int(0, -1));
+
+            if (currentCheckPos.y + 1 < gridSize && !closedList.Contains(currentCheckPos + new Vector2Int(0, 1)) && grid[currentCheckPos.x, currentCheckPos.y + 1].roomID <= 0)
+                possibleChecks.Add(new Vector2Int(0, 1));
+
+            Vector2Int randomCheck = possibleChecks[Random.Range(0, possibleChecks.Count)];
+            Vector2Int neighbourCheck = currentCheckPos + randomCheck;
+
+            Element neighbour = grid[neighbourCheck.x, neighbourCheck.y];
+
+            if (neighbour.roomID == lookfor) {
+                grid[neighbourCheck.x, neighbourCheck.y].roomID = 0;
+                openList.Add(neighbourCheck);
+            }
+        }
+
+        /*
         if (openList.Count > 0) {
             Vector2Int checkingpos = openList[0];
 
@@ -333,6 +496,7 @@ public class GridWorld : MonoBehaviour {
             }
             closedList.Clear();
         }
+        */
     }
 
     void GenerateHalls() {
@@ -452,6 +616,14 @@ public class GridWorld : MonoBehaviour {
     }
 
     void GenerateRooms() {
+        for (int i = 0; i < amount; i++) {
+
+            int x2 = Random.Range(0, gridSize);
+            int y2 = Random.Range(0, gridSize);
+
+            AddRoom(Resources.Load<GameObject>("rooms/Room_0" + (Random.Range(0, 2) + 1 + "")), new Vector2(x2, y2));
+        }
+        /*
         for (int y = 0; y < gridSize; y++) {
             for (int x = 0; x < gridSize; x++) {
                 if (grid[x, y].floor)
@@ -467,7 +639,7 @@ public class GridWorld : MonoBehaviour {
 
                 AddRoom(Resources.Load<GameObject>("rooms/Room_0" + (Random.Range(0, 2) + 1 + "")), new Vector2(x2, y2));
             }
-        }
+        }*/
     }
 
     void AddRoom(GameObject go, Vector2 position) {
@@ -596,7 +768,7 @@ public class GridWorld : MonoBehaviour {
 
 [SerializeField]
 public struct Element {
-    public static Element justFloor = new Element() { floor = true };
+    public static Element justFloor = new Element() { roomID = -1, floor = true };
 
     public int roomID; // 0 is hallway
     public bool floor;
@@ -617,7 +789,7 @@ public struct Element {
     public bool entranceposiblilitywest;
 
     public Element(int i) {
-        roomID = 0; // 0 is hallway
+        roomID = -1; // 0 is hallway
         floor = false;
 
         wallnorth = false;
