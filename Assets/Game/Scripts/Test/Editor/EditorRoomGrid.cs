@@ -17,18 +17,6 @@ public class EditorRoomGrid : Editor {
         for (int y = RoomGrid.size - 1; y >= 0; y--) {
             GUILayout.BeginHorizontal();
             for (int x = 0; x < RoomGrid.size; x++) {
-                room.grid[(y * RoomGrid.size) + x] = EditorGUILayout.Toggle(room.grid[(y * RoomGrid.size) + x], GUILayout.MaxWidth(13));
-            }
-            GUILayout.EndHorizontal();
-        }
-        GUILayout.EndVertical();
-
-        EditorGUILayout.Space();
-
-        GUILayout.BeginVertical();
-        for (int y = RoomGrid.size - 1; y >= 0; y--) {
-            GUILayout.BeginHorizontal();
-            for (int x = 0; x < RoomGrid.size; x++) {
                 GUILayout.Space(3);
                 //room.grid2[(y * RoomGrid.size) + x].floor = EditorGUILayout.Toggle(room.grid2[(y * RoomGrid.size) + x].floor, GUILayout.MaxWidth(13));
                 if (GUILayout.Button(GetTexture(room.grid2[(y * RoomGrid.size) + x]), GUIStyle.none, GUILayout.MaxWidth(15), GUILayout.MaxHeight(15))) {

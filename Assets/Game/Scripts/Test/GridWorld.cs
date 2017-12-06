@@ -8,27 +8,92 @@ public class GridWorld : MonoBehaviour {
 
     Element[,] grid;
 
-    Dictionary<Vector3, GameObject> roomsToSpawn = new Dictionary<Vector3, GameObject>();
+    //Dictionary<Vector3, GameObject> roomsToSpawn = new Dictionary<Vector3, GameObject>();
+    List<SpawnRequest> roomsToSpawn = new List<SpawnRequest>();
+
+    public Transform playerTransform;
 
     int currentSpawnID = 1;
 
     public bool spawnObjects = false;
 
-    List<Vector2Int> openList = new List<Vector2Int>();
     List<Vector2Int> closedList = new List<Vector2Int>();
 
-    bool generating = true;
-    
-    public int tries = 0;
+    public int spawnRoomTries = 20;
+    public int cleanDeadEndTries = 20;
 
-    public int maxElements = 0;
-    public float covered = 0;
+    int maxElementSize;
+    int visited = 0;
 
-    public int amount = 20;
+    Vector2Int currentCheck;
+    bool building = false;
+
+    int backup = 0;
+
+    bool doneGenerating = false;
+    public bool checking = false;
+
+    List<Vector2Int> checkopen = new List<Vector2Int>();
+    List<Vector2Int> checkclosed = new List<Vector2Int>();
+
+    List<GameObject> listOfRooms = new List<GameObject>();
+    List<GameObject> listOfHalls = new List<GameObject>();
 
     void Start () {
+        foreach (GameObject go in Resources.LoadAll<GameObject>("rooms")) {
+            if (go.GetComponent<RoomGrid>()) {
+                listOfRooms.Add(go);
+            }
+        }
+
+        foreach (GameObject go in Resources.LoadAll<GameObject>("halls")) {
+            listOfHalls.Add(go);
+        }
+
         grid = new Element[gridSize, gridSize];
+        maxElementSize = gridSize * gridSize;
         GenerateGrid();
+    }
+
+    void Update() {
+        if (doneGenerating && checking && checkopen.Count > 0) {
+            Vector2Int current = checkopen[0];
+
+            checkclosed.Add(current);
+            checkopen.Remove(current);
+
+            if ((!grid[current.x, current.y].walleast || grid[current.x, current.y].entranceeast) && current.x + 1 < gridSize) {
+                if(!checkopen.Contains(new Vector2Int(current.x + 1, current.y)) && !checkclosed.Contains(new Vector2Int(current.x + 1, current.y)))
+                    checkopen.Add(new Vector2Int(current.x + 1, current.y));
+            }
+
+            if ((!grid[current.x, current.y].wallwest || grid[current.x, current.y].entrancewest) && current.x - 1 >= 0) {
+                if (!checkopen.Contains(new Vector2Int(current.x - 1, current.y)) && !checkclosed.Contains(new Vector2Int(current.x - 1, current.y)))
+                    checkopen.Add(new Vector2Int(current.x - 1, current.y));
+            }
+
+            if ((!grid[current.x, current.y].wallnorth || grid[current.x, current.y].entrancenorth) && current.y + 1 < gridSize) {
+                if (!checkopen.Contains(new Vector2Int(current.x, current.y + 1)) && !checkclosed.Contains(new Vector2Int(current.x, current.y + 1)))
+                    checkopen.Add(new Vector2Int(current.x, current.y + 1));
+            }
+
+            if ((!grid[current.x, current.y].wallsouth || grid[current.x, current.y].entrancesouth) && current.y - 1 >= 0) {
+                if (!checkopen.Contains(new Vector2Int(current.x, current.y - 1)) && !checkclosed.Contains(new Vector2Int(current.x, current.y - 1)))
+                    checkopen.Add(new Vector2Int(current.x, current.y - 1));
+            }
+
+            if (checkopen.Count <= 0)
+                checking = false;
+
+        } 
+        else {
+
+            Vector2Int ve = new Vector2Int(Random.Range(0, gridSize), Random.Range(0, gridSize));
+
+            if (grid[ve.x, ve.y].floor) {
+                checkopen.Add(ve);
+            }
+        }
     }
 
     [ContextMenu("Test")]
@@ -40,70 +105,213 @@ public class GridWorld : MonoBehaviour {
             }
         }
 
-        GenerateRooms();
+        closedList.Clear();
+        building = false;
+        visited = 0;
+        currentCheck = Vector2Int.zero;
+        backup = 0;
 
-        CheckEntrances();
+        GenerateRooms();
+        //we need to change the actual wall for an entrance if needed
+
+        CheckEntrances(false);
 
         FillRemaining();
 
         CreateMaze();
 
-        //add doors to the maze
+        CheckEntrances(true);
 
-        //remove dead ends
+        CleanDeadEnds();
+        
+        doneGenerating = true;
 
-        //===============================================
-
-        //GenerateHallways();
-
-        //GenerateHalls();
-
-        if (spawnObjects)
+        if (spawnObjects) {
             Spawn();
+            PrepareHalls();
+
+            StaticBatchingUtility.Combine(gameObject);
+        }
     }
 
-    Vector2Int[] checking = new Vector2Int[] { new Vector2Int(0, 1), new Vector2Int(0, -1), new Vector2Int(1, 0), new Vector2Int(-1, 0) };
-
-    void CreateMaze() {
-
+    void PrepareHalls() {
         for (int y = 0; y < gridSize; y++) {
             for (int x = 0; x < gridSize; x++) {
-                if (grid[x, y].floor && grid[x, y].roomID == -1) {
-                    if(openList.Count == 0)
-                        openList.Add(new Vector2Int(x, y));
+                if (grid[x, y].floor && grid[x, y].roomID <= 0) {
+                    int[] walls = new int[] {
+                        grid[x, y].entrancenorth ? 2 : (grid[x, y].wallnorth ? 1 : 0),
+                        grid[x, y].entranceeast ? 2 : (grid[x, y].walleast ? 1 : 0),
+                        grid[x, y].entrancesouth ? 2 : (grid[x, y].wallsouth ? 1 : 0),
+                        grid[x, y].entrancewest ? 2 : (grid[x, y].wallwest ? 1 : 0)
+                    };
+
+                    bool got = false;
+
+                    GameObject hallbase = Instantiate(Resources.Load<GameObject>("halls/floor"));
+                    hallbase.isStatic = true;
+                    hallbase.transform.position = new Vector3(x * 4, 0, y * 4);
+                    hallbase.transform.SetParent(transform);
+
+                    for (int i = 0; i < 4; i++) {
+                        if (walls[i] > 0) {
+                            GameObject wall = Instantiate(Resources.Load<GameObject>("halls/" + (walls[i] == 1 ? "wall" : "entrance")));
+                            wall.isStatic = true;
+                            wall.transform.SetParent(hallbase.transform);
+                            wall.transform.localPosition = Vector3.zero;
+                            wall.transform.localEulerAngles = new Vector3(0, (i - 1) * 90, 0);
+                            got = true;
+                        }
+                    }
+
+                    if (!got) {
+                        print("" + walls[0] + " / " + walls[1] + " / " + walls[2] + " / " + walls[3] + " |");
+                    }
                 }
             }
         }
-        /*
-        while (open.Count > 0) {
+    }
 
-            Vector2Int currentCheckPos = open[0];
+    void CleanDeadEnds() {
+        for (int i = 0; i < cleanDeadEndTries; i++) {
+            for (int y = 0; y < gridSize; y++) {
+                for (int x = 0; x < gridSize; x++) {
+                    if (!grid[x, y].floor || grid[x, y].roomID > 0)
+                        continue;
 
-            closedList.Add(currentCheckPos);
-            open.Remove(currentCheckPos);
+                    int wallAmount = 0;
+                    int direction = 0;
 
-            List<Vector2Int> possibleChecks = new List<Vector2Int>();
+                    if (grid[x, y].walleast && !grid[x, y].entranceeast)
+                        wallAmount++;
 
-            if (currentCheckPos.x - 1 >= 0 && !closedList.Contains(currentCheckPos + new Vector2Int(-1, 0)) && grid[currentCheckPos.x - 1, currentCheckPos.y].roomID <= 0)
-                possibleChecks.Add(new Vector2Int(-1, 0));
+                    if (grid[x, y].wallwest && !grid[x, y].entrancewest)
+                        wallAmount++;
 
-            if (currentCheckPos.x + 1 < gridSize && !closedList.Contains(currentCheckPos + new Vector2Int(1, 0)) && grid[currentCheckPos.x + 1, currentCheckPos.y].roomID <= 0)
-                possibleChecks.Add(new Vector2Int(1, 0));
+                    if (grid[x, y].wallnorth && !grid[x, y].entrancenorth)
+                        wallAmount++;
 
-            if (currentCheckPos.y - 1 >= 0 && !closedList.Contains(currentCheckPos + new Vector2Int(0, -1)) && grid[currentCheckPos.x, currentCheckPos.y - 1].roomID <= 0)
-                possibleChecks.Add(new Vector2Int(0, -1));
+                    if (grid[x, y].wallsouth && !grid[x, y].entrancesouth)
+                        wallAmount++;
 
-            if (currentCheckPos.y + 1 < gridSize && !closedList.Contains(currentCheckPos + new Vector2Int(0, 1)) && grid[currentCheckPos.x, currentCheckPos.y + 1].roomID <= 0)
-                possibleChecks.Add(new Vector2Int(0, 1));
+                    bool hasEntrance = grid[x, y].entrancesouth || grid[x, y].entrancenorth || grid[x, y].entrancewest || grid[x, y].entranceeast;
 
-            Vector2Int randomCheck = possibleChecks[Random.Range(0, possibleChecks.Count)];
-            Vector2Int neighbourCheck = currentCheckPos + randomCheck;
+                    if (wallAmount >= 3 && !hasEntrance) {
+                        direction = !grid[x, y].walleast ? 1 : (!grid[x, y].wallwest ? 2 : (!grid[x, y].wallnorth ? 3 : (!grid[x, y].wallsouth ? 4 : 0)));
 
-            Element neighbour = grid[neighbourCheck.x, neighbourCheck.y];
+                        grid[x, y].floor = false;
+                        grid[x, y].walleast = false;
+                        grid[x, y].wallwest = false;
+                        grid[x, y].wallnorth = false;
+                        grid[x, y].wallsouth = false;
+                    }
 
-            if(neighbour.roomID <= 0)
-                open.Add(neighbourCheck);
-        }*/
+                    if(direction == 1 && x + 1 < gridSize && grid[x + 1, y].floor && grid[x + 1, y].roomID <= 0) {
+                        if (!grid[x + 1, y].wallwest)
+                            grid[x + 1, y].wallwest = true;
+                    }
+
+                    if (direction == 2 && x - 1 >= 0 && grid[x - 1, y].floor && grid[x - 1, y].roomID <= 0) {
+                        if (!grid[x - 1, y].walleast)
+                            grid[x - 1, y].walleast = true;
+                    }
+
+                    if (direction == 3 && y + 1 < gridSize && grid[x, y + 1].floor && grid[x, y + 1].roomID <= 0) {
+                        if (!grid[x, y + 1].wallsouth)
+                            grid[x, y + 1].wallsouth = true;
+                    }
+
+                    if (direction == 4 && y - 1 >= 0 && grid[x, y - 1].floor && grid[x, y - 1].roomID <= 0) {
+                        if (!grid[x, y - 1].wallnorth)
+                            grid[x, y - 1].wallnorth = true;
+                    }
+                }
+            }
+        }
+    }
+
+    void BreakWall(Vector2Int current, Vector2Int neighbour) {
+        Vector2Int dif = neighbour - current;
+
+        bool up = dif.x == 0 && dif.y == 1;
+        bool down = dif.x == 0 && dif.y == -1;
+        bool left = dif.x == -1 && dif.y == 0;
+        bool right = dif.x == 1 && dif.y == 0;
+
+        if (up) {
+            grid[current.x, current.y].wallnorth = false;
+            grid[neighbour.x, neighbour.y].wallsouth = false;
+        } else if (down) {
+            grid[current.x, current.y].wallsouth = false;
+            grid[neighbour.x, neighbour.y].wallnorth = false;
+        } else if (left) {
+            grid[current.x, current.y].wallwest = false;
+            grid[neighbour.x, neighbour.y].walleast = false;
+        } else if (right) {
+            grid[current.x, current.y].walleast = false;
+            grid[neighbour.x, neighbour.y].wallwest = false;
+        }
+    }
+
+    void CreateMaze() {
+        while (visited < maxElementSize) {
+
+            if (building) {
+                List<Vector2Int> possibleChecks = new List<Vector2Int>();
+
+                if (currentCheck.x - 1 >= 0 && grid[currentCheck.x - 1, currentCheck.y].roomID == -1)
+                    possibleChecks.Add(new Vector2Int(-1, 0));
+
+                if (currentCheck.x + 1 < gridSize && grid[currentCheck.x + 1, currentCheck.y].roomID == -1)
+                    possibleChecks.Add(new Vector2Int(1, 0));
+
+                if (currentCheck.y - 1 >= 0 && grid[currentCheck.x, currentCheck.y - 1].roomID == -1)
+                    possibleChecks.Add(new Vector2Int(0, -1));
+
+                if (currentCheck.y + 1 < gridSize && grid[currentCheck.x, currentCheck.y + 1].roomID == -1)
+                    possibleChecks.Add(new Vector2Int(0, 1));
+
+                if (possibleChecks.Count <= 0) {
+                    if (backup < 0) {
+                        grid[currentCheck.x, currentCheck.y].floor = false;
+                        visited += 1;
+                        continue;
+                    }
+
+                    currentCheck = closedList[backup];
+                    backup--;
+                    if (backup < 0)
+                        building = false;
+                } else {
+                    Element currentElement = grid[currentCheck.x, currentCheck.y];
+                    Vector2Int neighbourcheck = currentCheck + possibleChecks[Random.Range(0, possibleChecks.Count)];
+                    Element neighbourElement = grid[neighbourcheck.x, neighbourcheck.y];
+
+                    if (neighbourElement.roomID == -1 && currentElement.roomID == 0) {
+
+                        BreakWall(currentCheck, neighbourcheck);
+
+                        grid[neighbourcheck.x, neighbourcheck.y].roomID = 0;
+                        visited += 1;
+
+                        closedList.Add(currentCheck);
+                        //openList.Remove(currentCheck);
+
+                        currentCheck = neighbourcheck;
+
+                        if (closedList.Count > 0) {
+                            backup = closedList.Count - 1;
+                        }
+                    }
+                }
+            } else {
+                currentCheck = new Vector2Int(Random.Range(0, gridSize), Random.Range(0, gridSize));
+                if (grid[currentCheck.x, currentCheck.y].floor && grid[currentCheck.x, currentCheck.y].roomID == -1) {
+                    visited += 1;
+                    grid[currentCheck.x, currentCheck.y].roomID = 0;
+                    building = true;
+                }
+            }
+        }
     }
 
     void FillRemaining() {
@@ -112,12 +320,12 @@ public class GridWorld : MonoBehaviour {
                 if (grid[x, y].floor)
                     continue;
 
-                grid[x, y] = Element.justFloor;
+                grid[x, y] = Element.allwalls;
             }
         }
     }
 
-    void CheckEntrances() {
+    void CheckEntrances(bool breakWalls) {
         for (int y = 0; y < gridSize; y++) {
             for (int x = 0; x < gridSize; x++) {
                 if (!grid[x, y].floor)
@@ -132,11 +340,17 @@ public class GridWorld : MonoBehaviour {
                             grid[x - 1, y].entranceeast = true;
                         } 
                         else if (grid[x - 1, y ].walleast) {
-                            grid[x, y].entrancewest = false;
+                            if (breakWalls) {
+                                grid[x - 1, y].entranceeast = true;
+                            } else {
+                                grid[x, y].entrancewest = false;
+                                roomsToSpawn.Add(new SpawnRequest(new Vector3(x * 4, 0, y * 4), "halls/endwest"));
+                            }
                         }
                     } 
                     else {
                         grid[x, y].entrancewest = false;
+                        roomsToSpawn.Add(new SpawnRequest(new Vector3(x * 4, 0, y * 4), "halls/endwest"));
                     }
                 }
 
@@ -149,10 +363,16 @@ public class GridWorld : MonoBehaviour {
                             grid[x + 1, y].entrancewest = true;
                         } 
                         else if (grid[x + 1, y].wallwest) {
-                            grid[x, y].entranceeast = false;
+                            if (breakWalls) {
+                                grid[x + 1, y].entrancewest = true;
+                            } else {
+                                grid[x, y].entranceeast = false;
+                                roomsToSpawn.Add(new SpawnRequest(new Vector3(x * 4, 0, y * 4), "halls/endeast"));
+                            }
                         }
                     } else {
                         grid[x, y].entranceeast = false;
+                        roomsToSpawn.Add(new SpawnRequest(new Vector3(x * 4, 0, y * 4), "halls/endeast"));
                     }
                 }
 
@@ -165,481 +385,81 @@ public class GridWorld : MonoBehaviour {
                             grid[x, y + 1].entrancesouth = true;
                         } 
                         else if (grid[x, y + 1].wallsouth) {
-                            grid[x, y].entrancenorth = false;
+                            if (breakWalls) {
+                                grid[x, y + 1].entrancesouth = true;
+                            } else {
+                                grid[x, y].entrancenorth = false;
+                                roomsToSpawn.Add(new SpawnRequest(new Vector3(x * 4, 0, y * 4), "halls/endnorth"));
+                            }
                         }
                     } else {
                         grid[x, y].entrancenorth = false;
-                    }
-                }
-            }
-        }
-    }
-
-    void Addwalls() {
-        //*
-        for (int y = 0; y < gridSize; y++) {
-            for (int x = 0; x < gridSize; x++) {
-                if (!grid[x, y].floor)
-                    continue;
-
-                if (grid[x, y].roomID > 0)
-                    continue;
-
-                Element element = new Element() {
-                    roomID = 0,
-
-                    floor = grid[x, y].floor,
-
-                    wallwest = x - 1 < 0 ? true : (grid[x - 1, y].floor && grid[x - 1, y].roomID > 0 ? true : !grid[x - 1, y].floor),
-                    walleast = x + 1 >= gridSize ? true : (grid[x + 1, y].floor && grid[x + 1, y].roomID > 0 ? true : !grid[x + 1, y].floor),
-
-                    wallsouth = y - 1 < 0 ? true : (grid[x, y - 1].floor && grid[x, y - 1].roomID > 0 ? true : !grid[x, y - 1].floor),
-                    wallnorth = y + 1 >= gridSize ? true : (grid[x, y + 1].floor && grid[x, y + 1].roomID > 0 ? true : !grid[x, y + 1].floor),
-
-                    //entrancewest = x - 1 < 0 ? false : (grid[x - 1, y].floor && grid[x - 1, y].roomID > 0 ? true : false),
-                    //entranceeast = x + 1 >= gridSize ? false : (grid[x + 1, y].floor && grid[x + 1, y].roomID > 0 ? true : false),
-
-                    //entrancesouth = y - 1 < 0 ? false : (grid[x, y - 1].floor && grid[x, y - 1].roomID > 0 ? true : false),
-                    //entrancenorth = y + 1 >= gridSize ? false : (grid[x, y + 1].floor && grid[x, y + 1].roomID > 0 ? true : false),
-                };
-
-                if (element.wallwest && x - 1 >= 0) {
-                    if (grid[x - 1, y].entranceeast) {
-                        element.entrancewest = true;
-                    } else if (grid[x - 1, y].entranceposiblilityeast) {
-                        if (y + 1 < gridSize && grid[x, y + 1].floor && grid[x, y + 1].roomID == 0 && !grid[x, y + 1].entrancewest) {
-                            print("do");
-                            element.entrancewest = true;
-                            grid[x - 1, y].entranceeast = true;
-                        } else if (y - 1 >= 0 && grid[x, y - 1].floor && grid[x, y + 1].roomID == 0 && !grid[x, y - 1].entrancewest) {
-                            print("do123");
-                            element.entrancewest = true;
-                            grid[x - 1, y].entranceeast = true;
-                        } else {
-                            int b = 0;
-                            if (y + 1 < gridSize && !grid[x, y + 1].floor) {
-                                b++;
-                            }
-                            if (y - 1 >= 0 && !grid[x, y - 1].floor) {
-                                b++;
-                            }
-                            if (b == 2) {
-                                element.entrancewest = true;
-                                grid[x - 1, y].entranceeast = true;
-                            }
-                        }
-                    }
-                }
-
-                if (element.walleast && x + 1 < gridSize) {
-                    if (grid[x + 1, y].entrancewest)
-                        element.entranceeast = true;
-                }
-
-                if (element.wallsouth && y - 1 >= 0) {
-                    if (grid[x, y - 1].entrancenorth) {
-                        element.entrancesouth = true;
-                    }
-                }
-
-                if (element.wallnorth && y + 1 < gridSize) {
-                    if (grid[x, y + 1].entrancesouth) {
-                        element.entrancenorth = true;
-                    }
-                }
-
-                grid[x, y] = element;
-
-                Vector3 key = new Vector3(x * 4, 0, y * 4);
-
-                bool turned = grid[x, y].entrancewest && grid[x, y].entranceeast;
-
-                if (!roomsToSpawn.ContainsKey(key))
-                    roomsToSpawn.Add(key, Resources.Load<GameObject>("rooms/hallway" + (turned ? "90" : "")));
-            }
-        }
-    }
-
-    void Spawn() {
-        foreach(KeyValuePair<Vector3, GameObject> room in roomsToSpawn) {
-            GameObject go = Instantiate(room.Value);
-            go.transform.position = room.Key;
-            go.transform.SetParent(transform);
-        } 
-    }
-
-    
-
-    void ChangeGrid(int x, int y, int i, bool b) {
-        switch (i) {
-            case 0: grid[x, y].entrancesouth = b; break;
-            case 1: grid[x, y].entrancenorth = b; break;
-            case 2: grid[x, y].entrancewest = b; break;
-            case 3: grid[x, y].entranceeast = b; break;
-
-            case 4: grid[x, y].entrancenorth = b; break;
-            case 5: grid[x, y].entrancesouth = b; break;
-            case 6: grid[x, y].entranceeast = b; break;
-            case 7: grid[x, y].entrancewest = b; break;
-        }
-    }
-
-    void ChangeGrid(int x, int y, Element el) {
-        grid[x, y] = el;
-    }
-
-    void Update() {
-
-        int lookfor = -1;
-
-        if (openList.Count > 0) {
-
-            Vector2Int currentCheckPos = openList[0];
-
-            closedList.Add(currentCheckPos);
-            openList.Remove(currentCheckPos);
-
-            List<Vector2Int> possibleChecks = new List<Vector2Int>();
-
-            if (currentCheckPos.x - 1 >= 0 && !closedList.Contains(currentCheckPos + new Vector2Int(-1, 0)) && grid[currentCheckPos.x - 1, currentCheckPos.y].roomID <= 0)
-                possibleChecks.Add(new Vector2Int(-1, 0));
-
-            if (currentCheckPos.x + 1 < gridSize && !closedList.Contains(currentCheckPos + new Vector2Int(1, 0)) && grid[currentCheckPos.x + 1, currentCheckPos.y].roomID <= 0)
-                possibleChecks.Add(new Vector2Int(1, 0));
-
-            if (currentCheckPos.y - 1 >= 0 && !closedList.Contains(currentCheckPos + new Vector2Int(0, -1)) && grid[currentCheckPos.x, currentCheckPos.y - 1].roomID <= 0)
-                possibleChecks.Add(new Vector2Int(0, -1));
-
-            if (currentCheckPos.y + 1 < gridSize && !closedList.Contains(currentCheckPos + new Vector2Int(0, 1)) && grid[currentCheckPos.x, currentCheckPos.y + 1].roomID <= 0)
-                possibleChecks.Add(new Vector2Int(0, 1));
-
-            Vector2Int randomCheck = possibleChecks[Random.Range(0, possibleChecks.Count)];
-            Vector2Int neighbourCheck = currentCheckPos + randomCheck;
-
-            Element neighbour = grid[neighbourCheck.x, neighbourCheck.y];
-
-            if (neighbour.roomID == lookfor) {
-                grid[neighbourCheck.x, neighbourCheck.y].roomID = 0;
-                openList.Add(neighbourCheck);
-            }
-        }
-
-        /*
-        if (openList.Count > 0) {
-            Vector2Int checkingpos = openList[0];
-
-            openList.Remove(checkingpos);
-            closedList.Add(checkingpos);
-
-            Element checkingElement = grid[checkingpos.x, checkingpos.y];
-
-            for(int i = 0; i < checking.Length; i++){ // check all sides
-                Vector2Int check = checking[i];
-                Vector2Int neighbourCheck = checkingpos + check;
-
-                if (closedList.Contains(neighbourCheck)) { // if already checked, dont check again
-                    //print("int list");
-                    continue;
-                }
-
-                if (neighbourCheck.x < 0 || neighbourCheck.x >= gridSize || neighbourCheck.y < 0 || neighbourCheck.y >= gridSize) // if outside of grid, dont check
-                    continue;
-
-                Element neighbour = grid[neighbourCheck.x, neighbourCheck.y];
-
-                bool facingEntrance = i == 0 ? checkingElement.entrancenorth : (i == 1 ? checkingElement.entrancesouth : (i == 2 ? checkingElement.entranceeast : checkingElement.entrancewest));
-                bool facingWall = i == 0 ? checkingElement.wallnorth : (i == 1 ? checkingElement.wallsouth : (i == 2 ? checkingElement.walleast : checkingElement.wallwest));
-                bool facingEntrancePosible = i == 0 ? checkingElement.entranceposiblilitynorth : (i == 1 ? checkingElement.entranceposiblilitysouth : (i == 2 ? checkingElement.entranceposiblilityeast : checkingElement.entranceposiblilitywest));
-                bool facingEntranceNeighbour = i == 0 ? neighbour.entrancesouth : (i == 1 ? neighbour.entrancenorth : (i == 2 ? neighbour.entrancewest : neighbour.entranceeast));
-                bool facingEntranceNeighbourPosible = i == 0 ? neighbour.entranceposiblilitysouth : (i == 1 ? neighbour.entranceposiblilitynorth : (i == 2 ? neighbour.entranceposiblilitywest : neighbour.entranceposiblilityeast));
-
-                if (check == checking[i]) {
-                    if (neighbour.floor) {
-                        if (facingEntrance) {
-                            if (facingEntranceNeighbour) {
-
-                                if (!openList.Contains(neighbourCheck)) {
-                                    openList.Add(neighbourCheck);
-                                    continue;
-                                }
-                            }
-                            else if (facingEntranceNeighbourPosible) {
-                                ChangeGrid(neighbourCheck.x, neighbourCheck.y, i, true);
-
-                                if (!openList.Contains(neighbourCheck)) {
-                                    openList.Add(neighbourCheck);
-                                    continue;
-                                }
-                            } 
-                            else if (neighbour.wallsouth) {
-                                ChangeGrid(checkingpos.x, checkingpos.y, 4 + i, false);
-                                continue;
-                            }
-                            else {
-                                if (!openList.Contains(neighbourCheck)) {
-                                    openList.Add(neighbourCheck);
-                                    continue;
-                                }
-                            }
-                        } 
-                        else if (facingEntranceNeighbour) {
-                            if (facingEntrancePosible) {
-                                ChangeGrid(checkingpos.x, checkingpos.y, 4 + i, true);
-
-                                if (!openList.Contains(neighbourCheck)) {
-                                    openList.Add(neighbourCheck);
-                                    continue;
-                                }
-                            }
-                        }
-                        else if (facingEntranceNeighbourPosible) {
-                            if (tries > 0) {
-                                ChangeGrid(checkingpos.x, checkingpos.y, 4 + i, true);
-
-                                if (!openList.Contains(neighbourCheck)) {
-                                    openList.Add(neighbourCheck);
-                                    tries--;
-                                    continue;
-                                }
-                            }
-                        }
-                        else if (facingEntrancePosible) {
-                            if(tries > 0) {
-                                ChangeGrid(checkingpos.x, checkingpos.y, 4 + i, true);
-
-                                if (!openList.Contains(neighbourCheck)) {
-                                    openList.Add(neighbourCheck);
-                                    tries--;
-                                    continue;
-                                }
-                            }
-                        }
-                        else if (checkingElement.roomID == neighbour.roomID) {
-                            if (!openList.Contains(neighbourCheck)) {
-                                openList.Add(neighbourCheck);
-                                continue;
-                            }
-                        } 
-                    } 
-                    else {
-                        if (facingEntrance) {
-                            //grid[checkingpos.x, checkingpos.y] = Element.justFloor;
-                            ChangeGrid(checkingpos.x, checkingpos.y, Element.justFloor);
-
-                            if (!openList.Contains(neighbourCheck)) {
-                                openList.Add(neighbourCheck);
-                                continue;
-                            }
-                        }
-                        else if (facingWall) {
-                            continue;
-                        }
-                        else if(tries > 0) {
-                            for(int j = 0; j < checking.Length; j++) {
-                                Vector2Int newCheck = neighbourCheck + checking[j];
-
-                                if (closedList.Contains(newCheck))
-                                    continue;
-
-                                if (openList.Contains(newCheck))
-                                    continue;
-
-                                if (newCheck.x < 0 || newCheck.x >= gridSize || newCheck.y < 0 || newCheck.y >= gridSize) // if outside of grid, dont check
-                                    continue;
-
-                                Element newElement = grid[newCheck.x, newCheck.y];
-
-                                bool newNeighbourPosible = j == 0 ? newElement.entranceposiblilitysouth : (j == 1 ? newElement.entranceposiblilitynorth : (j == 2 ? newElement.entranceposiblilitywest : newElement.entranceposiblilityeast));
-
-                                if (newElement.floor) {
-                                    if (newNeighbourPosible) {
-                                        ChangeGrid(neighbourCheck.x, neighbourCheck.y, j, true);
-
-                                        if (!openList.Contains(neighbourCheck)) {
-                                            openList.Add(neighbourCheck);
-                                        }
-                                        tries--;
-                                        break;
-                                    }
-                                    else if (newElement.roomID == checkingElement.roomID) {
-                                        ChangeGrid(neighbourCheck.x, neighbourCheck.y, Element.justFloor);
-
-                                        if (!openList.Contains(neighbourCheck)) {
-                                            openList.Add(neighbourCheck);
-                                        }
-                                        tries--;
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-        } else if(openList.Count <= 0 && !generating) {
-            covered = (float)closedList.Count / (float)maxElements;
-
-            maxElements = 0;
-            for (int y = 0; y < gridSize; y++) {
-                for (int x = 0; x < gridSize; x++) {
-                    if (grid[x, y].floor) {
-                        maxElements++;
-                        if(!closedList.Contains(new Vector2Int(x, y))) {
-                            if(openList.Count <= 0) {
-                                openList.Add(new Vector2Int(x, y));
-                                tries += 3;
-                            }
-                        }
-                    }
-                }
-            }
-            closedList.Clear();
-        }
-        */
-    }
-
-    void GenerateHalls() {
-        for (int y = 0; y < 3; y++) {
-            for (int x = 0; x < 3; x++) {
-                if (openList.Count <= 0) {
-                    if (grid[x, y].floor) {
-                        openList.Add(new Vector2Int(x, y));
-                        break;
-                    }
-                }
-            }
-            if (openList.Count > 0)
-                break;
-        }
-
-        generating = false;
-
-        /*
-        while (openList.Count > 0) {
-            Vector2Int checkingpos = openList[0];
-
-            openList.Remove(checkingpos);
-            closedList.Add(checkingpos);
-
-            Element checkingElement = grid[checkingpos.x, checkingpos.y];
-
-            foreach (Vector2Int check in checking) {
-                Vector2Int neighbourCheck = checkingpos + check;
-
-                if (closedList.Contains(neighbourCheck))
-                    continue;
-
-                if (neighbourCheck.x < 0 || neighbourCheck.x >= gridSize || neighbourCheck.y < 0 || neighbourCheck.y >= gridSize)
-                    continue;
-
-                Element neighbour = grid[neighbourCheck.x, neighbourCheck.y];
-
-                openList.Add(neighbourCheck);
-            }
-
-        }*/
-    }
-
-    void GenerateHallways() {
-        for (int y = 0; y < gridSize; y++) {
-            for (int x = 0; x < gridSize; x++) {
-                if (grid[x, y].entrancewest) {
-                    if (x - 1 >= 0) {
-                        if (!grid[x - 1, y].floor) {
-                            grid[x - 1, y] = Element.justFloor;
-                        }else {
-                            if(grid[x - 1, y].entranceposiblilityeast) {
-                                grid[x - 1, y].entranceeast = true;
-                            }
-                        }
-                    }
-                }
-
-                if (grid[x, y].entranceeast) {
-                    if (x + 1 < gridSize) {
-                        if (!grid[x + 1, y].floor) { 
-                            grid[x + 1, y] = Element.justFloor;
-                        } else {
-                            if (grid[x + 1, y].entranceposiblilitywest) {
-                                grid[x + 1, y].entrancewest = true;
-                            }
-                        }
+                        roomsToSpawn.Add(new SpawnRequest(new Vector3(x * 4, 0, y * 4), "halls/endnorth"));
                     }
                 }
 
                 if (grid[x, y].entrancesouth) {
                     if (y - 1 >= 0) {
-                        if (!grid[x, y - 1].floor) { 
-                            grid[x, y - 1] = Element.justFloor;
-                        } else {
-                            if (grid[x, y - 1].entranceposiblilitynorth) {
+                        if (grid[x, y - 1].entrancenorth) {
+                            continue;
+                        } 
+                        else if (grid[x, y - 1].entranceposiblilitynorth) {
+                            grid[x, y - 1].entrancenorth = true;
+                        } 
+                        else if (grid[x, y - 1].wallnorth) {
+                            if (breakWalls) {
                                 grid[x, y - 1].entrancenorth = true;
+                            } else {
+                                grid[x, y].entrancesouth = false;
+                                roomsToSpawn.Add(new SpawnRequest(new Vector3(x * 4, 0, y * 4), "halls/endsouth"));
                             }
                         }
+                    } else {
+                        grid[x, y].entrancesouth = false;
+                        roomsToSpawn.Add(new SpawnRequest(new Vector3(x * 4, 0, y * 4), "halls/endsouth"));
                     }
-                }
-
-                if (grid[x, y].entrancenorth) {
-                    if (y + 1 < gridSize) {
-                        if (!grid[x, y + 1].floor) { 
-                            grid[x, y + 1] = Element.justFloor;
-                        } else {
-                            if (grid[x, y + 1].entranceposiblilitysouth) {
-                                grid[x, y + 1].entrancesouth = true;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        
-        for (int y = 0; y < gridSize; y++) {
-            for (int x = 0; x < gridSize; x++) {
-                if (grid[x, y].floor)
-                    continue;
-
-                if (x - 1 < 0 || x + 1 >= gridSize || y - 1 < 0 || y + 1 >= gridSize)
-                    continue;
-
-                if (grid[x - 1, y].floor && grid[x + 1, y].floor && !grid[x, y - 1].floor && !grid[x, y + 1].floor) {
-                    if ((y - 2 >= 0 && grid[x, y - 2].floor && grid[x, y - 2].roomID == 0) || (y + 2 < gridSize && grid[x, y + 2].floor && grid[x, y + 2].roomID == 0))
-                        continue;
-
-                    grid[x, y].roomID = 0;
-                    grid[x, y].floor = true;
-                    continue;
                 }
             }
         }
     }
 
-    void GenerateRooms() {
-        for (int i = 0; i < amount; i++) {
-
-            int x2 = Random.Range(0, gridSize);
-            int y2 = Random.Range(0, gridSize);
-
-            AddRoom(Resources.Load<GameObject>("rooms/Room_0" + (Random.Range(0, 2) + 1 + "")), new Vector2(x2, y2));
-        }
-        /*
-        for (int y = 0; y < gridSize; y++) {
-            for (int x = 0; x < gridSize; x++) {
-                if (grid[x, y].floor)
-                    continue;
-
-                if (x != 0 && y != 0 && Random.Range(0, 2) == 0)
-                    continue;
-
-                int x2 = x + Random.Range(0, 2);
-                int y2 = y + Random.Range(0, 2);
-
-                //print(x + " // " + y);
-
-                AddRoom(Resources.Load<GameObject>("rooms/Room_0" + (Random.Range(0, 2) + 1 + "")), new Vector2(x2, y2));
+    void Spawn() {
+        foreach(SpawnRequest request in roomsToSpawn) {
+            if(request.itemobject == null) {
+                GameObject go = Instantiate(Resources.Load<GameObject>(request.itemname));
+                go.transform.position = request.position;
+                go.transform.SetParent(transform);
             }
-        }*/
+            else {
+                GameObject go = Instantiate(request.itemobject);
+                go.transform.position = request.position;
+                go.transform.SetParent(transform);
+            }
+
+        } 
+    }
+
+    void GenerateRooms() {
+        if (spawnRoomTries > 0) {
+            for (int i = 0; i < spawnRoomTries; i++) {
+
+                int x2 = Random.Range(0, gridSize);
+                int y2 = Random.Range(0, gridSize);
+
+                AddRoom(listOfRooms[Random.Range(0, listOfRooms.Count)], new Vector2(x2, y2));
+            }
+        } else {
+            for (int y = 0; y < gridSize; y++) {
+                for (int x = 0; x < gridSize; x++) {
+
+                    int x2 = x + Random.Range(0, 5);
+                    int y2 = y + Random.Range(0, 5);
+
+                    AddRoom(listOfRooms[Random.Range(0, listOfRooms.Count)], new Vector2(x == 0 ? 0 : x2, y == 0 ? 0 : y2));
+
+                }
+            }
+        }
     }
 
     void AddRoom(GameObject go, Vector2 position) {
@@ -647,26 +467,22 @@ public class GridWorld : MonoBehaviour {
 
         Element[,] old = (Element[,])grid.Clone();
 
+        int roomsize = 0;
+
+        Vector2Int spot  = Vector2Int.zero;
+
         for (int y = 0; y < RoomGrid.size; y++) {
             for (int x = 0; x < RoomGrid.size; x++) {
-                if (!room.grid[(y * RoomGrid.size) + x])
+                if (room.grid2[(y * RoomGrid.size) + x] == 0)
                     continue;
 
-                if ((int)position.x + x >= gridSize) {
+                if ((int)position.x + x >= gridSize || (int)position.y + y >= gridSize) { // if the room is going off the edges, dont put it there
                     grid = old;
-                    //print("too big on x");
                     return;
                 }
 
-                if ((int)position.y + y >= gridSize) {
+                if (grid[(int)position.x + x, (int)position.y + y].floor) { //if the room is overlapping, dont put it there
                     grid = old;
-                    //print("too big for y");
-                    return;
-                }
-
-                if (grid[(int)position.x + x, (int)position.y + y].floor) {
-                    grid = old;
-                    //print("already contains something");
                     return;
                 }
 
@@ -691,42 +507,25 @@ public class GridWorld : MonoBehaviour {
                     entranceposiblilitynorth = room.grid2[(y * RoomGrid.size) + x] == 9,
                 };
 
-                /*
-                if (element.entrancewest) {
-                    if((int)position.x + (x - 1) >= 0) {
-                        grid[(int)position.x + (x - 1), (int)position.y + y] = Element.justFloor;
-                    }
+                if(Random.Range(0, 10) == 0) {
+                    spot = new Vector2Int(x, y);
                 }
-
-                if (element.entranceeast) {
-                    if ((int)position.x + (x + 1) < gridSize) {
-                        grid[(int)position.x + (x + 1), (int)position.y + y] = Element.justFloor;
-                    }
-                }
-
-                if (element.entrancesouth) {
-                    if ((int)position.y + (y - 1) >= 0) {
-                        grid[(int)position.x + x, (int)position.y + (y - 1)] = Element.justFloor;
-                    }
-                }
-
-                if (element.entrancenorth) {
-                    if ((int)position.y + (y + 1) < gridSize) {
-                        grid[(int)position.x + x, (int)position.y + (y + 1)] = Element.justFloor;
-                    }
-                }
-                */
 
                 grid[(int)position.x + x, (int)position.y + y] = element;
+                roomsize++;
             }
+        }
+        visited += roomsize;
+
+        if (currentSpawnID == 1) {
+            playerTransform.position = new Vector3(((int)position.x + spot.x) * 4, 0, ((int)position.y + spot.y) * 4);
         }
 
         currentSpawnID++;
 
         Vector3 key = new Vector3(position.x * 4, 0, position.y * 4);
 
-        if (!roomsToSpawn.ContainsKey(key))
-            roomsToSpawn.Add(key, go);
+        roomsToSpawn.Add(new SpawnRequest(key, go));
     }
 
     private void OnDrawGizmosSelected() {
@@ -738,10 +537,12 @@ public class GridWorld : MonoBehaviour {
                 Color current = grid[x, y].roomID > 0 ? Color.white : Color.gray;
 
                 if (grid[x, y].floor) {
-                    Gizmos.color = closedList.Contains(new Vector2Int(x, y)) ? Color.blue : current;
+                    //Gizmos.color = grid[x, y].roomID <= 0 ? (grid[x, y].roomID == 0 ? Color.green : Color.black) : current;
+                    Gizmos.color = checkclosed.Contains(new Vector2Int(x, y)) ? Color.green : Color.white;
                     Gizmos.DrawCube(new Vector3(x, 0, y), new Vector3(0.7f, 0.1f, 0.7f));
                 }
 
+                
                 if (grid[x, y].wallnorth) {
                     Gizmos.color = grid[x, y].entrancenorth ? Color.red : (grid[x, y].entranceposiblilitynorth ? Color.yellow : current);
                     Gizmos.DrawCube(new Vector3(x, 1, y + 0.4f), new Vector3(0.7f, 2f, 0.1f));
@@ -761,14 +562,34 @@ public class GridWorld : MonoBehaviour {
                     Gizmos.color = grid[x, y].entrancewest ? Color.red : (grid[x, y].entranceposiblilitywest ? Color.yellow : current);
                     Gizmos.DrawCube(new Vector3(x - 0.4f, 1, y), new Vector3(0.1f, 2f, 0.7f));
                 }
+                
             }
         }
+    }
+}
+
+public struct SpawnRequest {
+    public Vector3 position;
+    public string itemname;
+    public GameObject itemobject;
+
+    public SpawnRequest(Vector3 v, string s) {
+        position = v;
+        itemname = s;
+        itemobject = null;
+    }
+
+    public SpawnRequest(Vector3 v, GameObject g) {
+        position = v;
+        itemname = "";
+        itemobject = g;
     }
 }
 
 [SerializeField]
 public struct Element {
     public static Element justFloor = new Element() { roomID = -1, floor = true };
+    public static Element allwalls = new Element() { roomID = -1, floor = true, walleast = true, wallnorth = true, wallsouth = true, wallwest = true };
 
     public int roomID; // 0 is hallway
     public bool floor;
