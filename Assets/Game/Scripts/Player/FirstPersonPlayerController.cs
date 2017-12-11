@@ -43,7 +43,7 @@ public class FirstPersonPlayerController : MonoBehaviour {
         Arms = GameObject.FindGameObjectWithTag("PlayerArms");
         Camera = GameObject.FindGameObjectWithTag("PlayerCamera");
         BulletSpawnPoint = GameObject.FindGameObjectWithTag("PlayerBulletSpawnPoint").transform;
-        Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.lockState = CursorLockMode.Locked;
     }
 	
 	void Update () {

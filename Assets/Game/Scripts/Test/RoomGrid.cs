@@ -8,13 +8,22 @@ public class RoomGrid : MonoBehaviour {
 
     //public bool[] grid = new bool[size * size];
 
-    public int[] grid2 = new int[size * size];
+    public int[] grid = new int[size * size];
 
-    void Start () {
-		
-	}
-	
-	void Update () {
-		
-	}
+    public bool secondFloor;
+    public int[] gridsecond = new int[size * size];
+
+    [SerializeField]
+    public GameObject[] entranceObjects = new GameObject[size * size * 2];
+
+    public List<GameObject> Changables() {
+        List<GameObject> temp = new List<GameObject>();
+
+        foreach (GameObject go in entranceObjects) {
+            if (go != null)
+                temp.Add(go);
+        }
+
+        return temp;
+    }
 }

@@ -3,7 +3,7 @@ guid: 95428e6615d46654099e09ab63c43e09
 timeCreated: 1511806080
 licenseType: Free
 ModelImporter:
-  serializedVersion: 21
+  serializedVersion: 22
   fileIDToRecycleName:
     100000: Cube
     100002: Cube.001
@@ -18,6 +18,9 @@ ModelImporter:
     100020: Plane.001
     100022: Plane.002
     100024: Plane.003
+    100026: Plane.004
+    100028: Plane.005
+    100030: Plane.006
     400000: Cube
     400002: Cube.001
     400004: Cube.002
@@ -31,6 +34,9 @@ ModelImporter:
     400020: Plane.001
     400022: Plane.002
     400024: Plane.003
+    400026: Plane.004
+    400028: Plane.005
+    400030: Plane.006
     2300000: Cube
     2300002: Cube.001
     2300004: Cube.002
@@ -43,6 +49,9 @@ ModelImporter:
     2300018: Plane.001
     2300020: Plane.002
     2300022: Plane.003
+    2300024: Plane.004
+    2300026: Plane.005
+    2300028: Plane.006
     3300000: Cube
     3300002: Cube.001
     3300004: Cube.002
@@ -55,6 +64,9 @@ ModelImporter:
     3300018: Plane.001
     3300020: Plane.002
     3300022: Plane.003
+    3300024: Plane.004
+    3300026: Plane.005
+    3300028: Plane.006
     4300000: Cube.005
     4300002: Cube.004
     4300004: Cube.003
@@ -67,6 +79,9 @@ ModelImporter:
     4300018: Plane.001
     4300020: Plane
     4300022: Plane.003
+    4300024: Plane.005
+    4300026: Plane.004
+    4300028: Plane.006
     6400000: Cube
     6400002: Cube.001
     6400004: Cube.002
@@ -79,10 +94,20 @@ ModelImporter:
     6400018: Plane.001
     6400020: Plane.002
     6400022: Plane.003
+    6400024: Plane.004
+    6400026: Plane.005
+    6400028: Plane.006
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: No Name
+    second: {fileID: 2100000, guid: 450c5c646d654bf44a915b90a1c437d1, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
     materialSearch: 1
+    materialLocation: 0
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
@@ -95,6 +120,7 @@ ModelImporter:
     animationImportWarnings: 
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
     animationCompression: 1
     animationRotationError: 0.5
     animationPositionError: 0.5
