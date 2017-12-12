@@ -13,6 +13,13 @@ public class Bullet : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        transform.position += transform.forward * BulletSpeed;
+        transform.position += transform.forward * Time.deltaTime * BulletSpeed;
 	}
+
+    void OnTriggerEnter(Collider collision) {
+        if (collision.CompareTag("Enemy")) {
+            Destroy(collision.gameObject);
+        }
+        Destroy(gameObject);
+    }
 }
