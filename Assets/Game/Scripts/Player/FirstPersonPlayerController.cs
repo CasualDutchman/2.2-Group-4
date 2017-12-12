@@ -45,8 +45,8 @@ public class FirstPersonPlayerController : MonoBehaviour {
         BulletSpawnPoint = GameObject.FindGameObjectWithTag("PlayerBulletSpawnPoint").transform;
         //Cursor.lockState = CursorLockMode.Locked;
     }
-	
-	void Update () {
+
+    void Update () {
         //looking around
 
         //print(Input.GetKeyDown("joystick button 0"));
@@ -57,6 +57,22 @@ public class FirstPersonPlayerController : MonoBehaviour {
 
         transform.GetChild(0).localEulerAngles = new Vector3(pitch, 0, 0);
         transform.localEulerAngles = new Vector3(0, yaw, 0);
+
+        if (Input.GetKeyDown(KeyCode.E)) {
+            Ray ray = new Ray(Camera.transform.position, Camera.transform.forward);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit)) {
+                if(hit.distance < 10) {
+                    if (hit.collider.CompareTag("Door")) {
+                        if (hit.collider.GetComponent<Door>()) {
+                            hit.collider.GetComponent<Door>().ChangeState();
+                        } else {
+                            hit.transform.parent.GetComponent<Door>().ChangeState();
+                        }
+                    }
+                }
+            }
+        }
 
         //walking around
         if (controller.isGrounded) {
