@@ -19,6 +19,7 @@ public class EditorRoomGrid : Editor {
             for (int x = 0; x < RoomGrid.size; x++) {
                 GUILayout.Space(3);
                 //room.grid2[(y * RoomGrid.size) + x].floor = EditorGUILayout.Toggle(room.grid2[(y * RoomGrid.size) + x].floor, GUILayout.MaxWidth(13));
+<<<<<<< HEAD
                 if (GUILayout.Button(GetTexture(room.grid[(y * RoomGrid.size) + x]), GUIStyle.none, GUILayout.MaxWidth(15), GUILayout.MaxHeight(15))) {
 
                     if(Event.current.modifiers == EventModifiers.Control) {
@@ -55,6 +56,45 @@ public class EditorRoomGrid : Editor {
                             room.grid[(y * RoomGrid.size) + x] = 0;
                     }
 
+=======
+                if (GUILayout.Button(GetTexture(room.grid2[(y * RoomGrid.size) + x]), GUIStyle.none, GUILayout.MaxWidth(15), GUILayout.MaxHeight(15))) {
+
+                    if(Event.current.modifiers == EventModifiers.Control) {
+                        room.grid2[(y * RoomGrid.size) + x] = 0;
+                    }
+                    else if (Event.current.modifiers == EventModifiers.Shift) {
+                        if (room.grid2[(y * RoomGrid.size) + x] == 2)
+                            room.grid2[(y * RoomGrid.size) + x] = 6;
+
+                        else if (room.grid2[(y * RoomGrid.size) + x] == 3)
+                            room.grid2[(y * RoomGrid.size) + x] = 7;
+
+                        else if (room.grid2[(y * RoomGrid.size) + x] == 4)
+                            room.grid2[(y * RoomGrid.size) + x] = 8;
+
+                        else if (room.grid2[(y * RoomGrid.size) + x] == 5)
+                            room.grid2[(y * RoomGrid.size) + x] = 9;
+
+                        else if (room.grid2[(y * RoomGrid.size) + x] == 6)
+                            room.grid2[(y * RoomGrid.size) + x] = 2;
+
+                        else if (room.grid2[(y * RoomGrid.size) + x] == 7)
+                            room.grid2[(y * RoomGrid.size) + x] = 3;
+
+                        else if (room.grid2[(y * RoomGrid.size) + x] == 8)
+                            room.grid2[(y * RoomGrid.size) + x] = 4;
+
+                        else if (room.grid2[(y * RoomGrid.size) + x] == 9)
+                            room.grid2[(y * RoomGrid.size) + x] = 5;
+                    } 
+                    else {
+                        room.grid2[(y * RoomGrid.size) + x]++;
+                        if (room.grid2[(y * RoomGrid.size) + x] > 9)
+                            room.grid2[(y * RoomGrid.size) + x] = 0;
+                    }
+
+                    
+>>>>>>> master
                 }
                 
             }
@@ -63,6 +103,7 @@ public class EditorRoomGrid : Editor {
             GUILayout.Space(3);
         }
         GUILayout.EndVertical();
+<<<<<<< HEAD
 
         room.secondFloor = EditorGUILayout.Toggle("Has second floor", room.secondFloor);
 
@@ -132,6 +173,8 @@ public class EditorRoomGrid : Editor {
                 }
             }
         }
+=======
+>>>>>>> master
     }
 
     Texture GetTexture(int i) {
@@ -202,6 +245,7 @@ public class EditorRoomGrid : Editor {
                                 tex.SetPixel(x, y, Color.white);
                             }
                         }; break;
+<<<<<<< HEAD
                     case 10: {
                             if (x > 2 && x < 13 && y > 2 && y < 13) {
                                 tex.SetPixel(x, y, Color.black);
@@ -209,6 +253,8 @@ public class EditorRoomGrid : Editor {
                                 tex.SetPixel(x, y, Color.white);
                             }
                         }; break;
+=======
+>>>>>>> master
                 }
 
                 

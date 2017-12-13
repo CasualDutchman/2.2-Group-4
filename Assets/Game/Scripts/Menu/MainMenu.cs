@@ -27,7 +27,11 @@ public class MainMenu : MonoBehaviour {
     }
 
     IEnumerator Play() {
+<<<<<<< HEAD
         AsyncOperation async = SceneManager.LoadSceneAsync("Game");
+=======
+        AsyncOperation async = SceneManager.LoadSceneAsync(1);
+>>>>>>> master
         //async.allowSceneActivation = false;
 
         while (!async.isDone) {
