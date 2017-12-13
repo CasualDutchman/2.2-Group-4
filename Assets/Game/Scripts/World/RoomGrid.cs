@@ -8,7 +8,6 @@ public class RoomGrid : MonoBehaviour {
 
     //public bool[] grid = new bool[size * size];
 
-<<<<<<< HEAD
     public int[] grid = new int[size * size];
 
     public bool secondFloor;
@@ -27,8 +26,6 @@ public class RoomGrid : MonoBehaviour {
 
         return temp;
     }
-=======
-    public int[] grid2 = new int[size * size];
 
     void Start () {
 		
@@ -37,5 +34,4 @@ public class RoomGrid : MonoBehaviour {
 	void Update () {
 		
 	}
->>>>>>> master
 }

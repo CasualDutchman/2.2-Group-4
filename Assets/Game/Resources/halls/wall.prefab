@@ -22,7 +22,6 @@ GameObject:
   - component: {fileID: 33042701437012798}
   - component: {fileID: 23832662980021744}
   - component: {fileID: 64666154654232882}
-  - component: {fileID: 114096928014172236}
   m_Layer: 0
   m_Name: wall
   m_TagString: Untagged
@@ -83,7 +82,7 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1232417728566574}
-  m_Mesh: {fileID: 4300018, guid: 95428e6615d46654099e09ab63c43e09, type: 3}
+  m_Mesh: {fileID: 4300038, guid: 95428e6615d46654099e09ab63c43e09, type: 3}
 --- !u!64 &64666154654232882
 MeshCollider:
   m_ObjectHideFlags: 1
@@ -97,16 +96,4 @@ MeshCollider:
   m_Convex: 0
   m_InflateMesh: 0
   m_SkinWidth: 0.01
-  m_Mesh: {fileID: 4300018, guid: 95428e6615d46654099e09ab63c43e09, type: 3}
---- !u!114 &114096928014172236
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1232417728566574}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 32fe77ff911fc974780322ff7fe6f8d1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  canBeEntrance: 0
+  m_Mesh: {fileID: 4300038, guid: 95428e6615d46654099e09ab63c43e09, type: 3}

@@ -27,7 +27,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 3
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: c48c318b6d4f6bb458574606b6f280ec, type: 2}
+  m_SkyboxMaterial: {fileID: 2100000, guid: cb512b1d8a693644ba29528c377cdede, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -39,7 +39,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.00028395743, g: 0.0003846222, b: 0.0006073401, a: 1}
+  m_IndirectSpecularColor: {r: 0.002142008, g: 0.0022891117, b: 0.0026325122, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -276,6 +276,10 @@ MonoBehaviour:
   MaxAmmo: 20
   AmmoTextArea: {fileID: 1954722311}
   AmmoPrefix: 'Ammo: '
+  Health: 10
+  MaxHealth: 10
+  HealthTextArea: {fileID: 0}
+  HealthPrefix: 'Health: '
 --- !u!143 &424730027
 CharacterController:
   m_ObjectHideFlags: 0
@@ -4355,6 +4359,10 @@ MonoBehaviour:
   MaxAmmo: 20
   AmmoTextArea: {fileID: 1954722311}
   AmmoPrefix: 'Ammo: '
+  Health: 10
+  MaxHealth: 10
+  HealthTextArea: {fileID: 0}
+  HealthPrefix: 'Health: '
 --- !u!23 &1404890040
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -4835,6 +4843,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 1404890043}
+  DelayBetweenAttacks: 1
 --- !u!195 &1727898094
 NavMeshAgent:
   m_ObjectHideFlags: 0

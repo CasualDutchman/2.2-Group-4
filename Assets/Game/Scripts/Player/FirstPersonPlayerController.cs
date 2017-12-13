@@ -38,14 +38,11 @@ public class FirstPersonPlayerController : MonoBehaviour {
     public Text AmmoTextArea;
     public string AmmoPrefix = "Ammo: ";
 
-<<<<<<< HEAD
-=======
     public int Health = 10;
     public int MaxHealth = 10;
     public Text HealthTextArea;
     public string HealthPrefix = "Health: ";
 
->>>>>>> master
     void Start () {
         controller = GetComponent<CharacterController>();
         Arms = GameObject.FindGameObjectWithTag("PlayerArms");
@@ -101,10 +98,7 @@ public class FirstPersonPlayerController : MonoBehaviour {
         TimeSinceLastShot += Time.deltaTime;
         if (TimeSinceLastShot >= 10.0f) TimeSinceLastShot = DelayBetweenShots+1;
         AmmoTextArea.text = AmmoPrefix + Ammo + " / " + MaxAmmo;
-<<<<<<< HEAD
-=======
         HealthTextArea.text = HealthPrefix + Health + " / " + MaxHealth;
->>>>>>> master
     }
 
     private void Shoot() {
@@ -116,10 +110,7 @@ public class FirstPersonPlayerController : MonoBehaviour {
             } else {
                 SpawnBullet(Camera.transform.forward * 2000);
             }
-<<<<<<< HEAD
-=======
             //Debug.DrawLine(Camera.transform.position, OutHit.point, Color.blue, 100.0f);
->>>>>>> master
             TimeSinceLastShot = 0.0f;
             Ammo--;
         }
@@ -148,14 +139,12 @@ public class FirstPersonPlayerController : MonoBehaviour {
     private void SpawnBullet(Vector3 BulletTargetPoint) {
         GameObject Bullet = Instantiate(BulletClass);
         Bullet.transform.position = BulletSpawnPoint.position;
-<<<<<<< HEAD
         Bullet.transform.rotation = BulletSpawnPoint.rotation;
         /*
         Transform BulletTargetTransform = new GameObject().transform; // creates an empty game object just to have a new empty transform, that is given a value on the next line
         BulletTargetTransform.position = BulletTargetPoint;
         Bullet.transform.LookAt(BulletTargetTransform);
         */
-=======
         //Bullet.transform.rotation = BulletSpawnPoint.rotation;
         
         Transform BulletTargetTransform = new GameObject().transform; // creates an empty game object just to have a new empty transform, that is given a value on the next line
@@ -167,6 +156,5 @@ public class FirstPersonPlayerController : MonoBehaviour {
     public void BeAttacked() {
         Health--;
         if (Health <= 0) Destroy(gameObject);
->>>>>>> master
     }
 }

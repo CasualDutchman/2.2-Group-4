@@ -6,33 +6,24 @@ using UnityEngine.AI;
 public class AgentGoTo : MonoBehaviour {
 
     public Transform target;
-<<<<<<< HEAD
-=======
     private FirstPersonPlayerController PlayerScript;
 
     private bool CanFollowPlayer = false;
 
     public float DelayBetweenAttacks = 1.0f;
     private float TimeSinceLastAttack = 1.1f;
->>>>>>> master
 
     NavMeshAgent agent;
 
 	void Start () {
         agent = GetComponent<NavMeshAgent>();
-<<<<<<< HEAD
         
-=======
         target = GameObject.FindGameObjectWithTag("Player").transform;
         PlayerScript = target.GetComponent<FirstPersonPlayerController>();
->>>>>>> master
 	}
 	
 	void FixedUpdate () {
-        //if(!agent.hasPath)
-<<<<<<< HEAD
-            agent.SetDestination(target.position);
-=======
+
         if (!CanFollowPlayer) {
             RaycastHit OutHit;
             if (Physics.Linecast(transform.position, target.transform.position, out OutHit)) {
@@ -56,6 +47,5 @@ public class AgentGoTo : MonoBehaviour {
             TimeSinceLastAttack = 0.0f;
             PlayerScript.BeAttacked();
         }
->>>>>>> master
     }
 }
