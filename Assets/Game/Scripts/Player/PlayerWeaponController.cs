@@ -263,7 +263,12 @@ public class PlayerWeaponController : MonoBehaviour {
             go.transform.SetParent(hit.collider.transform);
             decalList.Add(go);
         } else {
-            GameObject go = decalList[0];
+            GameObject go;
+            if (decalList[0] != null) {
+                go = decalList[0];
+            } else {
+                go = Instantiate(decal);
+            }
             decalList.RemoveAt(0);
             go.transform.position = hit.point + hit.normal * 0.01f;
             go.transform.rotation = Quaternion.LookRotation(hit.normal);
