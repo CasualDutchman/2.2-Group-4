@@ -5,6 +5,15 @@ using UnityEngine.AI;
 
 public class GridWorld : MonoBehaviour {
 
+    public GameObject enemy;
+
+    List<Transform> spawnpoints = new List<Transform>();
+
+    public GameObject[] weaponPrefabs;
+
+    float timer;
+    public float timeTillSpawn;
+
     public int gridSize = 20;
     public int floors = 1;
 
@@ -102,9 +111,61 @@ public class GridWorld : MonoBehaviour {
             Spawn();
             PrepareHalls();
 
-            //StaticBatchingUtility.Combine(gameObject);
+
+            SpawnSpawnPoints();
+
 
             GetComponent<NavMeshSurface>().BuildNavMesh();
+            SpawnWeapons();
+            
+
+            //StaticBatchingUtility.Combine(gameObject);
+        }
+    }
+
+    void Update() {
+        timer += Time.deltaTime;
+        if (timer >= timeTillSpawn) {
+            timer -= timeTillSpawn;
+
+            GameObject go = Instantiate(enemy, spawnpoints[Random.Range(0, spawnpoints.Count)].position, Quaternion.identity);
+            //go.transform.position = spawnpoints[Random.Range(0, spawnpoints.Count)].position;
+            go.GetComponent<NavMeshAgent>().enabled = true;
+        }
+    }
+
+    void SpawnWeapons() {
+        for (int f = 0; f < floors; f++) {
+            for (int y = 0; y < gridSize; y++) {
+                for (int x = 0; x < gridSize; x++) {
+                    if (grid[x, f, y].floor) {
+                        if (Random.Range(0, 10) < 2) {
+                            GameObject go = Instantiate(weaponPrefabs[Random.Range(0, weaponPrefabs.Length)]);
+                            go.transform.position = new Vector3(x * 4, f * 5 + 1, y * 4);
+                            go.transform.rotation = Quaternion.Euler(Random.value * 360f, Random.value * 360f, Random.value * 360f);
+                            go.transform.SetParent(transform);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    void SpawnSpawnPoints() {
+        GameObject spawns = new GameObject("spawns");
+        for (int f = 0; f < floors; f++) {
+            for (int y = 0; y < gridSize; y++) {
+                for (int x = 0; x < gridSize; x++) {
+                    if(grid[x, f, y].floor) {
+                        if(Random.Range(0, 10) < 2) {
+                            GameObject spawnpoint = new GameObject();
+                            spawnpoint.transform.position = new Vector3(x * 4, f * 5, y * 4);
+                            spawnpoint.transform.SetParent(spawns.transform);
+                            spawnpoints.Add(spawnpoint.transform);
+                        }
+                    }
+                }
+            }
         }
     }
 

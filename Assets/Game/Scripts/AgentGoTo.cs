@@ -6,7 +6,7 @@ using UnityEngine.AI;
 public class AgentGoTo : MonoBehaviour {
 
     public Transform target;
-    private FirstPersonPlayerController PlayerScript;
+    Player player;
 
     private bool CanFollowPlayer = false;
 
@@ -15,12 +15,15 @@ public class AgentGoTo : MonoBehaviour {
 
     NavMeshAgent agent;
 
+    public float health = 100f;
+
 	void Start () {
         agent = GetComponent<NavMeshAgent>();
         
         target = GameObject.FindGameObjectWithTag("Player").transform;
-        PlayerScript = target.GetComponent<FirstPersonPlayerController>();
-	}
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+        //PlayerScript = target.GetComponent<FirstPersonPlayerController>();
+    }
 	
 	void FixedUpdate () {
 
@@ -45,7 +48,7 @@ public class AgentGoTo : MonoBehaviour {
     private void Attack() {
         if (TimeSinceLastAttack >= DelayBetweenAttacks) {
             TimeSinceLastAttack = 0.0f;
-            PlayerScript.BeAttacked();
+            player.Hurt();
         }
     }
 }

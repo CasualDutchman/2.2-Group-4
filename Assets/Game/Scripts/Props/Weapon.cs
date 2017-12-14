@@ -2,20 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Weapon", menuName = "Props/Weapon", order = 1)]
-public class Weapon : ScriptableObject {
+public class Weapon : MonoBehaviour {
 
-    public enum FireMode { Semi, Burst, Auto }
+    public enum FireMode { Semi, Burst, Auto, ShotGun }
+
+    public string weaponName;
+
+    public PlayerWeaponController.WeaponSlot preveredSlot;
 
     public FireMode fireMode;
-    public float rateOfFire;
-    public int maxAmmo;
+    public float rateOfFire = 1;
+    public int maxAmmoMagazine;
+    public int ammo;
+    public int holdingmaxAmmo;
 
-	void Start () {
-		
-	}
-	
-	void Update () {
-		
-	}
+    public GameObject bulletShell;
 }
