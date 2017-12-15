@@ -24,7 +24,7 @@ public class GridWorld : MonoBehaviour {
 
     Dictionary<Vector3Int, int> roomEntrances = new Dictionary<Vector3Int, int>();
 
-    public Transform playerTransform;
+    public PlayerManager playerManager;
 
     int currentSpawnID = 1;
 
@@ -121,6 +121,8 @@ public class GridWorld : MonoBehaviour {
 
             //StaticBatchingUtility.Combine(gameObject);
         }
+
+        playerManager.Play();
     }
 
     void Update() {
@@ -719,6 +721,7 @@ public class GridWorld : MonoBehaviour {
         int roomsize = 0;
 
         Vector3Int spot  = Vector3Int.zero;
+        Vector3Int spot2 = Vector3Int.zero;
 
         //for (int f = 0; f < (room.secondFloor ? 2 : 1); f++) {
         for (int y = 0; y < RoomGrid.size; y++) {
@@ -766,6 +769,9 @@ public class GridWorld : MonoBehaviour {
 
                     if (Random.Range(0, 10) == 0) {
                         spot = new Vector3Int(x, 0, y);
+                    }
+                    if (Random.Range(0, 10) == 0) {
+                        spot2 = new Vector3Int(x, 0, y);
                     }
 
                     grid[(int)position.x + x, (int)position.y, (int)position.z + y] = element;
@@ -822,6 +828,9 @@ public class GridWorld : MonoBehaviour {
                     if (Random.Range(0, 10) == 0) {
                         spot = new Vector3Int(x, 0, y);
                     }
+                    if (Random.Range(0, 10) == 0) {
+                        spot2 = new Vector3Int(x, 0, y);
+                    }
 
                     grid[(int)position.x + x, height, (int)position.z + y] = element;
                     roomsize++;
@@ -832,7 +841,8 @@ public class GridWorld : MonoBehaviour {
         visited += roomsize;
 
         if (currentSpawnID == 1) {
-            playerTransform.position = new Vector3(((int)position.x + spot.x) * 4, ((int)position.y + spot.y) * 5, ((int)position.z + spot.z) * 4);
+            playerManager.playerOneSpawn.position = new Vector3(((int)position.x + spot.x) * 4, ((int)position.y + spot.y) * 5, ((int)position.z + spot.z) * 4);
+            playerManager.playerTwoSpawn.position = new Vector3(((int)position.x + spot2.x) * 4, ((int)position.y + spot2.y) * 5, ((int)position.z + spot2.z) * 4);
         }
 
         Vector3 key = new Vector3(position.x, position.y, position.z);

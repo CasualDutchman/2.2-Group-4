@@ -5,12 +5,18 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour {
 
+    public enum playertype { PlayerOne, PlayerTwo }
+    public enum Controltype { Mouse, ControllerOne, ControllerTwo }
+
+    public playertype playerType;
+    public Controltype controlType;
+
     public Text healthText;
     public float health = 100;
     public float maxHealth = 100;
 
 	void Start () {
-        healthText.text = health + "/" + maxHealth + "";
+        UpdateHealthText();
     }
 	
 	void Update () {
@@ -20,6 +26,22 @@ public class Player : MonoBehaviour {
     public void Hurt() {
         health -= 10;
 
+        UpdateHealthText();
+    }
+
+    public void UpdateHealthText() {
         healthText.text = health + "/" + maxHealth + "";
+    }
+
+    public FirstPersonPlayerController GetMovementController {
+        get {
+            return GetComponent<FirstPersonPlayerController>();
+        }
+    }
+
+    public PlayerWeaponController GetWeaponController {
+        get {
+            return GetComponent<PlayerWeaponController>();
+        }
     }
 }

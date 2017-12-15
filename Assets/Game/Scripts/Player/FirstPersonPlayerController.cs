@@ -6,6 +6,8 @@ using UnityEngine.UI;
 public class FirstPersonPlayerController : MonoBehaviour {
 
     CharacterController controller;
+    Player player;
+    public Camera playerCamera;
 
     public float mouseSpeed = 5;
     public float yaw = 0.0f;
@@ -20,27 +22,24 @@ public class FirstPersonPlayerController : MonoBehaviour {
 
     void Start () {
         controller = GetComponent<CharacterController>();
+        player = GetComponent<Player>();
+        playerCamera = transform.GetChild(0).GetComponent<Camera>();
         Cursor.lockState = CursorLockMode.Locked;
     }
 
     void Update () {
-        //looking around
-
-        //print(Input.GetKeyDown("joystick button 0"));
-
-        //yaw += Input.get * mouseSpeed;
-        yaw += Input.GetAxis("Mouse X") * mouseSpeed;
-        pitch = Mathf.Clamp(pitch + (Input.GetAxis("Mouse Y") * mouseSpeed * (invertY ? -1 : 1)), -90, 90);
+        yaw += Input.GetAxis(player.controlType.ToString() + " X") * mouseSpeed;
+        pitch = Mathf.Clamp(pitch + (Input.GetAxis(player.controlType.ToString() + " Y") * mouseSpeed * (invertY ? -1 : 1)), -90, 90);
 
         transform.GetChild(0).localEulerAngles = new Vector3(pitch, 0, 0);
         transform.localEulerAngles = new Vector3(0, yaw, 0);
 
         //walking around
         if (controller.isGrounded) {
-            moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+            moveDirection = new Vector3(Input.GetAxis(player.controlType.ToString() + " Horizontal"), 0, Input.GetAxis(player.controlType.ToString() + " Vertical"));
             moveDirection = transform.TransformDirection(moveDirection);
             moveDirection *= speed;
-            if (Input.GetButton("Jump"))
+            if (Input.GetButton(player.controlType.ToString() + " Jump"))
                 moveDirection.y = jumpSpeed;
 
         }

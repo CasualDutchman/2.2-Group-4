@@ -18,11 +18,17 @@ public class MainMenu : MonoBehaviour {
         if (eventSystem.currentSelectedGameObject != null)
             lastHoverOver = eventSystem.currentSelectedGameObject;
 
-        if (Mathf.Abs(Input.GetAxis("Vertical")) > 0 && eventSystem.currentSelectedGameObject == null)
+        if (Mathf.Abs(Input.GetAxis("ControllerOne Vertical")) > 0 && eventSystem.currentSelectedGameObject == null)
             eventSystem.SetSelectedGameObject(lastHoverOver);
     }
 
+    public void OnTwoPlay() {
+        PlayerPrefs.SetInt("PlayerCount", 2);
+        StartCoroutine(Play());
+    }
+
     public void OnPlay() {
+        PlayerPrefs.SetInt("PlayerCount", 1);
         StartCoroutine(Play());
     }
 

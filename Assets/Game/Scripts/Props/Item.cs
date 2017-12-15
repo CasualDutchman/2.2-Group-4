@@ -4,11 +4,9 @@ using UnityEngine;
 
 public class Item : MonoBehaviour {
 
-	void Start () {
-		
-	}
-	
-	void Update () {
-		
-	}
+    public bool interactable = true;
+
+    public virtual void Interact(Player player) { }
+
+    public virtual string Message() { return ""; }
 }

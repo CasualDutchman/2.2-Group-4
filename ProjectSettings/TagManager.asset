@@ -6,6 +6,10 @@ TagManager:
   tags:
   - Walkable
   - Gun
+  - Enemy
+  - PlayerBulletSpawnPoint
+  - PlayerCamera
+  - PlayerArms
   layers:
   - Default
   - TransparentFX
@@ -15,7 +19,7 @@ TagManager:
   - UI
   - 
   - 
-  - 
+  - Interactable
   - 
   - 
   - 

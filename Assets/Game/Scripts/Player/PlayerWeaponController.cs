@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class PlayerWeaponController : MonoBehaviour {
 
+    Player player;
+
     public GameObject decal;
     List<GameObject> decalList = new List<GameObject>();
     public int maxDecals = 10;
@@ -14,6 +16,8 @@ public class PlayerWeaponController : MonoBehaviour {
 
     List<GameObject> magazineList = new List<GameObject>();
     public int maxMagazinesOnGround = 10;
+
+    public GameObject[] muzzleFlashes;
 
     public Transform hand;
 
@@ -25,25 +29,26 @@ public class PlayerWeaponController : MonoBehaviour {
     public Weapon primaryWeapon;
     public Weapon secondaryWeapon;
 
-    FirstPersonPlayerController control;
-
     float rateOfFire = 0;
 
+    float reloadTimer = 0;
+    bool isReloading = false;
+
     float recoilFactor = 0;
+    float recoilCooldownMultiplier = 1;
     public RectTransform recoilCrosshair;
 
     int fireMode;
-    Transform muzzle;
 
     public Text ammoText;
     public Text pickUpText;
 
-	void Start () {
-        control = GetComponent<FirstPersonPlayerController>();
+    int muzzleFlashShownFrames;
 
-        if(currentWeapon != null) {
-            muzzle = currentWeapon.transform.Find("Muzzle");
-        }
+    bool pressFire = false;
+
+	void Start () {
+        player = GetComponent<Player>();
 	}
 	
 	void Update () {
@@ -55,90 +60,35 @@ public class PlayerWeaponController : MonoBehaviour {
             SwapWeapon(WeaponSlot.secondary);
         }
 
-        if (Input.GetKeyDown(KeyCode.R)) {
-            Reload();
+        if (Input.GetButton(player.controlType.ToString() + " Reload")) {
+            isReloading = true;
         }
 
-        Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
+        if (isReloading) {
+            reloadTimer += Time.deltaTime;
+            hand.localEulerAngles = Vector3.right * 30;
+            if (reloadTimer >= currentWeapon.reloadTime) {
+                reloadTimer = 0;
+                isReloading = false;
+                hand.localEulerAngles = Vector3.zero;
+                Reload();
+            }
+        }
+
+        Debug.DrawRay(player.GetMovementController.playerCamera.transform.position, player.GetMovementController.playerCamera.transform.forward, Color.red);
+        Ray ray = new Ray(player.GetMovementController.playerCamera.transform.position, player.GetMovementController.playerCamera.transform.forward);
         RaycastHit hit;
 
-        if (Physics.Raycast(ray, out hit, 3) && hit.collider.CompareTag("Gun")) {
-            Weapon weapon = hit.collider.GetComponent<Weapon>();
-            if (weapon != null) {
+        if (Physics.Raycast(ray, out hit, 3, LayerMask.GetMask("Interactable"))) {
+            Item item = hit.collider.GetComponent<Item>();
+
+            if (item.interactable) {
                 pickUpText.gameObject.SetActive(true);
-                pickUpText.text = "[E] Pick up " + weapon.weaponName;
-                pickUpText.rectTransform.anchoredPosition = (Vector2)Camera.main.WorldToScreenPoint(hit.collider.transform.position) - new Vector2(Screen.currentResolution.width, Screen.currentResolution.height) / 2;
+                pickUpText.text = "[E] " + item.Message();
+                //pickUpText.rectTransform.anchoredPosition = (Vector2)player.GetMovementController.playerCamera.WorldToScreenPoint(hit.collider.transform.position) - new Vector2(Screen.currentResolution.width, Screen.currentResolution.height) / 2 + new Vector2(0, 100);
 
-                if (Input.GetKeyDown(KeyCode.E)) {
-                    if (weapon.preveredSlot == WeaponSlot.primary) {
-                        if (primaryWeapon == null) {
-                            primaryWeapon = weapon;
-                            if (currentWeapon != null)
-                                currentWeapon.gameObject.SetActive(false);
-
-                            currentWeapon = primaryWeapon;
-                            currentSlot = WeaponSlot.primary;
-                            UpdateAmmoCounter();
-
-                            weapon.GetComponent<Rigidbody>().isKinematic = true;
-                            weapon.transform.parent = hand;
-                            weapon.transform.localPosition = Vector3.zero;
-                            weapon.transform.localRotation = Quaternion.identity;
-                        }
-                        else {
-                            if (currentWeapon != null)
-                                currentWeapon.gameObject.SetActive(false);
-
-                            primaryWeapon.gameObject.SetActive(true);
-                            primaryWeapon.GetComponent<Rigidbody>().isKinematic = false;
-                            primaryWeapon.GetComponent<Rigidbody>().AddForce(Camera.main.transform.forward);
-                            primaryWeapon.transform.parent = null;
-
-                            primaryWeapon = weapon;
-                            currentWeapon = primaryWeapon;
-                            currentSlot = WeaponSlot.primary;
-                            UpdateAmmoCounter();
-
-                            weapon.GetComponent<Rigidbody>().isKinematic = true;
-                            weapon.transform.parent = hand;
-                            weapon.transform.localPosition = Vector3.zero;
-                            weapon.transform.localRotation = Quaternion.identity;
-                        }
-                    }
-                    else if (weapon.preveredSlot == WeaponSlot.secondary) {
-                        if(secondaryWeapon == null) {
-                            secondaryWeapon = weapon;
-                            if (currentWeapon != null)
-                                currentWeapon.gameObject.SetActive(false);
-
-                            currentWeapon = secondaryWeapon;
-                            currentSlot = WeaponSlot.secondary;
-                            UpdateAmmoCounter();
-
-                            weapon.GetComponent<Rigidbody>().isKinematic = true;
-                            weapon.transform.parent = hand;
-                            weapon.transform.localPosition = Vector3.zero;
-                            weapon.transform.localRotation = Quaternion.identity;
-                        } else {
-                            if (currentWeapon != null)
-                                currentWeapon.gameObject.SetActive(false);
-
-                            secondaryWeapon.gameObject.SetActive(true);
-                            secondaryWeapon.GetComponent<Rigidbody>().isKinematic = false;
-                            secondaryWeapon.GetComponent<Rigidbody>().AddForce(Camera.main.transform.forward);
-                            secondaryWeapon.transform.parent = null;
-
-                            secondaryWeapon = weapon;
-                            currentWeapon = secondaryWeapon;
-                            currentSlot = WeaponSlot.secondary;
-                            UpdateAmmoCounter();
-
-                            weapon.GetComponent<Rigidbody>().isKinematic = true;
-                            weapon.transform.parent = hand;
-                            weapon.transform.localPosition = Vector3.zero;
-                            weapon.transform.localRotation = Quaternion.identity;
-                        }
-                    }
+                if (Input.GetButtonDown(player.controlType.ToString() + " Pickup")) {
+                    item.Interact(GetComponent<Player>());
                 }
             }
         } else {
@@ -148,12 +98,23 @@ public class PlayerWeaponController : MonoBehaviour {
         }
 
         rateOfFire = Mathf.Clamp(rateOfFire - Time.deltaTime, 0, float.MaxValue);
-        recoilFactor = Mathf.Clamp(recoilFactor - Time.deltaTime, 0, float.MaxValue);
+        recoilFactor = Mathf.Clamp(recoilFactor - Time.deltaTime * recoilCooldownMultiplier, 0, float.MaxValue);
 
-        recoilCrosshair.sizeDelta = new Vector2(100 + 100f * recoilFactor, 100 + 100f * recoilFactor);
+        recoilCrosshair.sizeDelta = new Vector2(50 + 100f * recoilFactor, 50 + 100f * recoilFactor);
 
-        if (Input.GetMouseButton(0) && currentWeapon != null) {
-            if(currentWeapon.fireMode == Weapon.FireMode.Semi || currentWeapon.fireMode == Weapon.FireMode.ShotGun) {
+        bool hitfire = false;
+
+        if(player.controlType == Player.Controltype.Mouse) {
+            hitfire = Input.GetButton(player.controlType.ToString() + " Fire");
+        } else {
+            hitfire = Input.GetAxis(player.controlType.ToString() + " Fire") > 0;
+        }
+
+        if (hitfire && currentWeapon != null && !isReloading) {
+            pressFire = hitfire;
+            recoilCooldownMultiplier = 1;
+
+            if (currentWeapon.fireMode == Weapon.FireMode.Semi || currentWeapon.fireMode == Weapon.FireMode.ShotGun) {
                 if (fireMode < 1) {
                     Shoot();
                 }
@@ -166,11 +127,121 @@ public class PlayerWeaponController : MonoBehaviour {
             else if (currentWeapon.fireMode == Weapon.FireMode.Auto) {
                 Shoot();
             }
+            else if (currentWeapon.fireMode == Weapon.FireMode.Flamethrower) {
+                Shoot();
+            }
+
+            if(currentWeapon.ammo <= 0) {
+                if (currentWeapon != null && currentWeapon.muzzle != null && currentWeapon.muzzle.childCount > 0) {
+                    if (currentWeapon.muzzle.GetChild(0).GetComponent<ParticleSystem>()) {
+                        currentWeapon.muzzle.GetChild(0).GetComponent<ParticleSystem>().Stop();
+                    }
+                }
+                fireMode = 0;
+                recoilCooldownMultiplier = 4;
+            }
         }
 
-        if (Input.GetMouseButtonUp(0)) {
+        if (pressFire && hitfire != pressFire) {
+            if(currentWeapon != null && currentWeapon.muzzle != null && currentWeapon.muzzle.childCount > 0) {
+                if (currentWeapon.muzzle.GetChild(0).GetComponent<ParticleSystem>()) {
+                    currentWeapon.muzzle.GetChild(0).GetComponent<ParticleSystem>().Stop();
+                }
+            }
+
             fireMode = 0;
+            recoilCooldownMultiplier = 4;
+
+            pressFire = false;
         }
+
+        if (currentWeapon != null && currentWeapon.muzzleFlash != null && currentWeapon.muzzleFlash.activeSelf) {
+            muzzleFlashShownFrames++;
+            if (muzzleFlashShownFrames > 3) {
+                currentWeapon.muzzle.GetComponent<Light>().enabled = false;
+                currentWeapon.muzzleFlash.SetActive(false);
+                muzzleFlashShownFrames = 0;
+            }
+        }
+    }
+
+    public void PickUpGun(Weapon weapon) {
+        if (weapon.preveredSlot == WeaponSlot.primary) {
+            if (primaryWeapon == null) {
+                primaryWeapon = weapon;
+                if (currentWeapon != null)
+                    currentWeapon.gameObject.SetActive(false);
+
+                currentWeapon = primaryWeapon;
+                currentWeapon.interactable = false;
+                currentSlot = WeaponSlot.primary;
+                UpdateAmmoCounter();
+
+                WeaponFromFloorToHand(weapon);
+
+                ResetReload();
+            } else {
+                if (currentWeapon != null)
+                    currentWeapon.gameObject.SetActive(false);
+
+                primaryWeapon.gameObject.SetActive(true);
+                primaryWeapon.GetComponent<Rigidbody>().isKinematic = false;
+                primaryWeapon.interactable = true;
+                primaryWeapon.GetComponent<Rigidbody>().AddForce(player.GetMovementController.playerCamera.transform.forward);
+                primaryWeapon.transform.parent = null;
+
+                primaryWeapon = weapon;
+                currentWeapon = primaryWeapon;
+                currentWeapon.interactable = false;
+                currentSlot = WeaponSlot.primary;
+                UpdateAmmoCounter();
+
+                WeaponFromFloorToHand(weapon);
+
+                ResetReload();
+            }
+        } else if (weapon.preveredSlot == WeaponSlot.secondary) {
+            if (secondaryWeapon == null) {
+                secondaryWeapon = weapon;
+                if (currentWeapon != null)
+                    currentWeapon.gameObject.SetActive(false);
+
+                currentWeapon = secondaryWeapon;
+                currentSlot = WeaponSlot.secondary;
+                currentWeapon.interactable = false;
+                UpdateAmmoCounter();
+
+                WeaponFromFloorToHand(weapon);
+
+                ResetReload();
+            } else {
+                if (currentWeapon != null)
+                    currentWeapon.gameObject.SetActive(false);
+
+                secondaryWeapon.gameObject.SetActive(true);
+                secondaryWeapon.GetComponent<Rigidbody>().isKinematic = false;
+                secondaryWeapon.interactable = true;
+                secondaryWeapon.GetComponent<Rigidbody>().AddForce(player.GetMovementController.playerCamera.transform.forward);
+                secondaryWeapon.transform.parent = null;
+
+                secondaryWeapon = weapon;
+                currentWeapon = secondaryWeapon;
+                currentWeapon.interactable = false;
+                currentSlot = WeaponSlot.secondary;
+                UpdateAmmoCounter();
+
+                WeaponFromFloorToHand(weapon);
+
+                ResetReload();
+            }
+        }
+    }
+
+    void WeaponFromFloorToHand(Weapon weapon) {
+        weapon.GetComponent<Rigidbody>().isKinematic = true;
+        weapon.transform.parent = hand;
+        weapon.transform.localPosition = Vector3.zero;
+        weapon.transform.localRotation = Quaternion.identity;
     }
 
     void Reload() {
@@ -192,13 +263,19 @@ public class PlayerWeaponController : MonoBehaviour {
         UpdateAmmoCounter();
     }
 
+    void ResetReload() {
+        reloadTimer = 0;
+        isReloading = false;
+        hand.localEulerAngles = Vector3.zero;
+    }
+
     void Recoil() {
-        FirstPersonPlayerController movement = Camera.main.transform.parent.GetComponent<FirstPersonPlayerController>();
+        FirstPersonPlayerController movement = player.GetMovementController.playerCamera.transform.parent.GetComponent<FirstPersonPlayerController>();
 
-        recoilFactor += 0.2f;
+        recoilFactor += 0.2f * currentWeapon.affectedByRecoilFactor;
 
-        movement.pitch -= Random.value * 0.7f * recoilFactor;
-        movement.yaw += Random.value * 0.7f * recoilFactor;
+        movement.pitch -= Random.value * 1f * recoilFactor * currentWeapon.affectedByRecoilFactor;
+        movement.yaw += Random.value * 1f * recoilFactor * currentWeapon.affectedByRecoilFactor;
     }
 
     void Shoot() {
@@ -210,25 +287,38 @@ public class PlayerWeaponController : MonoBehaviour {
 
         fireMode++;
 
-        if (currentWeapon.fireMode != Weapon.FireMode.ShotGun) {
-            Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit)) {
-                Decal(hit);
-                Hurt(hit);
-            }
-        }else {
+        Vector3 recoilOffset = new Vector3((Random.value - 0.5f) * recoilFactor * 0.15f, (Random.value - 0.5f) * recoilFactor * 0.15f, (Random.value - 0.5f) * recoilFactor * 0.15f);  
+
+        if (currentWeapon.fireMode == Weapon.FireMode.ShotGun) {
             for (int i = 0; i < 5; i++) {
-                Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward + new Vector3((Random.value - 0.5f) * 0.25f, (Random.value - 0.5f) * 0.25f, (Random.value - 0.5f) * 0.25f));
+                Ray ray = new Ray(player.GetMovementController.playerCamera.transform.position, player.GetMovementController.playerCamera.transform.forward + new Vector3((Random.value - 0.5f) * 0.25f, (Random.value - 0.5f) * 0.25f, (Random.value - 0.5f) * 0.25f) + recoilOffset);
                 RaycastHit hit;
                 if (Physics.Raycast(ray, out hit)) {
                     Decal(hit);
                     Hurt(hit);
                 }
             }
+            MuzzleFlash();
+            SpawnShell();
         }
-
-        SpawnShell();
+        else if (currentWeapon.fireMode == Weapon.FireMode.Flamethrower) {
+            //Ray ray = new Ray(player.GetMovementController.playerCamera.transform.position, player.GetMovementController.playerCamera.transform.forward + recoilOffset);
+            //RaycastHit hit;
+            //if (Physics.Raycast(ray, out hit)) {
+                //Hurt(hit);
+                currentWeapon.muzzle.GetChild(0).GetComponent<ParticleSystem>().Play();
+            //}
+        }
+        else {
+            Ray ray = new Ray(player.GetMovementController.playerCamera.transform.position, player.GetMovementController.playerCamera.transform.forward + recoilOffset);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit)) {
+                Decal(hit);
+                Hurt(hit);
+            }
+            MuzzleFlash();
+            SpawnShell();
+        }
 
         if (currentWeapon.rateOfFire > 0) {
             rateOfFire += 60.0f / currentWeapon.rateOfFire;
@@ -239,6 +329,20 @@ public class PlayerWeaponController : MonoBehaviour {
         UpdateAmmoCounter();
 
         Recoil();
+    }
+
+    void MuzzleFlash() {
+        if (currentWeapon.muzzleFlash == null) {
+            currentWeapon.muzzleFlash = Instantiate(muzzleFlashes[Random.Range(0, muzzleFlashes.Length)]);
+            currentWeapon.muzzleFlash.transform.position = currentWeapon.muzzle.position;
+            currentWeapon.muzzleFlash.transform.rotation = currentWeapon.muzzle.rotation;
+            currentWeapon.muzzleFlash.transform.SetParent(currentWeapon.muzzle);
+        } else {
+            currentWeapon.muzzleFlash.SetActive(true);
+            currentWeapon.muzzleFlash.transform.localEulerAngles = new Vector3(0, 0, Random.value * 360);
+        }
+        
+        currentWeapon.muzzle.GetComponent<Light>().enabled = true;
     }
 
     void Hurt(RaycastHit hit) {
@@ -255,12 +359,25 @@ public class PlayerWeaponController : MonoBehaviour {
     }
 
     void Decal(RaycastHit hit) {
+        if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Water"))
+            if (hit.collider.GetComponent<Rigidbody>()) {
+                hit.collider.GetComponent<Rigidbody>().AddForce(-hit.normal * 2000);
+                return;
+            }
+
+        if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Interactable"))
+            return;
+
         if (decalList.Count < maxDecals) {
             GameObject go = Instantiate(decal);
             //go.transform.eulerAngles = go.transform.eulerAngles - new Vector3(0, 180, 0);
             go.transform.position = hit.point + hit.normal * 0.01f;
+            print(hit.point);
             go.transform.rotation = Quaternion.LookRotation(hit.normal);
+            go.transform.SetParent(null);
+            go.transform.localScale = Vector3.one;
             go.transform.SetParent(hit.collider.transform);
+            //go.transform.localScale = new Vector3(0.2f / go.transform.lossyScale.x, 0.2f / go.transform.lossyScale.y, 0.2f / go.transform.lossyScale.z);
             decalList.Add(go);
         } else {
             GameObject go;
@@ -272,7 +389,10 @@ public class PlayerWeaponController : MonoBehaviour {
             decalList.RemoveAt(0);
             go.transform.position = hit.point + hit.normal * 0.01f;
             go.transform.rotation = Quaternion.LookRotation(hit.normal);
+            go.transform.SetParent(null);
+            go.transform.localScale = Vector3.one;
             go.transform.SetParent(hit.collider.transform);
+            //go.transform.localScale = new Vector3(0.2f / go.transform.lossyScale.x, 0.2f / go.transform.lossyScale.y, 0.2f / go.transform.lossyScale.z);
             decalList.Add(go);
         }
     }
@@ -291,7 +411,7 @@ public class PlayerWeaponController : MonoBehaviour {
         }
     }
 
-    void UpdateAmmoCounter() {
+    public void UpdateAmmoCounter() {
         ammoText.text = "" + currentWeapon.ammo + "/" + currentWeapon.holdingmaxAmmo + "";
     }
 
@@ -299,7 +419,9 @@ public class PlayerWeaponController : MonoBehaviour {
         if (currentSlot == slot)
             return;
 
-        if(slot == WeaponSlot.primary && primaryWeapon != null) {
+        ResetReload();
+
+        if (slot == WeaponSlot.primary && primaryWeapon != null) {
             currentSlot = slot;
             DrawWeapon(primaryWeapon);
         }
@@ -318,7 +440,6 @@ public class PlayerWeaponController : MonoBehaviour {
 
         currentWeapon = weapon;
         currentWeapon.gameObject.SetActive(true);
-        muzzle = currentWeapon.transform.Find("Muzzle");
 
         //control.MaxAmmo = weapon.maxAmmo;
         //control.Ammo = weapon.maxAmmo;
