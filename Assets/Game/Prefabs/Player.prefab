@@ -70,7 +70,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4244017389160842}
   - component: {fileID: 33349426844813714}
-  - component: {fileID: 136165442999136352}
   - component: {fileID: 23367694664528474}
   m_Layer: 0
   m_Name: LeftArm
@@ -88,7 +87,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4836008094713976}
   - component: {fileID: 33449222042555404}
-  - component: {fileID: 65463975537992066}
   - component: {fileID: 23243736044856774}
   m_Layer: 0
   m_Name: Grip
@@ -122,7 +120,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4444424217319462}
   - component: {fileID: 33561423515845152}
-  - component: {fileID: 136575994397802024}
   - component: {fileID: 23957686127855546}
   m_Layer: 0
   m_Name: RightArm
@@ -174,7 +171,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4693684304533344}
   - component: {fileID: 33653794305985078}
-  - component: {fileID: 65055410131780818}
   - component: {fileID: 23715223205194188}
   m_Layer: 0
   m_Name: Barrel
@@ -247,7 +243,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1304403904487072}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 19.718151, y: 1.029, z: 13.498945}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4011316029427912}
@@ -386,7 +382,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
-  m_StereoMirrorMode: 0
 --- !u!23 &23243736044856774
 MeshRenderer:
   m_ObjectHideFlags: 1
@@ -396,6 +391,7 @@ MeshRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -411,6 +407,7 @@ MeshRenderer:
   m_PreserveUVs: 1
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
   m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
@@ -428,6 +425,7 @@ MeshRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -443,6 +441,7 @@ MeshRenderer:
   m_PreserveUVs: 1
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
   m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
@@ -460,6 +459,7 @@ MeshRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -475,6 +475,7 @@ MeshRenderer:
   m_PreserveUVs: 1
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
   m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
@@ -492,6 +493,7 @@ MeshRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -507,6 +509,7 @@ MeshRenderer:
   m_PreserveUVs: 1
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
   m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
@@ -524,6 +527,7 @@ MeshRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -539,6 +543,7 @@ MeshRenderer:
   m_PreserveUVs: 1
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
   m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
@@ -582,30 +587,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1895209773248714}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!65 &65055410131780818
-BoxCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1895209773248714}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!65 &65463975537992066
-BoxCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1443670185222446}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!81 &81040182395633024
 AudioListener:
   m_ObjectHideFlags: 1
@@ -652,20 +633,6 @@ Light:
   m_Lightmapping: 4
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
-  m_FalloffTable:
-    m_Table[0]: 0
-    m_Table[1]: 0
-    m_Table[2]: 0
-    m_Table[3]: 0
-    m_Table[4]: 0
-    m_Table[5]: 0
-    m_Table[6]: 0
-    m_Table[7]: 0
-    m_Table[8]: 0
-    m_Table[9]: 0
-    m_Table[10]: 0
-    m_Table[11]: 0
-    m_Table[12]: 0
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
@@ -678,7 +645,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1304403904487072}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fb2da43b940ea7b41b655a2ffaa60a94, type: 3}
+  m_Script: {fileID: 11500000, guid: 87b0511e48f36744a808fa822d628f3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   mouseSpeed: 5
@@ -686,11 +653,19 @@ MonoBehaviour:
   speed: 6
   jumpSpeed: 8
   gravity: 20
-  DelayBetweenShots: 0.5
-  HalfRecoilAnimationLength: 0.075
+  DelayBetweenShots: 1
+  HalfRecoilAnimationLength: 0.15
   RecoilEndPitchRotation: -15
-  BulletClass: {fileID: 1608187545132752, guid: c5c4e3b3d74124743b7d961e085659e9,
+  BulletClass: {fileID: 1608187545132752, guid: 940d8d3cef9f5724498f3c648c634f5e,
     type: 2}
+  Ammo: 10
+  MaxAmmo: 20
+  AmmoTextArea: {fileID: 0}
+  AmmoPrefix: 'Ammo: '
+  Health: 10
+  MaxHealth: 10
+  HealthTextArea: {fileID: 0}
+  HealthPrefix: 'Health: '
 --- !u!124 &124428022263532718
 Behaviour:
   m_ObjectHideFlags: 1
@@ -698,32 +673,6 @@ Behaviour:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1699320443678468}
   m_Enabled: 1
---- !u!136 &136165442999136352
-CapsuleCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1422994342146064}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!136 &136575994397802024
-CapsuleCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1599410851097534}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!136 &136576526790525906
 CapsuleCollider:
   m_ObjectHideFlags: 1

@@ -17,13 +17,12 @@ public class AgentGoTo : MonoBehaviour {
 
 	void Start () {
         agent = GetComponent<NavMeshAgent>();
-        
         target = GameObject.FindGameObjectWithTag("Player").transform;
         PlayerScript = target.GetComponent<FirstPersonPlayerController>();
 	}
 	
 	void FixedUpdate () {
-
+        //if(!agent.hasPath)
         if (!CanFollowPlayer) {
             RaycastHit OutHit;
             if (Physics.Linecast(transform.position, target.transform.position, out OutHit)) {

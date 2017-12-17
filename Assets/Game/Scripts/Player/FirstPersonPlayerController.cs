@@ -50,8 +50,8 @@ public class FirstPersonPlayerController : MonoBehaviour {
         BulletSpawnPoint = GameObject.FindGameObjectWithTag("PlayerBulletSpawnPoint").transform;
         //Cursor.lockState = CursorLockMode.Locked;
     }
-
-    void Update () {
+	
+	void Update () {
         //looking around
 
         //print(Input.GetKeyDown("joystick button 0"));
@@ -62,22 +62,6 @@ public class FirstPersonPlayerController : MonoBehaviour {
 
         transform.GetChild(0).localEulerAngles = new Vector3(pitch, 0, 0);
         transform.localEulerAngles = new Vector3(0, yaw, 0);
-
-        if (Input.GetKeyDown(KeyCode.E)) {
-            Ray ray = new Ray(Camera.transform.position, Camera.transform.forward);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit)) {
-                if(hit.distance < 10) {
-                    if (hit.collider.CompareTag("Door")) {
-                        if (hit.collider.GetComponent<Door>()) {
-                            hit.collider.GetComponent<Door>().ChangeState();
-                        } else {
-                            hit.transform.parent.GetComponent<Door>().ChangeState();
-                        }
-                    }
-                }
-            }
-        }
 
         //walking around
         if (controller.isGrounded) {
@@ -139,12 +123,6 @@ public class FirstPersonPlayerController : MonoBehaviour {
     private void SpawnBullet(Vector3 BulletTargetPoint) {
         GameObject Bullet = Instantiate(BulletClass);
         Bullet.transform.position = BulletSpawnPoint.position;
-        Bullet.transform.rotation = BulletSpawnPoint.rotation;
-        /*
-        Transform BulletTargetTransform = new GameObject().transform; // creates an empty game object just to have a new empty transform, that is given a value on the next line
-        BulletTargetTransform.position = BulletTargetPoint;
-        Bullet.transform.LookAt(BulletTargetTransform);
-        */
         //Bullet.transform.rotation = BulletSpawnPoint.rotation;
         
         Transform BulletTargetTransform = new GameObject().transform; // creates an empty game object just to have a new empty transform, that is given a value on the next line
@@ -156,5 +134,14 @@ public class FirstPersonPlayerController : MonoBehaviour {
     public void BeAttacked() {
         Health--;
         if (Health <= 0) Destroy(gameObject);
+    }
+    
+    public void OnTriggerEnter(Collider col) {
+        Collider thiscol = GetComponent<Collider>();
+        Debug.Log("foreign: " + col.name + " this: " + thiscol.name);
+        if (col.gameObject.tag == "Spit") {
+            Destroy(col.gameObject);
+            BeAttacked();
+        }
     }
 }
