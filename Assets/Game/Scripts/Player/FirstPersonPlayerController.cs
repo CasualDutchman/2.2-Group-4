@@ -25,6 +25,10 @@ public class FirstPersonPlayerController : MonoBehaviour {
         player = GetComponent<Player>();
         playerCamera = transform.GetChild(0).GetComponent<Camera>();
         Cursor.lockState = CursorLockMode.Locked;
+
+        foreach (string s in Input.GetJoystickNames()) {
+            print(s);
+        }
     }
 
     void Update () {

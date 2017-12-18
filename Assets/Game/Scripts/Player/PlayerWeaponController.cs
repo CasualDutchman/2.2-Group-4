@@ -60,7 +60,7 @@ public class PlayerWeaponController : MonoBehaviour {
             SwapWeapon(WeaponSlot.secondary);
         }
 
-        if (Input.GetButton(player.controlType.ToString() + " Reload")) {
+        if (Input.GetButton(player.controlType.ToString() + " Reload") && currentWeapon != null) {
             isReloading = true;
         }
 
