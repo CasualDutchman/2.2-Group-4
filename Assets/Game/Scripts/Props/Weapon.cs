@@ -10,6 +10,11 @@ public class Weapon : Item {
 
     public PlayerWeaponController.WeaponSlot preveredSlot;
 
+    [HideInInspector]
+    public AudioSource audioSource;
+
+    public AudioClip shoot, begin, end;
+
     public FireMode fireMode;
     public float rateOfFire = 1;
     public float affectedByRecoilFactor = 1;
@@ -20,11 +25,14 @@ public class Weapon : Item {
 
     public GameObject bulletShell;
 
+    [HideInInspector]
     public Transform muzzle;
+
     public GameObject muzzleFlash;
 
     void OnEnable() {
         muzzle = transform.Find("Muzzle");
+        audioSource = GetComponent<AudioSource>();
     }
 
     public override string Message() {

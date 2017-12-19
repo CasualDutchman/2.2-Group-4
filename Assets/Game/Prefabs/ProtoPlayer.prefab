@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 20692745336623594}
   - component: {fileID: 124544118102627030}
   - component: {fileID: 81683349193350918}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Main Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -38,7 +38,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4576489471112134}
   - component: {fileID: 108312281625573868}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Spotlight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -53,7 +53,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4144630341033040}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Hand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -70,7 +70,7 @@ GameObject:
   - component: {fileID: 4688787771301492}
   - component: {fileID: 33745731272720582}
   - component: {fileID: 23947804726394612}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Capsule
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -87,7 +87,7 @@ GameObject:
   - component: {fileID: 4112960092031222}
   - component: {fileID: 33621741609335032}
   - component: {fileID: 23307184600081688}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -107,7 +107,7 @@ GameObject:
   - component: {fileID: 136441501051149484}
   - component: {fileID: 114430075207477888}
   - component: {fileID: 114920525662353886}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: ProtoPlayer
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -380,6 +380,7 @@ MonoBehaviour:
   - {fileID: 1837011512970230, guid: c9719de19ea89d34095c9cb847eb7a51, type: 2}
   - {fileID: 1824710768545964, guid: 90b6f9f9f21b36f43b392fcd1c5bf390, type: 2}
   hand: {fileID: 4144630341033040}
+  originHand: {x: 0, y: 0, z: 0}
   currentWeapon: {fileID: 0}
   currentSlot: 0
   primaryWeapon: {fileID: 0}
@@ -400,12 +401,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerCamera: {fileID: 0}
   mouseSpeed: 5
+  aimMultiplier: 1
   yaw: 0
   pitch: 0
   invertY: 1
   speed: 6
   jumpSpeed: 8
   gravity: 20
+  crouched: 0
 --- !u!114 &114920525662353886
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -437,7 +440,7 @@ CapsuleCollider:
   m_GameObject: {fileID: 1594797296617446}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   m_Radius: 0.5
   m_Height: 2
   m_Direction: 1

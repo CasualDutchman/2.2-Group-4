@@ -25,6 +25,7 @@ ModelImporter:
     100038: Floor_Ceil
     100040: Stairs
     100042: Walls
+    100044: Doorframe
     400000: Cube
     400002: Cube.001
     400004: Cube.002
@@ -47,6 +48,7 @@ ModelImporter:
     400038: Floor_Ceil
     400040: Stairs
     400042: Walls
+    400044: Doorframe
     2300000: Cube
     2300002: Cube.001
     2300004: Cube.002
@@ -68,6 +70,7 @@ ModelImporter:
     2300036: Floor_Ceil
     2300038: Stairs
     2300040: Walls
+    2300042: Doorframe
     3300000: Cube
     3300002: Cube.001
     3300004: Cube.002
@@ -89,6 +92,7 @@ ModelImporter:
     3300036: Floor_Ceil
     3300038: Stairs
     3300040: Walls
+    3300042: Doorframe
     4300000: Plane.006
     4300002: Plane.005
     4300004: Plane.004
@@ -110,6 +114,7 @@ ModelImporter:
     4300036: Floor_Ceil
     4300038: Walls
     4300040: Entrances
+    4300042: Doorframe
     9500000: //RootNode
   externalObjects:
   - first:

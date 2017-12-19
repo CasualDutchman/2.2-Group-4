@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4717761791778756}
   - component: {fileID: 33367125911198738}
   - component: {fileID: 23704041600083636}
+  - component: {fileID: 205805535268370402}
   m_Layer: 4
   m_Name: Mesh1_Group1_Model
   m_TagString: Untagged
@@ -65,7 +66,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1090355652680246}
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0, y: 0.1008, z: 0}
+  m_LocalPosition: {x: -1.57, y: 0.1008, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4717761791778756}
@@ -143,3 +144,20 @@ CapsuleCollider:
   m_Height: 0.2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!205 &205805535268370402
+LODGroup:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1067225528841642}
+  serializedVersion: 2
+  m_LocalReferencePoint: {x: 0, y: 0.046200022, z: 0}
+  m_Size: 0.18
+  m_FadeMode: 0
+  m_AnimateCrossFading: 0
+  m_LODs:
+  - screenRelativeHeight: 0.019638764
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 23704041600083636}
+  m_Enabled: 1

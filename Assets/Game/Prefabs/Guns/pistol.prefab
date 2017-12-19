@@ -327,7 +327,7 @@ MonoBehaviour:
   weaponName: Pistol
   preveredSlot: 1
   fireMode: 0
-  rateOfFire: 0
+  rateOfFire: 300
   affectedByRecoilFactor: 3
   maxAmmoMagazine: 8
   ammo: 8

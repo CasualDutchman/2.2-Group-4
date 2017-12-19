@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class RandomOnOff : MonoBehaviour {
 
-    Light light;
+    Light lightObj;
 
     float randomTime;
 
     float timer;
 
 	void Start () {
-        light = GetComponent<Light>();
-        light.enabled = Random.Range(0, 3) == 0;
+        lightObj = GetComponent<Light>();
+        lightObj.enabled = Random.Range(0, 3) == 0;
 
         randomTime = Random.value / 3f;
 	}
@@ -21,11 +21,11 @@ public class RandomOnOff : MonoBehaviour {
         timer += Time.deltaTime;
 
         if (timer >= randomTime) {
-            light.enabled = !light.enabled;
+            lightObj.enabled = !lightObj.enabled;
 
-            light.intensity = Random.value / 2f;
+            lightObj.intensity = Random.value / 2f;
 
-            randomTime = !light.enabled ? Random.value * 3f : Random.value / 2f;
+            randomTime = !lightObj.enabled ? Random.value * 3f : Random.value / 2f;
             timer = 0;
         }
 	}

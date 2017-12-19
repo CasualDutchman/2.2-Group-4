@@ -8,6 +8,8 @@ public class MainMenu : MonoBehaviour {
 
     public EventSystem eventSystem;
 
+    public GameObject optionsObjects, mainMenuOptions;
+
     GameObject lastHoverOver;
 
 	void Start () {
@@ -45,7 +47,17 @@ public class MainMenu : MonoBehaviour {
     }
 
     public void OnOptions() {
+        if (!optionsObjects.activeSelf) {
+            optionsObjects.SetActive(true);
+            mainMenuOptions.SetActive(false);
+        }
+    }
 
+    public void OnMainMenu() {
+        if (!mainMenuOptions.activeSelf) {
+            mainMenuOptions.SetActive(true);
+            optionsObjects.SetActive(false);
+        }
     }
 
     public void OnQuit() {

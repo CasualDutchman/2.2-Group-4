@@ -329,7 +329,7 @@ MonoBehaviour:
   weaponName: Shotgun
   preveredSlot: 0
   fireMode: 3
-  rateOfFire: 0
+  rateOfFire: 100
   affectedByRecoilFactor: 5
   maxAmmoMagazine: 8
   ammo: 8

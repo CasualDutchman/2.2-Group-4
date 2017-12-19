@@ -24,17 +24,25 @@ public class AgentGoTo : MonoBehaviour {
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         //PlayerScript = target.GetComponent<FirstPersonPlayerController>();
     }
-	
-	void FixedUpdate () {
 
-        if (!CanFollowPlayer) {
+    void OnParticleCollision(GameObject other) {
+        health -= 2;
+
+        if (health <= 0) {
+            Destroy(gameObject);
+        }
+    }
+
+    void FixedUpdate () {
+
+        if (!CanFollowPlayer && target != null) {
             RaycastHit OutHit;
             if (Physics.Linecast(transform.position, target.transform.position, out OutHit)) {
                 if (OutHit.collider.gameObject.tag == "Player") {
                     CanFollowPlayer = true;
                 }
             }
-        } else {
+        } else if(target != null){
             agent.SetDestination(target.position);
             if ((transform.position - target.transform.position).magnitude < 1.5f) {
                 Attack();

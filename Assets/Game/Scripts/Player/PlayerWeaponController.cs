@@ -20,6 +20,8 @@ public class PlayerWeaponController : MonoBehaviour {
     public GameObject[] muzzleFlashes;
 
     public Transform hand;
+    public Vector3 originHand;
+    bool aimDownSights = false;
 
     public enum WeaponSlot { primary, secondary }
 
@@ -47,9 +49,13 @@ public class PlayerWeaponController : MonoBehaviour {
 
     bool pressFire = false;
 
+    bool beginsound = false;
+    bool endsound = false;
+
 	void Start () {
         player = GetComponent<Player>();
-	}
+        originHand = hand.localPosition;
+    }
 	
 	void Update () {
         if (Input.GetKeyDown(KeyCode.Alpha1)) {
@@ -79,7 +85,7 @@ public class PlayerWeaponController : MonoBehaviour {
         Ray ray = new Ray(player.GetMovementController.playerCamera.transform.position, player.GetMovementController.playerCamera.transform.forward);
         RaycastHit hit;
 
-        if (Physics.Raycast(ray, out hit, 3, LayerMask.GetMask("Interactable"))) {
+        if (Physics.Raycast(ray, out hit, 3, LayerMask.GetMask("Interactable", "InteractableCol"))) {
             Item item = hit.collider.GetComponent<Item>();
 
             if (item.interactable) {
@@ -110,7 +116,20 @@ public class PlayerWeaponController : MonoBehaviour {
             hitfire = Input.GetAxis(player.controlType.ToString() + " Fire") > 0;
         }
 
-        if (hitfire && currentWeapon != null && !isReloading) {
+        if (Input.GetMouseButtonDown(1)) {
+            hand.localPosition -= new Vector3(originHand.x, 0, 0);
+            aimDownSights = true;
+            player.GetMovementController.playerCamera.fieldOfView = 50;
+            player.GetMovementController.aimMultiplier = 0.5f;
+        }
+        if (Input.GetMouseButtonUp(1)) {
+            hand.localPosition = originHand;
+            aimDownSights = false;
+            player.GetMovementController.playerCamera.fieldOfView = 60;
+            player.GetMovementController.aimMultiplier = 1f;
+        }
+
+        if (hitfire && currentWeapon != null && !isReloading && CanShoot()) {
             pressFire = hitfire;
             recoilCooldownMultiplier = 1;
 
@@ -136,6 +155,14 @@ public class PlayerWeaponController : MonoBehaviour {
                     if (currentWeapon.muzzle.GetChild(0).GetComponent<ParticleSystem>()) {
                         currentWeapon.muzzle.GetChild(0).GetComponent<ParticleSystem>().Stop();
                     }
+
+                    if (currentWeapon.end != null) {
+                        currentWeapon.audioSource.Stop();
+                        currentWeapon.audioSource.clip = currentWeapon.end;
+                        currentWeapon.audioSource.Play();
+                        beginsound = false;
+                        endsound = true;
+                    }
                 }
                 fireMode = 0;
                 recoilCooldownMultiplier = 4;
@@ -145,9 +172,18 @@ public class PlayerWeaponController : MonoBehaviour {
         if (pressFire && hitfire != pressFire) {
             if(currentWeapon != null && currentWeapon.muzzle != null && currentWeapon.muzzle.childCount > 0) {
                 if (currentWeapon.muzzle.GetChild(0).GetComponent<ParticleSystem>()) {
-                    currentWeapon.muzzle.GetChild(0).GetComponent<ParticleSystem>().Stop();
+                    currentWeapon.muzzle.GetChild(0).GetComponent<ParticleSystem>().Stop(); 
+                }
+                if (currentWeapon.end != null && !endsound) {
+                    currentWeapon.audioSource.Stop();
+                    currentWeapon.audioSource.clip = currentWeapon.end;
+                    currentWeapon.audioSource.Play();
+                    
                 }
             }
+
+            beginsound = false;
+            endsound = false;
 
             fireMode = 0;
             recoilCooldownMultiplier = 4;
@@ -163,6 +199,10 @@ public class PlayerWeaponController : MonoBehaviour {
                 muzzleFlashShownFrames = 0;
             }
         }
+    }
+
+    bool CanShoot() {
+        return currentWeapon.ammo > 0;
     }
 
     public void PickUpGun(Weapon weapon) {
@@ -189,6 +229,7 @@ public class PlayerWeaponController : MonoBehaviour {
                 primaryWeapon.interactable = true;
                 primaryWeapon.GetComponent<Rigidbody>().AddForce(player.GetMovementController.playerCamera.transform.forward);
                 primaryWeapon.transform.parent = null;
+                primaryWeapon.gameObject.layer = LayerMask.NameToLayer("Interactable");
 
                 primaryWeapon = weapon;
                 currentWeapon = primaryWeapon;
@@ -223,6 +264,7 @@ public class PlayerWeaponController : MonoBehaviour {
                 secondaryWeapon.interactable = true;
                 secondaryWeapon.GetComponent<Rigidbody>().AddForce(player.GetMovementController.playerCamera.transform.forward);
                 secondaryWeapon.transform.parent = null;
+                secondaryWeapon.gameObject.layer = LayerMask.NameToLayer("Interactable");
 
                 secondaryWeapon = weapon;
                 currentWeapon = secondaryWeapon;
@@ -242,6 +284,7 @@ public class PlayerWeaponController : MonoBehaviour {
         weapon.transform.parent = hand;
         weapon.transform.localPosition = Vector3.zero;
         weapon.transform.localRotation = Quaternion.identity;
+        weapon.gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
     }
 
     void Reload() {
@@ -272,17 +315,23 @@ public class PlayerWeaponController : MonoBehaviour {
     void Recoil() {
         FirstPersonPlayerController movement = player.GetMovementController.playerCamera.transform.parent.GetComponent<FirstPersonPlayerController>();
 
-        recoilFactor += 0.2f * currentWeapon.affectedByRecoilFactor;
+        float f = aimDownSights ? currentWeapon.affectedByRecoilFactor * 0.5f : currentWeapon.affectedByRecoilFactor;
+        float f2 = aimDownSights ? currentWeapon.affectedByRecoilFactor * 0.8f : currentWeapon.affectedByRecoilFactor;
 
-        movement.pitch -= Random.value * 1f * recoilFactor * currentWeapon.affectedByRecoilFactor;
-        movement.yaw += Random.value * 1f * recoilFactor * currentWeapon.affectedByRecoilFactor;
+        f *= movement.crouched ? 0.6f : 1;
+        f2 *= movement.crouched ? 0.7f : 1;
+
+        recoilFactor += 0.2f * f;
+
+        movement.pitch -= Random.value * 1f * recoilFactor * f2;
+        movement.yaw += Random.value * 1f * recoilFactor * f2;
     }
 
     void Shoot() {
         if (rateOfFire > 0)
             return;
 
-        if (currentWeapon.ammo <= 0)
+        if (!CanShoot())
             return;
 
         fireMode++;
@@ -294,30 +343,31 @@ public class PlayerWeaponController : MonoBehaviour {
                 Ray ray = new Ray(player.GetMovementController.playerCamera.transform.position, player.GetMovementController.playerCamera.transform.forward + new Vector3((Random.value - 0.5f) * 0.25f, (Random.value - 0.5f) * 0.25f, (Random.value - 0.5f) * 0.25f) + recoilOffset);
                 RaycastHit hit;
                 if (Physics.Raycast(ray, out hit)) {
-                    Decal(hit);
-                    Hurt(hit);
+                    Hit(hit, true, true);
                 }
             }
             MuzzleFlash();
             SpawnShell();
+            Sound();
         }
         else if (currentWeapon.fireMode == Weapon.FireMode.Flamethrower) {
-            //Ray ray = new Ray(player.GetMovementController.playerCamera.transform.position, player.GetMovementController.playerCamera.transform.forward + recoilOffset);
-            //RaycastHit hit;
-            //if (Physics.Raycast(ray, out hit)) {
-                //Hurt(hit);
-                currentWeapon.muzzle.GetChild(0).GetComponent<ParticleSystem>().Play();
-            //}
+            Ray ray = new Ray(player.GetMovementController.playerCamera.transform.position, player.GetMovementController.playerCamera.transform.forward + recoilOffset);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit, 5)) {
+                Hit(hit, false, false);
+            }
+            currentWeapon.muzzle.GetChild(0).GetComponent<ParticleSystem>().Play();
+            Sound();
         }
         else {
             Ray ray = new Ray(player.GetMovementController.playerCamera.transform.position, player.GetMovementController.playerCamera.transform.forward + recoilOffset);
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit)) {
-                Decal(hit);
-                Hurt(hit);
+                Hit(hit, true, true);
             }
             MuzzleFlash();
             SpawnShell();
+            Sound();
         }
 
         if (currentWeapon.rateOfFire > 0) {
@@ -329,6 +379,44 @@ public class PlayerWeaponController : MonoBehaviour {
         UpdateAmmoCounter();
 
         Recoil();
+    }
+
+    void Sound() {
+        if (currentWeapon.begin == null && currentWeapon.end == null) {
+            currentWeapon.audioSource.clip = currentWeapon.shoot;
+            currentWeapon.audioSource.Play();
+        }
+
+        if (currentWeapon.audioSource.isPlaying || !CanShoot())
+            return;
+
+        if (currentWeapon.end != null && beginsound) {
+            currentWeapon.audioSource.clip = currentWeapon.shoot;
+            currentWeapon.audioSource.Play();
+        }
+
+        if (currentWeapon.begin != null && !beginsound) {
+            currentWeapon.audioSource.Stop();
+            currentWeapon.audioSource.clip = currentWeapon.begin;
+            currentWeapon.audioSource.Play();
+            beginsound = true;
+        }
+    }
+
+    void Hit(RaycastHit hit, bool decal, bool hurt) {
+        if (hit.collider.GetComponent<Barrel>()) {
+            hit.collider.GetComponent<Barrel>().health--;
+            if (hit.collider.GetComponent<Barrel>().health <= 0) {
+                hit.collider.GetComponent<Barrel>().Explode();
+                return;
+            }
+        }
+
+        if(decal)
+            Decal(hit);
+
+        if(hurt)
+            Hurt(hit);
     }
 
     void MuzzleFlash() {
@@ -372,7 +460,6 @@ public class PlayerWeaponController : MonoBehaviour {
             GameObject go = Instantiate(decal);
             //go.transform.eulerAngles = go.transform.eulerAngles - new Vector3(0, 180, 0);
             go.transform.position = hit.point + hit.normal * 0.01f;
-            print(hit.point);
             go.transform.rotation = Quaternion.LookRotation(hit.normal);
             go.transform.SetParent(null);
             go.transform.localScale = Vector3.one;
@@ -402,6 +489,8 @@ public class PlayerWeaponController : MonoBehaviour {
         go.transform.position = currentWeapon.transform.Find("Escape").position;
         go.transform.eulerAngles = currentWeapon.transform.eulerAngles + new Vector3(90, 0, 0);
         go.GetComponent<Rigidbody>().AddForce(currentWeapon.transform.Find("Escape").forward * 250);
+
+        //go.layer = LayerMask.NameToLayer("Ignore Raycast");
 
         bulletList.Add(go);
 

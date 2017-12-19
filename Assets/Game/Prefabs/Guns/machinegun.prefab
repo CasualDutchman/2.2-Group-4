@@ -330,7 +330,7 @@ MonoBehaviour:
   preveredSlot: 0
   fireMode: 2
   rateOfFire: 700
-  affectedByRecoilFactor: 1
+  affectedByRecoilFactor: 2
   maxAmmoMagazine: 31
   ammo: 31
   holdingmaxAmmo: 155
