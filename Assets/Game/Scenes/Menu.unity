@@ -38,8 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.00029885938, g: 0.00040920777, b: 0.00065315433,
-    a: 1}
+  m_IndirectSpecularColor: {r: 0.0002988568, g: 0.0004092044, b: 0.0006531498, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -281,8 +280,8 @@ Light:
   serializedVersion: 8
   m_Type: 2
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 0.25
-  m_Range: 10
+  m_Intensity: 0.35
+  m_Range: 15
   m_SpotAngle: 30
   m_CookieSize: 10
   m_Shadows:
@@ -977,6 +976,36 @@ Prefab:
         type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: ViewKeyBinding
+      objectReference: {fileID: 0}
+    - target: {fileID: 114476523471002488, guid: 13482b0cc449d4544b580e620ebc0862,
+        type: 2}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1574312001}
+    - target: {fileID: 114476523471002488, guid: 13482b0cc449d4544b580e620ebc0862,
+        type: 2}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SetResolution
+      objectReference: {fileID: 0}
+    - target: {fileID: 114181680326274230, guid: 13482b0cc449d4544b580e620ebc0862,
+        type: 2}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1574312001}
+    - target: {fileID: 114181680326274230, guid: 13482b0cc449d4544b580e620ebc0862,
+        type: 2}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SetQuality
+      objectReference: {fileID: 0}
+    - target: {fileID: 114576668098134172, guid: 13482b0cc449d4544b580e620ebc0862,
+        type: 2}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1574312001}
+    - target: {fileID: 114576668098134172, guid: 13482b0cc449d4544b580e620ebc0862,
+        type: 2}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SetFullscreen
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 13482b0cc449d4544b580e620ebc0862, type: 2}

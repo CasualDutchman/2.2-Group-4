@@ -6,23 +6,43 @@ using UnityEngine.AI;
 public class AgentGoTo : MonoBehaviour {
 
     public Transform target;
-    Player player;
+
+    public Transform eyes;
 
     private bool CanFollowPlayer = false;
 
-    public float DelayBetweenAttacks = 1.0f;
-    private float TimeSinceLastAttack = 1.1f;
+    public float DelayBetweenAttacks = 5.0f;
+    private float TimeSinceLastAttack = 0;
 
     NavMeshAgent agent;
 
     public float health = 100f;
 
+    bool attack;
+
 	void Start () {
         agent = GetComponent<NavMeshAgent>();
-        
-        target = GameObject.FindGameObjectWithTag("Player").transform;
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
-        //PlayerScript = target.GetComponent<FirstPersonPlayerController>();
+
+        FindTarget();
+    }
+
+    void FindTarget() {
+        GameObject[] list = GameObject.FindGameObjectsWithTag("Player");
+
+        if (list.Length <= 0)
+            return;
+
+        float[] distances = new float[list.Length];
+        int closestIndex = 0;
+        for (int i = 0; i < list.Length; i++) {
+            distances[i] = Vector3.Distance(transform.position, list[i].transform.position);
+
+            if (i > 0 && distances[i] < distances[i - 1]) {
+                closestIndex = i;
+            }
+        }
+
+        target = list[closestIndex].transform.GetChild(0);
     }
 
     void OnParticleCollision(GameObject other) {
@@ -34,29 +54,36 @@ public class AgentGoTo : MonoBehaviour {
     }
 
     void FixedUpdate () {
+        FindTarget();
 
         if (!CanFollowPlayer && target != null) {
             RaycastHit OutHit;
-            if (Physics.Linecast(transform.position, target.transform.position, out OutHit)) {
-                if (OutHit.collider.gameObject.tag == "Player") {
-                    CanFollowPlayer = true;
-                }
+            if (!Physics.Linecast(eyes.position, target.position, out OutHit)) {
+                CanFollowPlayer = true;
             }
         } else if(target != null){
-            agent.SetDestination(target.position);
-            if ((transform.position - target.transform.position).magnitude < 1.5f) {
+            if (!attack) {
+                agent.SetDestination(target.position);
+            }
+
+            if ((transform.position - target.transform.position).magnitude < 2f && !attack) {
                 Attack();
             }
         }
 
-        TimeSinceLastAttack += Time.deltaTime;
-        if (TimeSinceLastAttack >= 10.0f) TimeSinceLastAttack = DelayBetweenAttacks + 1;
+        TimeSinceLastAttack = Mathf.Clamp(TimeSinceLastAttack - Time.deltaTime, 0, float.MaxValue);
+        if (TimeSinceLastAttack <= 0) {
+            attack = false;
+        }
     }
 
     private void Attack() {
-        if (TimeSinceLastAttack >= DelayBetweenAttacks) {
-            TimeSinceLastAttack = 0.0f;
-            player.Hurt();
-        }
+        TimeSinceLastAttack = DelayBetweenAttacks;
+        agent.ResetPath();
+        target.parent.GetComponent<Player>().Hurt();
+
+        attack = true;
+
+        print("Attack");
     }
 }

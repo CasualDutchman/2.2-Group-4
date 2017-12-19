@@ -70,6 +70,7 @@ GameObject:
   - component: {fileID: 54885251585444360}
   - component: {fileID: 64314167316602960}
   - component: {fileID: 114858180526790722}
+  - component: {fileID: 82869344028102116}
   m_Layer: 8
   m_Name: flamethrower
   m_TagString: Gun
@@ -199,8 +200,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1631832042557920}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 2.04, y: 1.43, z: -2.353}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4405274646191084}
@@ -341,6 +342,87 @@ MeshCollider:
   m_InflateMesh: 0
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300002, guid: f36093a55fdc4c541b66b01a4e0b3e6b, type: 3}
+--- !u!82 &82869344028102116
+AudioSource:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1631832042557920}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 243614846696509058, guid: 8f9dbbb9a881caa45a94f1249983c461,
+    type: 2}
+  m_audioClip: {fileID: 8300000, guid: e81c99442055cde42a3ee17587b91649, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
 --- !u!108 &108109833540987182
 Light:
   m_ObjectHideFlags: 1
@@ -427,6 +509,10 @@ MonoBehaviour:
   interactable: 1
   weaponName: Flamethrower
   preveredSlot: 0
+  audioSource: {fileID: 0}
+  shoot: {fileID: 8300000, guid: e81c99442055cde42a3ee17587b91649, type: 3}
+  begin: {fileID: 8300000, guid: df2772c7ec8f39145906fcb39fb4dadd, type: 3}
+  end: {fileID: 8300000, guid: a6e5e0c19ae185d4aa9936073a10f7dd, type: 3}
   fireMode: 4
   rateOfFire: 800
   affectedByRecoilFactor: 0.1
@@ -497,33 +583,39 @@ ParticleSystem:
   moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: -1173299787
+  randomSeed: -1496195452
   InitialModule:
     serializedVersion: 3
     enabled: 1
     startLifetime:
       serializedVersion: 2
-      minMaxState: 3
-      scalar: 2
+      minMaxState: 1
+      scalar: 10
       minScalar: 1
       maxCurve:
         serializedVersion: 2
         m_Curve:
         - serializedVersion: 2
-          time: 0
-          value: 1
+          time: 0.012619019
+          value: 0.2028656
           inSlope: 0
           outSlope: 0
           tangentMode: 0
         - serializedVersion: 2
+          time: 0.92895895
+          value: 0.389984
+          inSlope: 0.4862906
+          outSlope: 0.4862906
+          tangentMode: 0
+        - serializedVersion: 2
           time: 1
           value: 1
-          inSlope: 0
-          outSlope: 0
+          inSlope: 2
+          outSlope: 2
           tangentMode: 0
         m_PreInfinity: 2
         m_PostInfinity: 2
-        m_RotationOrder: 4
+        m_RotationOrder: 0
       minCurve:
         serializedVersion: 2
         m_Curve:
@@ -2820,9 +2912,9 @@ ParticleSystem:
     plane5: {fileID: 0}
     m_Dampen:
       serializedVersion: 2
-      minMaxState: 0
-      scalar: 0.5
-      minScalar: 0
+      minMaxState: 3
+      scalar: 1
+      minScalar: 0.5
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -2861,9 +2953,9 @@ ParticleSystem:
         m_RotationOrder: 4
     m_Bounce:
       serializedVersion: 2
-      minMaxState: 0
+      minMaxState: 3
       scalar: 0.5
-      minScalar: 1
+      minScalar: 0
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -2950,7 +3042,7 @@ ParticleSystem:
     maxCollisionShapes: 256
     quality: 0
     voxelSize: 0.5
-    collisionMessages: 0
+    collisionMessages: 1
     collidesWithDynamic: 1
     interiorCollisions: 0
   TriggerModule:
@@ -2961,11 +3053,11 @@ ParticleSystem:
     collisionShape3: {fileID: 0}
     collisionShape4: {fileID: 0}
     collisionShape5: {fileID: 0}
-    inside: 1
+    inside: 0
     outside: 0
-    enter: 0
+    enter: 2
     exit: 0
-    radiusScale: 1
+    radiusScale: 1.1
   SubModule:
     serializedVersion: 2
     enabled: 0
@@ -3071,8 +3163,8 @@ ParticleSystem:
     lifetime:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 0.6
-      minScalar: 0.8
+      scalar: 0.3
+      minScalar: 0.2
       maxCurve:
         serializedVersion: 2
         m_Curve:
