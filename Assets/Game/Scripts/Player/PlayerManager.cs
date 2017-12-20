@@ -26,7 +26,8 @@ public class PlayerManager : MonoBehaviour {
     }
 
     public void Play() {
-        type = PlayerPrefs.GetInt("PlayerCount") == 2 ? Player.playertype.PlayerTwo : Player.playertype.PlayerOne;
+        if (!onAwake)
+            type = PlayerPrefs.GetInt("PlayerCount") == 2 ? Player.playertype.PlayerTwo : Player.playertype.PlayerOne;
 
         if (type == Player.playertype.PlayerTwo && playerOneControls == playerTwoControls) {
             Debug.LogError("Players controls are the same");
