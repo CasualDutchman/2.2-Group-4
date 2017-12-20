@@ -379,6 +379,8 @@ MonoBehaviour:
   - {fileID: 1661078632905530, guid: 5b6fd07ca81f700498b57a0dbe9ff37b, type: 2}
   - {fileID: 1837011512970230, guid: c9719de19ea89d34095c9cb847eb7a51, type: 2}
   - {fileID: 1824710768545964, guid: 90b6f9f9f21b36f43b392fcd1c5bf390, type: 2}
+  soundObj: {fileID: 1779455863775866, guid: 364e2c545d17ef64689b29d9b9e2ebf5, type: 2}
+  effectsMixerGroup: {fileID: 0}
   hand: {fileID: 4144630341033040}
   originHand: {x: 0, y: 0, z: 0}
   currentWeapon: {fileID: 0}

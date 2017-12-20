@@ -19,6 +19,9 @@ public class PlayerWeaponController : MonoBehaviour {
 
     public GameObject[] muzzleFlashes;
 
+    public GameObject soundObj;
+    public UnityEngine.Audio.AudioMixerGroup effectsMixerGroup;
+
     public Transform hand;
     public Vector3 originHand;
     bool aimDownSights = false;
@@ -116,7 +119,7 @@ public class PlayerWeaponController : MonoBehaviour {
             hitfire = Input.GetAxis(player.controlType.ToString() + " Fire") > 0;
         }
 
-        if (Input.GetMouseButtonDown(1)) {
+        if (Input.GetMouseButtonDown(1) && !isReloading) {
             hand.localPosition -= new Vector3(originHand.x, 0, 0);
             aimDownSights = true;
             player.GetMovementController.playerCamera.fieldOfView = 50;
@@ -383,8 +386,13 @@ public class PlayerWeaponController : MonoBehaviour {
 
     void Sound() {
         if (currentWeapon.begin == null && currentWeapon.end == null) {
-            currentWeapon.audioSource.clip = currentWeapon.shoot;
-            currentWeapon.audioSource.Play();
+            GameObject shotSoundobj = Instantiate(soundObj, currentWeapon.muzzle.position, Quaternion.identity);
+            AudioSource source = shotSoundobj.GetComponent<AudioSource>();
+
+            source.outputAudioMixerGroup = effectsMixerGroup;
+            source.clip = currentWeapon.shoot;
+            source.Play();
+            //currentWeapon.audioSource.Play();
         }
 
         if (currentWeapon.audioSource.isPlaying || !CanShoot())
