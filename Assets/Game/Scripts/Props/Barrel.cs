@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class Barrel : MonoBehaviour {
 
+    public GameObject soundObj;
+    public AudioClip explosionSound;
+    public UnityEngine.Audio.AudioMixerGroup effectsMixerGroup;
+
     public GameObject system;
 
     public float health = 1;
@@ -13,7 +17,14 @@ public class Barrel : MonoBehaviour {
 	public void Explode() {
         if (!exploded) { //stackoverflow fix
             exploded = true;
-            
+
+            GameObject shotSoundobj = Instantiate(soundObj, transform.position, Quaternion.identity);
+            AudioSource source = shotSoundobj.GetComponent<AudioSource>();
+
+            source.outputAudioMixerGroup = effectsMixerGroup;
+            source.clip = explosionSound;
+            source.Play();
+
             Vector3 explosionPos = transform.position;
             Collider[] colliders = Physics.OverlapSphere(explosionPos, 5);
             foreach (Collider hit in colliders) {

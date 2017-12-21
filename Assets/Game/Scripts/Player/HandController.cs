@@ -18,21 +18,23 @@ public class HandController : MonoBehaviour {
         anim = GetComponent<Animator>();
 	}
 	
-	void Update () {
-		
-	}
-
-    void OnAnimatorIK(int layerIndex) {
+    void OnAnimatorIK() {
         anim.SetIKPositionWeight(AvatarIKGoal.LeftHand, ikWieght);
         anim.SetIKPositionWeight(AvatarIKGoal.RightHand, ikWieght);
 
         anim.SetIKPosition(AvatarIKGoal.LeftHand, leftIKTarget.position);
         anim.SetIKPosition(AvatarIKGoal.RightHand, rightIKTarget.position);
 
-        anim.SetIKHintPositionWeight(AvatarIKHint.LeftElbow, ikWieght);
-        anim.SetIKHintPositionWeight(AvatarIKHint.RightElbow, ikWieght);
+        anim.SetIKRotationWeight(AvatarIKGoal.LeftHand, ikWieght);
+        anim.SetIKRotationWeight(AvatarIKGoal.RightHand, ikWieght);
 
-        anim.SetIKHintPosition(AvatarIKHint.LeftElbow, leftHint.position);
-        anim.SetIKHintPosition(AvatarIKHint.RightElbow, rightHint.position);
+        anim.SetIKRotation(AvatarIKGoal.LeftHand, leftIKTarget.rotation);
+        anim.SetIKRotation(AvatarIKGoal.RightHand, rightIKTarget.rotation);
+
+        //anim.SetIKHintPositionWeight(AvatarIKHint.LeftElbow, ikWieght);
+        //anim.SetIKHintPositionWeight(AvatarIKHint.RightElbow, ikWieght);
+
+        //anim.SetIKHintPosition(AvatarIKHint.LeftElbow, leftHint.position);
+        //anim.SetIKHintPosition(AvatarIKHint.RightElbow, rightHint.position);
     }
 }

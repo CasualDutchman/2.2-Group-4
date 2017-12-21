@@ -22,7 +22,6 @@ GameObject:
   - component: {fileID: 114343472901428866}
   - component: {fileID: 54712746213106566}
   - component: {fileID: 64481419031673190}
-  - component: {fileID: 82231460435394962}
   m_Layer: 8
   m_Name: machinegun
   m_TagString: Gun
@@ -42,6 +41,21 @@ GameObject:
   - component: {fileID: 23834022858585146}
   m_Layer: 0
   m_Name: Mesh2_Group3_Group1_Model
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1221238264283580
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4720302805559508}
+  m_Layer: 8
+  m_Name: SecondHand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -102,7 +116,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1111955564863208}
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0, y: -0.1, z: 0.24}
+  m_LocalPosition: {x: -0, y: -0.0548, z: 0.1198}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4076735728500874}
@@ -115,13 +129,14 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1027183833371976}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 5.496, y: 1.094, z: -0.33799994}
+  m_LocalPosition: {x: -1.4150001, y: 1.294, z: -0.33799994}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4404748361389368}
   - {fileID: 4066714532734068}
   - {fileID: 4624440246263814}
   - {fileID: 4751621088903344}
+  - {fileID: 4720302805559508}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -151,6 +166,19 @@ Transform:
   m_Father: {fileID: 4076735728500874}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4720302805559508
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1221238264283580}
+  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
+  m_LocalPosition: {x: -0.06, y: -0.051, z: 0.142}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4076735728500874}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!4 &4751621088903344
 Transform:
   m_ObjectHideFlags: 1
@@ -261,7 +289,7 @@ Rigidbody:
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -279,87 +307,6 @@ MeshCollider:
   m_InflateMesh: 0
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300006, guid: f36093a55fdc4c541b66b01a4e0b3e6b, type: 3}
---- !u!82 &82231460435394962
-AudioSource:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1027183833371976}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 243614846696509058, guid: 8f9dbbb9a881caa45a94f1249983c461,
-    type: 2}
-  m_audioClip: {fileID: 8300000, guid: 73f17b304ed556c48b96175c0d37ad23, type: 3}
-  m_PlayOnAwake: 0
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 2
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    - serializedVersion: 2
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 2
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 0
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 2
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 2
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 0
 --- !u!108 &108676129485018778
 Light:
   m_ObjectHideFlags: 1
@@ -414,13 +361,14 @@ MonoBehaviour:
   shoot: {fileID: 8300000, guid: 73f17b304ed556c48b96175c0d37ad23, type: 3}
   begin: {fileID: 0}
   end: {fileID: 0}
+  secondHand: {fileID: 4720302805559508}
   fireMode: 2
   rateOfFire: 700
   affectedByRecoilFactor: 2
   maxAmmoMagazine: 31
   ammo: 31
   holdingmaxAmmo: 155
-  reloadTime: 5
+  reloadTime: 2.7
   bulletShell: {fileID: 1600648514189188, guid: 9c349788e9033b54492df3e9984de13e,
     type: 2}
   muzzle: {fileID: 0}

@@ -22,8 +22,11 @@ public class PlayerWeaponController : MonoBehaviour {
     public GameObject soundObj;
     public UnityEngine.Audio.AudioMixerGroup effectsMixerGroup;
 
+    public Transform leftIK, rightIK, combinedIK;
+    Vector3 leftIKorigin, rightIKoriginPos, rightIKoriginRot, combinedIKoriginPos, combineIKoriginRot;
+
     public Transform hand;
-    public Vector3 originHand;
+    Vector3 originHandPos, originHandRot;
     bool aimDownSights = false;
 
     public enum WeaponSlot { primary, secondary }
@@ -57,7 +60,11 @@ public class PlayerWeaponController : MonoBehaviour {
 
 	void Start () {
         player = GetComponent<Player>();
-        originHand = hand.localPosition;
+        originHandPos = hand.localPosition;
+        originHandRot = hand.localEulerAngles;
+
+        rightIKoriginPos = rightIK.localPosition;
+        rightIKoriginRot = rightIK.localEulerAngles;
     }
 	
 	void Update () {
@@ -75,11 +82,29 @@ public class PlayerWeaponController : MonoBehaviour {
 
         if (isReloading) {
             reloadTimer += Time.deltaTime;
-            hand.localEulerAngles = Vector3.right * 30;
+
+            if(reloadTimer < 0.5f) {
+                //combinedIK.localEulerAngles += Vector3.right * 40 * Time.deltaTime;
+                leftIK.localPosition -= Vector3.up * 0.5f * Time.deltaTime;
+
+                rightIK.localPosition += Vector3.up * 0.1f * Time.deltaTime;
+                rightIK.localEulerAngles -= Vector3.right * 20 * Time.deltaTime;
+            } else if (reloadTimer > currentWeapon.reloadTime - 0.5f) {
+                //combinedIK.localEulerAngles -= Vector3.right * 40 * Time.deltaTime;
+                leftIK.localPosition += Vector3.up * 0.5f * Time.deltaTime;
+
+                rightIK.localPosition -= Vector3.up * 0.1f * Time.deltaTime;
+                rightIK.localEulerAngles += Vector3.right * 20 * Time.deltaTime;
+            }
+            
             if (reloadTimer >= currentWeapon.reloadTime) {
                 reloadTimer = 0;
                 isReloading = false;
-                hand.localEulerAngles = Vector3.zero;
+                //combinedIK.localEulerAngles = Vector3.zero;
+                rightIK.localEulerAngles = rightIKoriginRot;
+                rightIK.localPosition = rightIKoriginPos;
+                leftIK.position = currentWeapon.secondHand.position;
+                leftIK.rotation = currentWeapon.secondHand.rotation;
                 Reload();
             }
         }
@@ -111,25 +136,31 @@ public class PlayerWeaponController : MonoBehaviour {
 
         recoilCrosshair.sizeDelta = new Vector2(50 + 100f * recoilFactor, 50 + 100f * recoilFactor);
 
-        bool hitfire = false;
-
-        if(player.controlType == Player.Controltype.Mouse) {
-            hitfire = Input.GetButton(player.controlType.ToString() + " Fire");
-        } else {
-            hitfire = Input.GetAxis(player.controlType.ToString() + " Fire") > 0;
-        }
-
         if (Input.GetMouseButtonDown(1) && !isReloading) {
-            hand.localPosition -= new Vector3(originHand.x, 0, 0);
+            //hand.localPosition -= new Vector3(originHandPos.x, 0, 0);
+            combinedIK.localPosition = new Vector3(0.05f, 0, 0);
             aimDownSights = true;
             player.GetMovementController.playerCamera.fieldOfView = 50;
             player.GetMovementController.aimMultiplier = 0.5f;
         }
         if (Input.GetMouseButtonUp(1)) {
-            hand.localPosition = originHand;
+            //hand.localPosition = originHandPos;
+            combinedIK.localPosition = new Vector3(0.3f, 0, 0);
             aimDownSights = false;
             player.GetMovementController.playerCamera.fieldOfView = 60;
             player.GetMovementController.aimMultiplier = 1f;
+        }
+
+        bool hitfire = false;
+
+        if (Input.GetButtonDown(player.controlType.ToString() + " Fire")) {
+            combinedIKoriginPos = combinedIK.localPosition;
+        }
+
+        if(player.controlType == Player.Controltype.Mouse) {
+            hitfire = Input.GetButton(player.controlType.ToString() + " Fire");
+        } else {
+            hitfire = Input.GetAxis(player.controlType.ToString() + " Fire") > 0;
         }
 
         if (hitfire && currentWeapon != null && !isReloading && CanShoot()) {
@@ -184,6 +215,8 @@ public class PlayerWeaponController : MonoBehaviour {
                     
                 }
             }
+
+            combinedIK.localPosition = combinedIKoriginPos;
 
             beginsound = false;
             endsound = false;
@@ -286,7 +319,13 @@ public class PlayerWeaponController : MonoBehaviour {
         weapon.GetComponent<Rigidbody>().isKinematic = true;
         weapon.transform.parent = hand;
         weapon.transform.localPosition = Vector3.zero;
-        weapon.transform.localRotation = Quaternion.identity;
+        weapon.transform.localEulerAngles = Vector3.zero;
+
+        if (currentWeapon.secondHand != null) {
+            leftIK.position = currentWeapon.secondHand.position;
+            leftIK.rotation = currentWeapon.secondHand.rotation;
+        }
+
         weapon.gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
     }
 
@@ -312,7 +351,11 @@ public class PlayerWeaponController : MonoBehaviour {
     void ResetReload() {
         reloadTimer = 0;
         isReloading = false;
-        hand.localEulerAngles = Vector3.zero;
+        hand.localEulerAngles = new Vector3(0, 0, 90);
+        rightIK.localEulerAngles = rightIKoriginRot;
+        rightIK.localPosition = rightIKoriginPos;
+        leftIK.position = currentWeapon.secondHand.position;
+        leftIK.rotation = currentWeapon.secondHand.rotation;
     }
 
     void Recoil() {
@@ -325,6 +368,10 @@ public class PlayerWeaponController : MonoBehaviour {
         f2 *= movement.crouched ? 0.7f : 1;
 
         recoilFactor += 0.2f * f;
+
+        float shotback = Mathf.Clamp(combinedIK.localPosition.y - 1 * 0.02f * currentWeapon.affectedByRecoilFactor, -7, 1);
+
+        combinedIK.localPosition = new Vector3(aimDownSights ? 0.05f : 0.3f, 0, shotback);
 
         movement.pitch -= Random.value * 1f * recoilFactor * f2;
         movement.yaw += Random.value * 1f * recoilFactor * f2;
@@ -387,6 +434,9 @@ public class PlayerWeaponController : MonoBehaviour {
     void Sound() {
         if (currentWeapon.begin == null && currentWeapon.end == null) {
             GameObject shotSoundobj = Instantiate(soundObj, currentWeapon.muzzle.position, Quaternion.identity);
+            shotSoundobj.transform.SetParent(currentWeapon.muzzle);
+            shotSoundobj.transform.localPosition = Vector3.zero;
+
             AudioSource source = shotSoundobj.GetComponent<AudioSource>();
 
             source.outputAudioMixerGroup = effectsMixerGroup;
@@ -395,7 +445,7 @@ public class PlayerWeaponController : MonoBehaviour {
             //currentWeapon.audioSource.Play();
         }
 
-        if (currentWeapon.audioSource.isPlaying || !CanShoot())
+        if ((currentWeapon.audioSource != null && currentWeapon.audioSource.isPlaying) || !CanShoot())
             return;
 
         if (currentWeapon.end != null && beginsound) {

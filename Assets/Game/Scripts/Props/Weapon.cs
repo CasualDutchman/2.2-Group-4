@@ -15,6 +15,8 @@ public class Weapon : Item {
 
     public AudioClip shoot, begin, end;
 
+    public Transform secondHand;
+
     public FireMode fireMode;
     public float rateOfFire = 1;
     public float affectedByRecoilFactor = 1;

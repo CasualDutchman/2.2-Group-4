@@ -44,6 +44,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1172084137676456
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4897927557907740}
+  m_Layer: 8
+  m_Name: SecondHand
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1472753294342904
 GameObject:
   m_ObjectHideFlags: 0
@@ -209,9 +224,23 @@ Transform:
   - {fileID: 4642629221042492}
   - {fileID: 4425822017721696}
   - {fileID: 4784815543093706}
+  - {fileID: 4897927557907740}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4897927557907740
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1172084137676456}
+  m_LocalRotation: {x: 0.05602265, y: 0.06676521, z: 0.6403416, w: 0.7631295}
+  m_LocalPosition: {x: -0.095, y: -0.022, z: 0.165}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4789011390085094}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 10, z: 80}
 --- !u!4 &4958201248307610
 Transform:
   m_ObjectHideFlags: 1
@@ -219,7 +248,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1009085291019724}
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0, y: 0.049, z: 0.315}
+  m_LocalPosition: {x: -0, y: 0.027, z: 0.165}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4789011390085094}
@@ -513,13 +542,14 @@ MonoBehaviour:
   shoot: {fileID: 8300000, guid: e81c99442055cde42a3ee17587b91649, type: 3}
   begin: {fileID: 8300000, guid: df2772c7ec8f39145906fcb39fb4dadd, type: 3}
   end: {fileID: 8300000, guid: a6e5e0c19ae185d4aa9936073a10f7dd, type: 3}
+  secondHand: {fileID: 4897927557907740}
   fireMode: 4
   rateOfFire: 800
   affectedByRecoilFactor: 0.1
   maxAmmoMagazine: 100
   ammo: 100
   holdingmaxAmmo: 200
-  reloadTime: 5
+  reloadTime: 4.5
   bulletShell: {fileID: 0}
   muzzle: {fileID: 4642629221042492}
   muzzleFlash: {fileID: 0}
