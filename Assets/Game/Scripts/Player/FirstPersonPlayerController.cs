@@ -17,6 +17,10 @@ public class FirstPersonPlayerController : MonoBehaviour {
     public bool invertY = false;
 
     public float speed = 6.0F;
+    public float crouchSpeed = 1.0f;
+    public float sprintSpeed = 10.0f;
+    public float crouchSprintSpeed = 4.0f;
+
     public float jumpSpeed = 8.0F;
     public float gravity = 20.0F;
     private Vector3 moveDirection = Vector3.zero;
@@ -50,7 +54,7 @@ public class FirstPersonPlayerController : MonoBehaviour {
 
         if (Input.GetKeyDown(KeyCode.LeftControl)) {
             crouched = true;
-            playerCamera.transform.localPosition -= new Vector3(0, 0.3f, 0);
+            playerCamera.transform.localPosition = new Vector3(0, 1, 0);
         }
         if (Input.GetKeyUp(KeyCode.LeftControl)) {
             crouched = false;
@@ -61,7 +65,7 @@ public class FirstPersonPlayerController : MonoBehaviour {
         if (controller.isGrounded) {
             moveDirection = new Vector3(Input.GetAxis(player.controlType.ToString() + " Horizontal"), 0, Input.GetAxis(player.controlType.ToString() + " Vertical"));
             moveDirection = transform.TransformDirection(moveDirection);
-            moveDirection *= crouched ? speed * 0.5f : speed * (Input.GetKey(KeyCode.LeftShift) ? 2 : 1);
+            moveDirection *= crouched ? (Input.GetKey(KeyCode.LeftShift) ? crouchSprintSpeed : crouchSpeed) : (Input.GetKey(KeyCode.LeftShift) ? sprintSpeed : speed);
             if (Input.GetButton(player.controlType.ToString() + " Jump"))
                 moveDirection.y = jumpSpeed;
 

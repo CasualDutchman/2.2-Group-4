@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Weapon : Item {
 
-    public enum FireMode { Semi, Burst, Auto, ShotGun, Flamethrower }
+    public enum FireMode { Semi, Burst, Auto, ShotGun, Flamethrower, Melee }
 
     public string weaponName;
 

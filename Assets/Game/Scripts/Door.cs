@@ -2,62 +2,71 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Door : MonoBehaviour {
+public class Door : Item {
+
+    public string itemName;
 
     public bool open = false;
 
+    public float openCloseTime = 1;
+
     bool moveToState = false;
 
-    public Transform left, right;
+    public Transform closedStateTransform, openStateTransform;
 
     public AnimationCurve curve;
 
-    Vector3 rightclosed = new Vector3(0.75f, 2f, 0f);
-    Vector3 rightopen = new Vector3(1.5f, 2f, 0f);
-    Vector3 leftclosed = new Vector3(-0.75f, 2f, 0f);
-    Vector3 leftopen = new Vector3(-1.5f, 2f, 0f);
+    public Door connectedDoor;
 
     float timer;
 
-    [ContextMenu("Change state")]
+    void Start() {
+        if (open) {
+            transform.localPosition = openStateTransform.localPosition;
+            transform.localEulerAngles = openStateTransform.localEulerAngles;
+            if (connectedDoor) {
+                connectedDoor.transform.localPosition = openStateTransform.localPosition;
+                connectedDoor.transform.localEulerAngles = openStateTransform.localEulerAngles;
+            }
+        }
+    }
+
+    public override string Message() {
+        return (open ? "Close" : "Open") + " " + itemName;
+    }
+
+    public override void Interact(Player player) {
+        ChangeState();
+
+        if (connectedDoor) {
+            connectedDoor.ChangeState();
+        }
+    }
+
     public void ChangeState() {
-        if(open == moveToState)
+        if (open == moveToState)
             moveToState = !moveToState;
     }
 
-	void Start () {
-		
-	}
-	
-	void Update () {
+    void Update () {
 		if(moveToState != open) {
-            
+
             if (moveToState) {
-                left.localPosition = Vector3.Lerp(leftclosed, leftopen, curve.Evaluate(timer));
-                right.localPosition = Vector3.Lerp(rightclosed, rightopen, curve.Evaluate(timer));
+                transform.localPosition = Vector3.Lerp(closedStateTransform.localPosition, openStateTransform.localPosition, curve.Evaluate(timer));
 
-                left.localEulerAngles = Vector3.Lerp(Vector3.zero, new Vector3(0, 90, 0), curve.Evaluate(timer));
-                right.localEulerAngles = Vector3.Lerp(Vector3.zero, new Vector3(0, -90, 0), curve.Evaluate(timer));
-
-                if (timer >= 1) {
-                    timer = 0;
-                    open = moveToState;
-                    return;
-                }
+                transform.localEulerAngles = Vector3.Lerp(closedStateTransform.localEulerAngles, openStateTransform.localEulerAngles, curve.Evaluate(timer));
             } else {
-                left.localPosition = Vector3.Lerp(leftopen, leftclosed, curve.Evaluate(timer));
-                right.localPosition = Vector3.Lerp(rightopen, rightclosed, curve.Evaluate(timer));
+                transform.localPosition = Vector3.Lerp(openStateTransform.localPosition, closedStateTransform.localPosition, curve.Evaluate(timer));
 
-                left.localEulerAngles = Vector3.Lerp(new Vector3(0, 90, 0), Vector3.zero, curve.Evaluate(timer));
-                right.localEulerAngles = Vector3.Lerp(new Vector3(0, -90, 0), Vector3.zero, curve.Evaluate(timer));
-
-                if (timer >= 1) {
-                    timer = 0;
-                    open = moveToState;
-                    return;
-                }
+                transform.localEulerAngles = Vector3.Lerp(openStateTransform.localEulerAngles, closedStateTransform.localEulerAngles, curve.Evaluate(timer));
             }
-            timer += Time.deltaTime;
+
+            if (timer >= 1) {
+                timer = 0;
+                open = moveToState;
+                return;
+            }
+            timer += Time.deltaTime / openCloseTime;
         }
 	}
 }

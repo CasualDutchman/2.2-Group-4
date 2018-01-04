@@ -76,7 +76,7 @@ public class PlayerWeaponController : MonoBehaviour {
             SwapWeapon(WeaponSlot.secondary);
         }
 
-        if (Input.GetButton(player.controlType.ToString() + " Reload") && currentWeapon != null) {
+        if (Input.GetKeyDown(KeyCode.R) && currentWeapon != null && CanReload()) {
             isReloading = true;
         }
 
@@ -113,16 +113,22 @@ public class PlayerWeaponController : MonoBehaviour {
         Ray ray = new Ray(player.GetMovementController.playerCamera.transform.position, player.GetMovementController.playerCamera.transform.forward);
         RaycastHit hit;
 
-        if (Physics.Raycast(ray, out hit, 3, LayerMask.GetMask("Interactable", "InteractableCol"))) {
+        if (Physics.Raycast(ray, out hit, 3)) {
             Item item = hit.collider.GetComponent<Item>();
 
-            if (item.interactable) {
-                pickUpText.gameObject.SetActive(true);
-                pickUpText.text = "[E] " + item.Message();
-                //pickUpText.rectTransform.anchoredPosition = (Vector2)player.GetMovementController.playerCamera.WorldToScreenPoint(hit.collider.transform.position) - new Vector2(Screen.currentResolution.width, Screen.currentResolution.height) / 2 + new Vector2(0, 100);
+            if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Interactable") || hit.collider.gameObject.layer == LayerMask.NameToLayer("InteractableCol")) {
+                if (item.interactable) {
+                    pickUpText.gameObject.SetActive(true);
+                    pickUpText.text = "[E] " + item.Message();
+                    //pickUpText.rectTransform.anchoredPosition = (Vector2)player.GetMovementController.playerCamera.WorldToScreenPoint(hit.collider.transform.position) - new Vector2(Screen.currentResolution.width, Screen.currentResolution.height) / 2 + new Vector2(0, 100);
 
-                if (Input.GetButtonDown(player.controlType.ToString() + " Pickup")) {
-                    item.Interact(GetComponent<Player>());
+                    if (Input.GetButtonDown(player.controlType.ToString() + " Pickup")) {
+                        item.Interact(GetComponent<Player>());
+                    }
+                }
+            } else {
+                if (pickUpText.gameObject.activeSelf) {
+                    pickUpText.gameObject.SetActive(false);
                 }
             }
         } else {
@@ -239,6 +245,10 @@ public class PlayerWeaponController : MonoBehaviour {
 
     bool CanShoot() {
         return currentWeapon.ammo > 0;
+    }
+
+    bool CanReload() {
+        return currentWeapon.holdingmaxAmmo > 0 && currentWeapon.ammo < currentWeapon.maxAmmoMagazine;
     }
 
     public void PickUpGun(Weapon weapon) {
@@ -470,11 +480,8 @@ public class PlayerWeaponController : MonoBehaviour {
             }
         }
 
-        if(decal)
-            Decal(hit);
-
         if(hurt)
-            Hurt(hit);
+            Hurt(hit, decal);
     }
 
     void MuzzleFlash() {
@@ -491,13 +498,22 @@ public class PlayerWeaponController : MonoBehaviour {
         currentWeapon.muzzle.GetComponent<Light>().enabled = true;
     }
 
-    void Hurt(RaycastHit hit) {
-        if (!hit.collider.GetComponent<AgentGoTo>())
+    void Hurt(RaycastHit hit, bool decal) {
+        if (!hit.collider.GetComponent<EnemyPart>()) {
+            if (decal)
+                Decal(hit);
+
             return;
+        }
 
-        AgentGoTo enemy = hit.collider.GetComponent<AgentGoTo>();
+        //AgentGoTo enemy = hit.collider.GetComponent<AgentGoTo>();
 
-        enemy.health -= 20;
+        //enemy.health -= 20;
+
+        EnemyPart part = hit.collider.GetComponent<EnemyPart>();
+        part.Damage(10);
+
+        Enemy enemy = part.connected;
 
         if (enemy.health <= 0) {
             Destroy(enemy.gameObject);

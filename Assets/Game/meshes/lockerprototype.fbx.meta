@@ -1,15 +1,27 @@
 fileFormatVersion: 2
-guid: 5e4ea92b19e0e324c98e5cdaad0bbd88
-timeCreated: 1513555371
+guid: 58b16b2db82e72b4fa7e416a5757b7e1
+timeCreated: 1514147658
 licenseType: Free
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
-    100000: //RootNode
-    400000: //RootNode
-    2300000: //RootNode
-    3300000: //RootNode
-    4300000: Cube
+    100000: bigdoor
+    100002: Locker
+    100004: //RootNode
+    100006: smalldoor
+    400000: bigdoor
+    400002: Locker
+    400004: //RootNode
+    400006: smalldoor
+    2300000: bigdoor
+    2300002: Locker
+    2300004: smalldoor
+    3300000: bigdoor
+    3300002: Locker
+    3300004: smalldoor
+    4300000: smalldoor
+    4300002: bigdoor
+    4300004: Locker
   externalObjects:
   - first:
       type: UnityEngine:Material

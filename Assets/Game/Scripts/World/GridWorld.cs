@@ -38,12 +38,14 @@ public class GridWorld : MonoBehaviour {
 
     Vector3Int currentCheck;
 
-    bool building = false;
+    bool buildingMaze = false;
 
     int backup = 1;
 
     bool doneGenerating = false;
     public bool checking = false;
+
+    bool doneSpawning = false;
 
     List<Vector3Int> checkopen = new List<Vector3Int>();
     List<Vector3Int> checkclosed = new List<Vector3Int>();
@@ -84,7 +86,7 @@ public class GridWorld : MonoBehaviour {
             }
         }
 
-        building = false;
+        buildingMaze = false;
         visited = 0;
         currentCheck = Vector3Int.zero;
 
@@ -111,18 +113,8 @@ public class GridWorld : MonoBehaviour {
             Spawn();
             PrepareHalls();
 
-
-            SpawnSpawnPoints();
-
-
-            GetComponent<NavMeshSurface>().BuildNavMesh();
-            SpawnWeapons();
-            
-
-            //StaticBatchingUtility.Combine(gameObject);
+            doneSpawning = true;
         }
-
-        playerManager.Play();
     }
 
     void Update() {
@@ -133,6 +125,14 @@ public class GridWorld : MonoBehaviour {
             GameObject go = Instantiate(enemy, spawnpoints[Random.Range(0, spawnpoints.Count)].position, Quaternion.identity);
             //go.transform.position = spawnpoints[Random.Range(0, spawnpoints.Count)].position;
             go.GetComponent<NavMeshAgent>().enabled = true;
+        }
+
+        if (doneSpawning) {
+            GetComponent<NavMeshSurface>().BuildNavMesh();
+            SpawnWeapons();
+            playerManager.Play();
+
+            doneSpawning = false;
         }
     }
 
@@ -357,7 +357,7 @@ public class GridWorld : MonoBehaviour {
     //void Update(){
         while (visited < maxElementSize) {
 
-            if (building) {
+            if (buildingMaze) {
                 List<Vector3Int> possibleChecks = new List<Vector3Int>();
 
                 if (currentCheck.x - 1 >= 0 && grid[currentCheck.x - 1, currentCheck.y, currentCheck.z].roomID == -1)
@@ -386,7 +386,7 @@ public class GridWorld : MonoBehaviour {
                     backup--;
 
                     if (backup < 0)
-                        building = false;
+                        buildingMaze = false;
                 } else {
                     
                     Element currentElement = grid[currentCheck.x, currentCheck.y, currentCheck.z];
@@ -415,7 +415,7 @@ public class GridWorld : MonoBehaviour {
                 if (grid[currentCheck.x, currentCheck.y, currentCheck.z].floor && grid[currentCheck.x, currentCheck.y, currentCheck.z].roomID == -1) {
                     visited += 1;
                     grid[currentCheck.x, currentCheck.y, currentCheck.z].roomID = 0;
-                    building = true;
+                    buildingMaze = true;
                 }
             }
         }

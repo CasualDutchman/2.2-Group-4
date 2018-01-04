@@ -357,6 +357,9 @@ MonoBehaviour:
   pitch: 0
   invertY: 1
   speed: 6
+  crouchSpeed: 1
+  sprintSpeed: 10
+  crouchSprintSpeed: 4
   jumpSpeed: 8
   gravity: 20
   crouched: 0
@@ -5214,6 +5217,9 @@ MonoBehaviour:
   pitch: 0
   invertY: 1
   speed: 6
+  crouchSpeed: 1
+  sprintSpeed: 10
+  crouchSprintSpeed: 4
   jumpSpeed: 8
   gravity: 20
   crouched: 0

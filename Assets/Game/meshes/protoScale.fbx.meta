@@ -1,15 +1,27 @@
 fileFormatVersion: 2
-guid: 5e4ea92b19e0e324c98e5cdaad0bbd88
-timeCreated: 1513555371
+guid: 9fcaa59264d0a754fa088c21005c100c
+timeCreated: 1514246489
 licenseType: Free
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
-    100000: //RootNode
-    400000: //RootNode
-    2300000: //RootNode
-    3300000: //RootNode
-    4300000: Cube
+    100000: Cube
+    100002: HUMAN
+    100004: HUMAN.001
+    100006: //RootNode
+    400000: Cube
+    400002: HUMAN
+    400004: HUMAN.001
+    400006: //RootNode
+    2300000: Cube
+    2300002: HUMAN
+    2300004: HUMAN.001
+    3300000: Cube
+    3300002: HUMAN
+    3300004: HUMAN.001
+    4300000: HUMAN.001
+    4300002: HUMAN
+    4300004: Cube
   externalObjects:
   - first:
       type: UnityEngine:Material
@@ -45,7 +57,7 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 100
+    globalScale: 1
     meshCompression: 0
     addColliders: 0
     importVisibility: 1
