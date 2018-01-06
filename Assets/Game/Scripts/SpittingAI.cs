@@ -3,38 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class SpittingAI : MonoBehaviour {
-
-    public Transform target;
-    private FirstPersonPlayerController PlayerScript;
-
+public class SpittingAI : Enemy {
     public float SpittingDistance = 5.0f;
     public float SpittingForce = 1000.0f;
 
-    private bool CanFollowPlayer = false;
-
-    public float DelayBetweenAttacks = 1.0f;
-    private float TimeSinceLastAttack = 1.1f;
-
     public Transform SpitClass;
-
-    NavMeshAgent agent;
-
-    void Start() {
-        agent = GetComponent<NavMeshAgent>();
-        target = GameObject.FindGameObjectWithTag("Player").transform;
-        PlayerScript = target.GetComponent<FirstPersonPlayerController>();
-    }
 
     void FixedUpdate() {
         //if(!agent.hasPath)
         if (!CanFollowPlayer) {
-            RaycastHit OutHit;
-            if (Physics.Linecast(transform.position, target.transform.position, out OutHit)) {
-                if (OutHit.collider.gameObject.tag == "Player") {
-                    CanFollowPlayer = true;
-                }
-            }
+            DetectPlayerLineOfSight();
         }
         else {
             if ((transform.position - target.transform.position).magnitude > SpittingDistance) {
@@ -46,12 +24,10 @@ public class SpittingAI : MonoBehaviour {
                 Attack();
             }
         }
-
-        TimeSinceLastAttack += Time.deltaTime;
-        if (TimeSinceLastAttack >= 10.0f) TimeSinceLastAttack = DelayBetweenAttacks + 1;
+        UpdateLastAttackTime();
     }
 
-    private void Attack() {
+    protected override void Attack() {
         if (TimeSinceLastAttack >= DelayBetweenAttacks) {
             TimeSinceLastAttack = 0.0f;
             Transform Spit = Instantiate(SpitClass);
