@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class Particles : MonoBehaviour {
 
-	void Update () {
-        if (GetComponent<ParticleSystem>().isStopped)
+    public ParticleSystem system;
+
+    void Update () {
+        if (system.isStopped)
             Destroy(gameObject);
 	}
 }

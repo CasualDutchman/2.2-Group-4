@@ -5,23 +5,31 @@ using UnityEngine.AI;
 
 public class EnemyTest : MonoBehaviour {
 
-    public Transform target;
+    public string detectingName;
 
-    NavMeshAgent agent;
-    Animator animator;
+    public int amount;
 
-	void Start () {
-        agent = GetComponent<NavMeshAgent>();
-        animator = GetComponent<Animator>();
-	}
-	
+    public FrustumPlanes FP;
+    public Matrix4x4 m, m2;
+
+    void Start() {
+        Plane[] planes = GeometryUtility.CalculateFrustumPlanes(Matrix4x4.Frustum(FP));
+        m = Camera.main.projectionMatrix;
+        m2 = Matrix4x4.Frustum(FP);
+        amount = planes.Length;
+    }
+
 	void Update () {
-        if (Vector3.Distance(transform.position, target.position) < 10) {
-            agent.SetDestination(target.position);
-        } else {
-            agent.ResetPath();
-        }
 
-        animator.SetFloat("Blend", agent.velocity.normalized.magnitude);
 	}
+
+    public bool IsVisibleFrom(Renderer renderer, Camera camera) {
+        Plane[] planes = GeometryUtility.CalculateFrustumPlanes(camera);
+        return GeometryUtility.TestPlanesAABB(planes, renderer.bounds);
+    }
+
+    void OnDrawGizmosSelected() {
+        Gizmos.matrix = Matrix4x4.TRS(transform.position + Vector3.forward, Quaternion.identity, Vector3.one);
+        Gizmos.DrawFrustum(Vector3.zero, 60, 20, 0.1f, 1920 / 1080);
+    }
 }

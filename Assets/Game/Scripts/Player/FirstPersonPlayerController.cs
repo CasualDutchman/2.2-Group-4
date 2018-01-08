@@ -5,6 +5,10 @@ using UnityEngine.UI;
 
 public class FirstPersonPlayerController : MonoBehaviour {
 
+    public AudioClip[] footsteps;
+    public GameObject soundObject;
+    int lastStepIndex;
+
     CharacterController controller;
     Player player;
     public Camera playerCamera;
@@ -25,8 +29,14 @@ public class FirstPersonPlayerController : MonoBehaviour {
     public float gravity = 20.0F;
     private Vector3 moveDirection = Vector3.zero;
 
+    bool jumping = false;
+
+    public bool walking = false;
+    public bool sprinting = false;
     public bool crouched = false;
     Vector3 originCameraPos;
+
+    float walkTimer = 0;
 
     void Start () {
         controller = GetComponent<CharacterController>();
@@ -61,16 +71,90 @@ public class FirstPersonPlayerController : MonoBehaviour {
             playerCamera.transform.localPosition = originCameraPos;
         }
 
+        sprinting = Input.GetKey(KeyCode.LeftShift);
+
+
         //walking around
         if (controller.isGrounded) {
+            if (jumping) {
+                StartCoroutine(JumpFallSound());
+                jumping = false;
+            }
             moveDirection = new Vector3(Input.GetAxis(player.controlType.ToString() + " Horizontal"), 0, Input.GetAxis(player.controlType.ToString() + " Vertical"));
             moveDirection = transform.TransformDirection(moveDirection);
-            moveDirection *= crouched ? (Input.GetKey(KeyCode.LeftShift) ? crouchSprintSpeed : crouchSpeed) : (Input.GetKey(KeyCode.LeftShift) ? sprintSpeed : speed);
-            if (Input.GetButton(player.controlType.ToString() + " Jump"))
+            moveDirection *= crouched ? (sprinting ? crouchSprintSpeed : crouchSpeed) : (sprinting ? sprintSpeed : speed);
+            if (Input.GetButton(player.controlType.ToString() + " Jump")) {
                 moveDirection.y = jumpSpeed;
-
+                jumping = true;
+            }
         }
+
+        walking = moveDirection.magnitude > 0.2f;
+
         moveDirection.y -= gravity * Time.deltaTime;
         controller.Move(moveDirection * Time.deltaTime);
+
+        if(walking && controller.isGrounded)
+            WalkUpdate();
+    }
+
+    void WalkUpdate() {
+        walkTimer += Time.deltaTime;
+
+        float current = sprinting ? 0.3f : (crouched ? 1f : (walking ? 0.5f : 0));
+
+        if (walkTimer >= current) {
+            walkTimer -= current;
+
+            GameObject go = Instantiate(soundObject, transform.position, Quaternion.identity);
+            AudioSource source = go.GetComponent<AudioSource>();
+            int index = Random.Range(0, footsteps.Length);
+            if(index == lastStepIndex) {
+                index = Random.Range(0, footsteps.Length);
+            }
+            source.clip = footsteps[index];
+            source.volume = sprinting ? 1f : (crouched ? 0.1f : 0.7f);
+            source.Play();
+
+            lastStepIndex = index;
+        }
+    }
+
+    IEnumerator JumpFallSound() {
+        int firstindex;
+        int index;
+
+        GameObject go = Instantiate(soundObject, transform.position, Quaternion.identity);
+        AudioSource source = go.GetComponent<AudioSource>();
+        index = firstindex = Random.Range(0, footsteps.Length);
+        source.clip = footsteps[index];
+        source.volume = 1f;
+        source.Play();
+
+        yield return new WaitForSeconds(0.02f);
+
+        go = Instantiate(soundObject, transform.position, Quaternion.identity);
+        source = go.GetComponent<AudioSource>();
+        index = Random.Range(0, footsteps.Length);
+        if (index == firstindex) {
+            index = Random.Range(0, footsteps.Length);
+        }
+        source.clip = footsteps[index];
+        source.volume = 1f;
+        source.Play();
+    }
+
+    public bool CanSee(Collider collider) {
+        Plane[] planes = GeometryUtility.CalculateFrustumPlanes(playerCamera);
+        bool b1 = GeometryUtility.TestPlanesAABB(planes, collider.bounds);
+        bool b2 = false;
+
+        RaycastHit hit;
+        if (Physics.Linecast(playerCamera.transform.position, collider.bounds.center, out hit)) {
+            if (hit.collider.name == collider.name) {
+                b2 = true;
+            }
+        }
+        return b1 && b2;
     }
 }

@@ -23,8 +23,8 @@ public class Player : MonoBehaviour {
 		
 	}
 
-    public void Hurt() {
-        health -= 10;
+    public void Hurt(float amount) {
+        health -= amount;
 
         UpdateHealthText();
     }

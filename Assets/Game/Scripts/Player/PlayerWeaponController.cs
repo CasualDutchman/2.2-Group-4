@@ -506,18 +506,8 @@ public class PlayerWeaponController : MonoBehaviour {
             return;
         }
 
-        //AgentGoTo enemy = hit.collider.GetComponent<AgentGoTo>();
-
-        //enemy.health -= 20;
-
         EnemyPart part = hit.collider.GetComponent<EnemyPart>();
         part.Damage(10);
-
-        Enemy enemy = part.connected;
-
-        if (enemy.health <= 0) {
-            Destroy(enemy.gameObject);
-        }
     }
 
     void Decal(RaycastHit hit) {

@@ -122,14 +122,16 @@ public class GridWorld : MonoBehaviour {
         if (timer >= timeTillSpawn) {
             timer -= timeTillSpawn;
 
-            GameObject go = Instantiate(enemy, spawnpoints[Random.Range(0, spawnpoints.Count)].position, Quaternion.identity);
-            //go.transform.position = spawnpoints[Random.Range(0, spawnpoints.Count)].position;
+            GameObject go = Instantiate(enemy);
+            go.transform.position = spawnpoints[Random.Range(0, spawnpoints.Count)].position;
             go.GetComponent<NavMeshAgent>().enabled = true;
         }
 
         if (doneSpawning) {
             GetComponent<NavMeshSurface>().BuildNavMesh();
+
             SpawnWeapons();
+            SpawnSpawnPoints();
             playerManager.Play();
 
             doneSpawning = false;
@@ -140,10 +142,10 @@ public class GridWorld : MonoBehaviour {
         for (int f = 0; f < floors; f++) {
             for (int y = 0; y < gridSize; y++) {
                 for (int x = 0; x < gridSize; x++) {
-                    if (grid[x, f, y].floor) {
+                    if (grid[x, f, y].floor && !grid[x, f, y].goesup) {
                         if (Random.Range(0, 10) < 2) {
                             GameObject go = Instantiate(weaponPrefabs[Random.Range(0, weaponPrefabs.Length)]);
-                            go.transform.position = new Vector3(x * 4, f * 5 + 1, y * 4);
+                            go.transform.position = new Vector3(x * 4, f * 5 + 5, y * 4);
                             go.transform.rotation = Quaternion.Euler(Random.value * 360f, Random.value * 360f, Random.value * 360f);
                             go.transform.SetParent(transform);
                         }

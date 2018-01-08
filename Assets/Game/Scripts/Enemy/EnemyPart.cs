@@ -9,6 +9,22 @@ public class EnemyPart : MonoBehaviour {
     public float hitMultiplier;
 
 	public void Damage(float damage) {
-        connected.health -= damage * hitMultiplier;
+        if (connected.health > 0) {
+            connected.health -= damage * hitMultiplier;
+
+            if (connected.health <= 0) {
+                connected.OnDeath();
+            }
+        }
+    }
+
+    void OnParticleCollision(GameObject other) {
+        if (connected.health > 0) {
+            connected.health -= 1;
+
+            if (connected.health <= 0) {
+                connected.OnDeath();
+            }
+        }
     }
 }
