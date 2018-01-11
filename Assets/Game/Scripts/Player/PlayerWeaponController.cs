@@ -58,6 +58,8 @@ public class PlayerWeaponController : MonoBehaviour {
     bool beginsound = false;
     bool endsound = false;
 
+    public bool shooting = false;
+
 	void Start () {
         player = GetComponent<Player>();
         originHandPos = hand.localPosition;
@@ -207,6 +209,8 @@ public class PlayerWeaponController : MonoBehaviour {
                 fireMode = 0;
                 recoilCooldownMultiplier = 4;
             }
+
+            shooting = true;
         }
 
         if (pressFire && hitfire != pressFire) {
@@ -231,6 +235,8 @@ public class PlayerWeaponController : MonoBehaviour {
             recoilCooldownMultiplier = 4;
 
             pressFire = false;
+
+            shooting = false;
         }
 
         if (currentWeapon != null && currentWeapon.muzzleFlash != null && currentWeapon.muzzleFlash.activeSelf) {
@@ -507,7 +513,7 @@ public class PlayerWeaponController : MonoBehaviour {
         }
 
         EnemyPart part = hit.collider.GetComponent<EnemyPart>();
-        part.Damage(10);
+        part.Damage(10, transform);
     }
 
     void Decal(RaycastHit hit) {

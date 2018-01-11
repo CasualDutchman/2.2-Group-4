@@ -5,7 +5,10 @@ using UnityEngine.AI;
 
 public class GridWorld : MonoBehaviour {
 
-    public GameObject enemy;
+    public int maxEnemySpawned = 60;
+    int currentEnemyCount;
+
+    public GameObject[] enemies;
 
     List<Transform> spawnpoints = new List<Transform>();
 
@@ -120,11 +123,15 @@ public class GridWorld : MonoBehaviour {
     void Update() {
         timer += Time.deltaTime;
         if (timer >= timeTillSpawn) {
-            timer -= timeTillSpawn;
+            if (currentEnemyCount < maxEnemySpawned) {
+                timer -= timeTillSpawn;
 
-            GameObject go = Instantiate(enemy);
-            go.transform.position = spawnpoints[Random.Range(0, spawnpoints.Count)].position;
-            go.GetComponent<NavMeshAgent>().enabled = true;
+                GameObject go = Instantiate(enemies[Random.Range(0, enemies.Length)]);
+                go.transform.position = spawnpoints[Random.Range(0, spawnpoints.Count)].position;
+                go.GetComponent<NavMeshAgent>().enabled = true;
+
+                currentEnemyCount++;
+            }
         }
 
         if (doneSpawning) {

@@ -5,10 +5,8 @@ using UnityEngine.AI;
 
 public class SpittingAI : Enemy {
     public float SpittingDistance = 5.0f;
-    public float SpittingForce = 1000.0f;
 
     public Transform SpitClass;
-
     public Transform spitBegin;
 
     protected override void UpdateFindingPath() {
@@ -28,11 +26,26 @@ public class SpittingAI : Enemy {
         UpdateLastAttackTime();
     }
 
+    protected override void UpdateAnimations() {
+        animator.SetFloat("Blend", agent.velocity.normalized.magnitude);
+
+        if (isAttacking) {
+            if (animator.GetCurrentAnimatorStateInfo(0).IsTag("Attack")) {
+                if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.95) {
+                    isAttacking = false;
+                }
+            }
+        }
+    }
+
     protected override void Attack() {
         if (TimeSinceLastAttack >= DelayBetweenAttacks) {
             TimeSinceLastAttack = 0.0f;
-            Transform Spit = Instantiate(SpitClass, spitBegin.position, Quaternion.identity);
-            Spit.GetComponent<Rigidbody>().velocity = CalculateSpitVelocity(target.GetChild(0), Spit);
+
+            if (!isAttacking) {
+                StartCoroutine(AttackAnimation());
+                isAttacking = true;
+            }
         }
     }
 
@@ -48,5 +61,20 @@ public class SpittingAI : Enemy {
         Vector3 VelocityXZ = displacementXZ / (Mathf.Sqrt(-2 * h / gravity) + Mathf.Sqrt(2 * (displacementY - h) / gravity));
 
         return VelocityXZ + velocityY;
+    }
+
+    IEnumerator AttackAnimation() {
+        animator.SetTrigger("Attack1");
+
+        yield return new WaitForSeconds(0.4f);
+        Spitting();
+        //yield return null;
+    }
+
+    void Spitting() {
+        if ((transform.position - target.transform.position).magnitude > SpittingDistance) {
+            Transform Spit = Instantiate(SpitClass, spitBegin.position, Quaternion.identity);
+            Spit.GetComponent<Rigidbody>().velocity = CalculateSpitVelocity(target.GetChild(0), Spit);
+        }
     }
 }

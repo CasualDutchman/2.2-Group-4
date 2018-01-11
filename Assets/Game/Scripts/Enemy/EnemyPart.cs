@@ -8,9 +8,13 @@ public class EnemyPart : MonoBehaviour {
 
     public float hitMultiplier;
 
-	public void Damage(float damage) {
+	public void Damage(float damage, Transform shooter) {
         if (connected.health > 0) {
             connected.health -= damage * hitMultiplier;
+
+            if (connected.target == null) {
+                connected.target = shooter;
+            }
 
             if (connected.health <= 0) {
                 connected.OnDeath();
