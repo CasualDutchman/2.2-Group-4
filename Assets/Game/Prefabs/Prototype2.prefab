@@ -1598,7 +1598,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1639235501378242}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -7.3020277, y: 1.242566e-16, z: -5.5960197}
+  m_LocalPosition: {x: 2.46, y: 1.242566e-16, z: 4.71}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4471100224028784}
@@ -2955,6 +2955,7 @@ MonoBehaviour:
   recoilCrosshair: {fileID: 0}
   ammoText: {fileID: 0}
   pickUpText: {fileID: 0}
+  shooting: 0
 --- !u!114 &114460693649031604
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2969,6 +2970,7 @@ MonoBehaviour:
   normalSize: 8
   crouchedSize: 4
   sprintSize: 15
+  shootSize: 30
 --- !u!114 &114465938288341438
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3035,9 +3037,9 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_Enabled: 0
   m_Radius: 0.5
-  m_Height: 2
+  m_Height: 1.8
   m_Direction: 1
-  m_Center: {x: 0, y: 1, z: 0}
+  m_Center: {x: 0, y: 0.9, z: 0}
 --- !u!137 &137738279845332974
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1
@@ -3157,10 +3159,10 @@ CharacterController:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Height: 2
+  m_Height: 1.8
   m_Radius: 0.5
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 1, z: 0}
+  m_Center: {x: 0, y: 0.9, z: 0}

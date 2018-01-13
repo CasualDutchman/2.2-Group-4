@@ -31,6 +31,8 @@ public class GridWorld : MonoBehaviour {
 
     int currentSpawnID = 1;
 
+    public Vector3 scale;
+
     public bool spawnObjects = false;
 
     public int spawnRoomTries = 20;
@@ -152,7 +154,7 @@ public class GridWorld : MonoBehaviour {
                     if (grid[x, f, y].floor && !grid[x, f, y].goesup) {
                         if (Random.Range(0, 10) < 2) {
                             GameObject go = Instantiate(weaponPrefabs[Random.Range(0, weaponPrefabs.Length)]);
-                            go.transform.position = new Vector3(x * 4, f * 5 + 5, y * 4);
+                            go.transform.position = new Vector3(x * scale.x, f * scale.y + 1, y * scale.z);
                             go.transform.rotation = Quaternion.Euler(Random.value * 360f, Random.value * 360f, Random.value * 360f);
                             go.transform.SetParent(transform);
                         }
@@ -170,7 +172,7 @@ public class GridWorld : MonoBehaviour {
                     if(grid[x, f, y].floor) {
                         if(Random.Range(0, 10) < 2) {
                             GameObject spawnpoint = new GameObject();
-                            spawnpoint.transform.position = new Vector3(x * 4, f * 5, y * 4);
+                            spawnpoint.transform.position = new Vector3(x * scale.x, f * scale.y, y * scale.z);
                             spawnpoint.transform.SetParent(spawns.transform);
                             spawnpoints.Add(spawnpoint.transform);
                         }
@@ -256,7 +258,7 @@ public class GridWorld : MonoBehaviour {
 
                         GameObject hallbase = Instantiate(Resources.Load<GameObject>("halls/floorceil"));
                         //hallbase.isStatic = true;
-                        hallbase.transform.position = new Vector3(x * 4, f * 5, y * 4);
+                        hallbase.transform.position = new Vector3(x * scale.x, f * scale.y, y * scale.z);
                         hallbase.transform.SetParent(transform);
 
                         for (int i = 0; i < 4; i++) {
@@ -657,7 +659,7 @@ public class GridWorld : MonoBehaviour {
             } else {
                 go = Instantiate(request.itemobject);
             }
-            go.transform.position = new Vector3(request.position.x * 4, request.position.y * 5, request.position.z * 4);
+            go.transform.position = new Vector3(request.position.x * scale.x, request.position.y * scale.y, request.position.z * scale.z);
             go.transform.SetParent(transform);
 
             RoomGrid room = go.GetComponent<RoomGrid>();
@@ -850,8 +852,8 @@ public class GridWorld : MonoBehaviour {
         visited += roomsize;
 
         if (currentSpawnID == 1) {
-            playerManager.playerOneSpawn.position = new Vector3(((int)position.x + spot.x) * 4, ((int)position.y + spot.y) * 5, ((int)position.z + spot.z) * 4);
-            playerManager.playerTwoSpawn.position = new Vector3(((int)position.x + spot2.x) * 4, ((int)position.y + spot2.y) * 5, ((int)position.z + spot2.z) * 4);
+            playerManager.playerOneSpawn.position = new Vector3(((int)position.x + spot.x) * scale.x, ((int)position.y + spot.y) * scale.y, ((int)position.z + spot.z) * scale.z);
+            playerManager.playerTwoSpawn.position = new Vector3(((int)position.x + spot2.x) * scale.x, ((int)position.y + spot2.y) * scale.y, ((int)position.z + spot2.z) * scale.z);
         }
 
         Vector3 key = new Vector3(position.x, position.y, position.z);
