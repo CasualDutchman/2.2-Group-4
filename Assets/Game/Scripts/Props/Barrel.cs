@@ -31,8 +31,7 @@ public class Barrel : MonoBehaviour {
 
                 if (hit.GetComponent<Enemy>()) {
                     print("ENEMY");
-                    hit.GetComponent<Enemy>().health -= 100;
-                    hit.GetComponent<Enemy>().OnDeath();
+                    hit.GetComponent<Enemy>().Hurt(100);
                 }
 
                 if (hit.GetComponent<Rigidbody>())

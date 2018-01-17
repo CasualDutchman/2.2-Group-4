@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Weapon : Item {
 
-    public enum FireMode { Semi, Burst, Auto, ShotGun, Flamethrower, Melee }
+    public enum FireMode { Semi, Burst, Auto, ShotGun, Flamethrower, Melee, Throwable }
 
     public string weaponName;
 
@@ -32,6 +32,8 @@ public class Weapon : Item {
 
     public GameObject muzzleFlash;
 
+    public GameObject throwableObj;
+
     void OnEnable() {
         muzzle = transform.Find("Muzzle");
         audioSource = GetComponent<AudioSource>();
@@ -44,5 +46,14 @@ public class Weapon : Item {
     public override void Interact(Player player) {
         PlayerWeaponController weaponcontroller = player.GetWeaponController;
         weaponcontroller.PickUpGun(this);
+    }
+
+    void OnParticleCollision(GameObject other) {
+        if (fireMode == Weapon.FireMode.Throwable && weaponName.ToLower().StartsWith("molo")) {
+            GameObject go = Instantiate(throwableObj);
+            go.transform.position = transform.position;
+
+            Destroy(gameObject);
+        }
     }
 }

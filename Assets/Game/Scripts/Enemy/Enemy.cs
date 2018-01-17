@@ -78,5 +78,12 @@ public abstract class Enemy : MonoBehaviour {
         Destroy(this);
     }
 
+    public void Hurt(float amount) {
+        health -= amount;
+        if (health <= 0) {
+            OnDeath();
+        }
+    }
+
     protected abstract void Attack();
 }

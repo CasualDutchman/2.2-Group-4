@@ -118,6 +118,8 @@ public class GridWorld : MonoBehaviour {
             Spawn();
             PrepareHalls();
 
+            //StaticBatchingUtility.Combine(gameObject);
+
             doneSpawning = true;
         }
     }
@@ -137,9 +139,10 @@ public class GridWorld : MonoBehaviour {
         }
 
         if (doneSpawning) {
+            
             GetComponent<NavMeshSurface>().BuildNavMesh();
 
-            SpawnWeapons();
+            //SpawnWeapons();
             SpawnSpawnPoints();
             playerManager.Play();
 

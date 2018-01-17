@@ -65,6 +65,8 @@ public class PlayerWeaponController : MonoBehaviour {
         originHandPos = hand.localPosition;
         originHandRot = hand.localEulerAngles;
 
+        leftIKorigin = leftIK.localPosition;
+
         rightIKoriginPos = rightIK.localPosition;
         rightIKoriginRot = rightIK.localEulerAngles;
     }
@@ -144,7 +146,7 @@ public class PlayerWeaponController : MonoBehaviour {
 
         recoilCrosshair.sizeDelta = new Vector2(50 + 100f * recoilFactor, 50 + 100f * recoilFactor);
 
-        if (Input.GetMouseButtonDown(1) && !isReloading) {
+        if (Input.GetMouseButtonDown(1) && !isReloading && CanAimDownSights()) {
             //hand.localPosition -= new Vector3(originHandPos.x, 0, 0);
             combinedIK.localPosition = new Vector3(0.05f, 0, 0);
             aimDownSights = true;
@@ -190,6 +192,21 @@ public class PlayerWeaponController : MonoBehaviour {
             }
             else if (currentWeapon.fireMode == Weapon.FireMode.Flamethrower) {
                 Shoot();
+            }
+            else if (currentWeapon.fireMode == Weapon.FireMode.Throwable) {
+                currentWeapon.gameObject.SetActive(false);
+
+                GameObject go = Instantiate(currentWeapon.throwableObj);
+                go.transform.position = currentWeapon.transform.position + player.GetMovementController.playerCamera.transform.forward * 0.1f;
+                go.transform.rotation = currentWeapon.transform.rotation;
+
+                go.transform.GetComponent<Rigidbody>().velocity = player.GetMovementController.playerCamera.transform.forward * 10;
+
+                Destroy(currentWeapon.gameObject);
+                currentWeapon = null;
+                secondaryWeapon = null;
+                leftIK.localPosition = leftIKorigin;
+                return;
             }
 
             if(currentWeapon.ammo <= 0) {
@@ -247,6 +264,10 @@ public class PlayerWeaponController : MonoBehaviour {
                 muzzleFlashShownFrames = 0;
             }
         }
+    }
+
+    bool CanAimDownSights() {
+        return currentWeapon != null && (currentWeapon.fireMode != Weapon.FireMode.Throwable || currentWeapon.fireMode != Weapon.FireMode.Melee);
     }
 
     bool CanShoot() {
@@ -370,8 +391,12 @@ public class PlayerWeaponController : MonoBehaviour {
         hand.localEulerAngles = new Vector3(0, 0, 90);
         rightIK.localEulerAngles = rightIKoriginRot;
         rightIK.localPosition = rightIKoriginPos;
-        leftIK.position = currentWeapon.secondHand.position;
-        leftIK.rotation = currentWeapon.secondHand.rotation;
+        if (currentWeapon.secondHand) {
+            leftIK.position = currentWeapon.secondHand.position;
+            leftIK.rotation = currentWeapon.secondHand.rotation;
+        }else {
+            leftIK.localPosition = leftIKorigin;
+        }
     }
 
     void Recoil() {
@@ -517,6 +542,9 @@ public class PlayerWeaponController : MonoBehaviour {
     }
 
     void Decal(RaycastHit hit) {
+        if (hit.collider.isTrigger)
+            return;
+
         if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Water"))
             if (hit.collider.GetComponent<Rigidbody>()) {
                 hit.collider.GetComponent<Rigidbody>().AddForce(-hit.normal * 2000);
@@ -578,8 +606,6 @@ public class PlayerWeaponController : MonoBehaviour {
         if (currentSlot == slot)
             return;
 
-        ResetReload();
-
         if (slot == WeaponSlot.primary && primaryWeapon != null) {
             currentSlot = slot;
             DrawWeapon(primaryWeapon);
@@ -590,6 +616,7 @@ public class PlayerWeaponController : MonoBehaviour {
             DrawWeapon(secondaryWeapon);
         }
 
+        ResetReload();
         UpdateAmmoCounter();
     }
 
