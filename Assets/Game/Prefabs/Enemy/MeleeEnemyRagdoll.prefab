@@ -17691,11 +17691,10 @@ GameObject:
   - component: {fileID: 95355729755904112}
   - component: {fileID: 114818292082987270}
   - component: {fileID: 195619690159594284}
-  - component: {fileID: 65699542515283436}
   - component: {fileID: 114632830195681122}
   m_Layer: 0
   m_Name: MeleeEnemyRagdoll
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -35282,23 +35281,11 @@ BoxCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1996071320155372}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.003658781, y: 0.003344845, z: 0.002421318}
   m_Center: {x: -1.1641532e-10, y: 0.0016724202, z: -0.00018172665}
---- !u!65 &65699542515283436
-BoxCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1974067179245416}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.2, y: 0.2, z: 0.2}
-  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!65 &65855173454193014
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -35306,7 +35293,7 @@ BoxCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1811336660630278}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.003658781, y: 0.0014520633, z: 0.002348071}
@@ -35353,7 +35340,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   connected: {fileID: 114818292082987270}
-  hitMultiplier: 0.75
+  hitMultiplier: 2
 --- !u!114 &114319254332210404
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -35366,7 +35353,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   connected: {fileID: 114818292082987270}
-  hitMultiplier: 0.75
+  hitMultiplier: 2
 --- !u!114 &114346284297329512
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -35379,7 +35366,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   connected: {fileID: 114818292082987270}
-  hitMultiplier: 0.65
+  hitMultiplier: 2
 --- !u!114 &114406774489090676
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -35392,7 +35379,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   connected: {fileID: 114818292082987270}
-  hitMultiplier: 0.1
+  hitMultiplier: 2
 --- !u!114 &114451006665341282
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -35405,7 +35392,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   connected: {fileID: 114818292082987270}
-  hitMultiplier: 0.9
+  hitMultiplier: 2
 --- !u!114 &114574323126597898
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -35418,7 +35405,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   connected: {fileID: 114818292082987270}
-  hitMultiplier: 0.75
+  hitMultiplier: 2
 --- !u!114 &114613382584298178
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -35431,7 +35418,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   connected: {fileID: 114818292082987270}
-  hitMultiplier: 0.5
+  hitMultiplier: 2
 --- !u!114 &114632830195681122
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -35470,7 +35457,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   connected: {fileID: 114818292082987270}
-  hitMultiplier: 0.65
+  hitMultiplier: 2
 --- !u!114 &114777319530469598
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -35483,7 +35470,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   connected: {fileID: 114818292082987270}
-  hitMultiplier: 0.9
+  hitMultiplier: 2
 --- !u!114 &114818292082987270
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -35495,8 +35482,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9d59de3970633f4a8121fe3e6754977, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 100
-  maxHealth: 50
+  health: 30
+  maxHealth: 30
   target: {fileID: 0}
   DelayBetweenAttacks: 1
   damageDone: 10
@@ -35512,7 +35499,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   connected: {fileID: 114818292082987270}
-  hitMultiplier: 0.1
+  hitMultiplier: 2
 --- !u!114 &114959672775064312
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -35525,7 +35512,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   connected: {fileID: 114818292082987270}
-  hitMultiplier: 0.5
+  hitMultiplier: 2
 --- !u!114 &114985830426282576
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -35538,7 +35525,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   connected: {fileID: 114818292082987270}
-  hitMultiplier: 1
+  hitMultiplier: 2
 --- !u!135 &135732182963643418
 SphereCollider:
   m_ObjectHideFlags: 1
@@ -35546,7 +35533,7 @@ SphereCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1600435424424962}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.0013

@@ -13,7 +13,6 @@ public class FirstPersonPlayerController : MonoBehaviour {
     Player player;
     public Camera playerCamera;
 
-    public float mouseSpeed = 5;
     public float aimMultiplier = 1;
     public float yaw = 0.0f;
     public float pitch = 0.0f;
@@ -55,6 +54,8 @@ public class FirstPersonPlayerController : MonoBehaviour {
     }
 
     void Update () {
+        float mouseSpeed = OptionsMenu.instance != null ? OptionsMenu.instance.mouseSpeed : 4;
+
         if (Time.deltaTime > 0) {
             yaw += Input.GetAxis(player.controlType.ToString() + " X") * mouseSpeed * aimMultiplier;
             pitch = Mathf.Clamp(pitch + (Input.GetAxis(player.controlType.ToString() + " Y") * mouseSpeed * aimMultiplier * (invertY ? -1 : 1)), -90, 90);

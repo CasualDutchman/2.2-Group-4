@@ -538,7 +538,7 @@ public class PlayerWeaponController : MonoBehaviour {
         }
 
         EnemyPart part = hit.collider.GetComponent<EnemyPart>();
-        part.Damage(10, transform);
+        part.Damage(currentWeapon.damageDone, transform);
     }
 
     void Decal(RaycastHit hit) {

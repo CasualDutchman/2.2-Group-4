@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028334, g: 0.2257134, b: 0.30692226, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -167,23 +167,19 @@ Prefab:
       propertyPath: m_LocalRotation.w
       value: 0.2015131
       objectReference: {fileID: 0}
-    - target: {fileID: 1974067179245416, guid: a3d4d1cc776c33e40a5582c0872f8a1f, type: 2}
-      propertyPath: m_IsActive
-      value: 0
+    - target: {fileID: 135732182963643418, guid: a3d4d1cc776c33e40a5582c0872f8a1f,
+        type: 2}
+      propertyPath: m_IsTrigger
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1974067179245416, guid: a3d4d1cc776c33e40a5582c0872f8a1f, type: 2}
-      propertyPath: m_TagString
-      value: Enemy
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 195619690159594284, guid: a3d4d1cc776c33e40a5582c0872f8a1f,
         type: 2}
       propertyPath: m_Enabled
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 65699542515283436, guid: a3d4d1cc776c33e40a5582c0872f8a1f,
-        type: 2}
-      propertyPath: m_Center.y
-      value: 0.2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a3d4d1cc776c33e40a5582c0872f8a1f, type: 2}
@@ -1179,10 +1175,6 @@ Prefab:
     - target: {fileID: 1680594701457946, guid: 48c6f43160184e1409dc4a4e809cfa64, type: 2}
       propertyPath: m_IsActive
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1680594701457946, guid: 48c6f43160184e1409dc4a4e809cfa64, type: 2}
-      propertyPath: m_TagString
-      value: Enemy
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 48c6f43160184e1409dc4a4e809cfa64, type: 2}
@@ -2732,10 +2724,6 @@ Prefab:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1682725958274826, guid: 0edba8a4e62c03448952fe67c646cdcd, type: 2}
-      propertyPath: m_TagString
-      value: Enemy
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 0edba8a4e62c03448952fe67c646cdcd, type: 2}
   m_IsPrefabParent: 0
@@ -3013,6 +3001,7 @@ MonoBehaviour:
   ammo: 0
   holdingmaxAmmo: 0
   reloadTime: 0
+  damageDone: 10
   bulletShell: {fileID: 0}
   muzzle: {fileID: 0}
   muzzleFlash: {fileID: 0}

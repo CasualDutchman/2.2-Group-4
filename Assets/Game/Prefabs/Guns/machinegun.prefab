@@ -369,7 +369,9 @@ MonoBehaviour:
   ammo: 31
   holdingmaxAmmo: 155
   reloadTime: 2.7
+  damageDone: 20
   bulletShell: {fileID: 1600648514189188, guid: 9c349788e9033b54492df3e9984de13e,
     type: 2}
   muzzle: {fileID: 0}
   muzzleFlash: {fileID: 0}
+  throwableObj: {fileID: 0}

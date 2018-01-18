@@ -1,24 +1,37 @@
 fileFormatVersion: 2
-guid: f242a6e4e09efce408805c54993ec814
-timeCreated: 1515776426
+guid: d344436760469dd479ed1eb3fb9c8035
+timeCreated: 1516219387
 licenseType: Free
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
-    100000: //RootNode
-    100002: FFloor1
-    100004: FFloor1.001
-    400000: //RootNode
-    400002: FFloor1
-    400004: FFloor1.001
-    2300000: FFloor1
-    2300002: FFloor1.001
-    2300004: //RootNode
-    3300000: FFloor1
-    3300002: FFloor1.001
-    3300004: //RootNode
-    4300000: FFloor1.001
+    100000: Doorframe
+    100002: //RootNode
+    100004: FFloor1
+    100006: Wall.001
+    100008: Plane
+    100010: Ceiling
+    400000: Doorframe
+    400002: //RootNode
+    400004: FFloor1
+    400006: Wall.001
+    400008: Plane
+    400010: Ceiling
+    2300000: Doorframe
+    2300002: FFloor1
+    2300004: Wall.001
+    2300006: Plane
+    2300008: Ceiling
+    3300000: Doorframe
+    3300002: FFloor1
+    3300004: Wall.001
+    3300006: Plane
+    3300008: Ceiling
+    4300000: Doorframe
     4300002: FFloor1
+    4300004: Wall.001
+    4300006: Plane
+    4300008: Ceiling
   externalObjects:
   - first:
       type: UnityEngine:Material
@@ -62,7 +75,7 @@ ModelImporter:
     importCameras: 1
     importLights: 1
     swapUVChannels: 0
-    generateSecondaryUV: 0
+    generateSecondaryUV: 1
     useFileUnits: 1
     optimizeMeshForGPU: 1
     keepQuads: 0

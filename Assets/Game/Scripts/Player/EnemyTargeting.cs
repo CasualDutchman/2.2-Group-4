@@ -19,7 +19,7 @@ public class EnemyTargeting : MonoBehaviour {
         weaponController = GetComponent<PlayerWeaponController>();
     }
 	
-	void Update () {
+	void FixedUpdate () {
         halfExtents = new Vector3(normalSize / 2f, 1, normalSize / 2f);
 
         if (movementController.crouched) {
@@ -38,8 +38,8 @@ public class EnemyTargeting : MonoBehaviour {
 
         Collider[] colliders = Physics.OverlapBox(transform.position + Vector3.up, halfExtents, transform.rotation);
         foreach (Collider hit in colliders) {
-            if (hit.GetComponent<Enemy>() && hit.GetComponent<Enemy>().target == null) {
-                hit.GetComponent<Enemy>().target = transform;
+            if (hit.GetComponent<EnemyPart>() && hit.GetComponent<EnemyPart>().connected.target == null) {
+                hit.GetComponent<EnemyPart>().connected.target = transform;
             }
         }
     }

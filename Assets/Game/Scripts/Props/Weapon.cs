@@ -24,6 +24,7 @@ public class Weapon : Item {
     public int ammo;
     public int holdingmaxAmmo;
     public float reloadTime;
+    public float damageDone = 10;
 
     public GameObject bulletShell;
 

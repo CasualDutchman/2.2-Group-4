@@ -23,10 +23,13 @@ public abstract class Enemy : MonoBehaviour {
     protected bool isAttacking = false;
 
     protected virtual void Start () {
-        health = maxHealth;
+        health = maxHealth * DemoScript.instance.healthMultiplier;
 
         animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
+        agent.speed = DemoScript.instance.speed;
+
+        StartCoroutine(pathing());
     }
 
     void Update() {
@@ -37,7 +40,14 @@ public abstract class Enemy : MonoBehaviour {
     protected virtual void UpdateAnimations() { }
 
 	void FixedUpdate () {
-        UpdateFindingPath();
+        //UpdateFindingPath();
+    }
+
+    IEnumerator pathing() {
+        while (true) {
+            UpdateFindingPath();
+            yield return new WaitForSeconds(0.5f);
+        }
     }
 
     protected virtual void UpdateFindingPath() {
@@ -79,7 +89,7 @@ public abstract class Enemy : MonoBehaviour {
     }
 
     public void Hurt(float amount) {
-        health -= amount;
+        health -= amount * DemoScript.instance.damageMultiplier;
         if (health <= 0) {
             OnDeath();
         }

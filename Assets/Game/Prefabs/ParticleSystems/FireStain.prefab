@@ -192,7 +192,7 @@ Light:
   m_SpotAngle: 30
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 0
+    m_Type: 1
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -227,6 +227,7 @@ MonoBehaviour:
   enemyType: 0
   damage: 2
   interval: 1
+  canMakeExplode: 1
 --- !u!114 &114848265986910466
 MonoBehaviour:
   m_ObjectHideFlags: 1

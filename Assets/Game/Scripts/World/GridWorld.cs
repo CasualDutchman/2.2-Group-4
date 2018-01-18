@@ -22,10 +22,15 @@ public class GridWorld : MonoBehaviour {
 
     Element[,,] grid;
 
+    public GameObject Floor, Ceiling, Wall, Entrance;
+    public Material allTextureMaterial;
+
     //Dictionary<Vector3, GameObject> roomsToSpawn = new Dictionary<Vector3, GameObject>();
     List<SpawnRequest> roomsToSpawn = new List<SpawnRequest>();
 
     Dictionary<Vector3Int, int> roomEntrances = new Dictionary<Vector3Int, int>();
+
+    List<GameObject> staticRooms = new List<GameObject>();
 
     public PlayerManager playerManager;
 
@@ -118,13 +123,14 @@ public class GridWorld : MonoBehaviour {
             Spawn();
             PrepareHalls();
 
-            //StaticBatchingUtility.Combine(gameObject);
+            StaticBatchingUtility.Combine(staticRooms.ToArray(), gameObject);
 
             doneSpawning = true;
         }
     }
 
     void Update() {
+        /*
         timer += Time.deltaTime;
         if (timer >= timeTillSpawn) {
             if (currentEnemyCount < maxEnemySpawned) {
@@ -137,6 +143,7 @@ public class GridWorld : MonoBehaviour {
                 currentEnemyCount++;
             }
         }
+        */
 
         if (doneSpawning) {
             
@@ -173,12 +180,30 @@ public class GridWorld : MonoBehaviour {
             for (int y = 0; y < gridSize; y++) {
                 for (int x = 0; x < gridSize; x++) {
                     if(grid[x, f, y].floor) {
-                        if(Random.Range(0, 10) < 2) {
-                            GameObject spawnpoint = new GameObject();
-                            spawnpoint.transform.position = new Vector3(x * scale.x, f * scale.y, y * scale.z);
-                            spawnpoint.transform.SetParent(spawns.transform);
-                            spawnpoints.Add(spawnpoint.transform);
-                        }
+                        if (currentEnemyCount > maxEnemySpawned)
+                            return;
+
+                        if (Random.Range(0, 5) > 0)
+                            continue;
+
+                        if (Vector3.Distance(playerManager.playerOneSpawn.position, new Vector3(x * scale.x, f * scale.y, y * scale.z)) < 16)
+                            continue;
+                        
+                            /*
+                            if(Random.Range(0, 10) < 2) {
+                                GameObject spawnpoint = new GameObject();
+                                spawnpoint.transform.position = new Vector3(x * scale.x, f * scale.y, y * scale.z);
+                                spawnpoint.transform.SetParent(spawns.transform);
+                                spawnpoints.Add(spawnpoint.transform);
+                            }*/
+
+                            int rand = Random.Range(0, 100);
+                        int i = rand < 20 ? 2 : (rand < 40 ? 1 : 0);
+
+                        GameObject go = Instantiate(enemies[i]);
+                        go.transform.position = new Vector3(x * scale.x, f * scale.y, y * scale.z);
+                        go.GetComponent<NavMeshAgent>().enabled = true;
+                        currentEnemyCount++;
                     }
                 }
             }
@@ -257,27 +282,44 @@ public class GridWorld : MonoBehaviour {
                         grid[x, f, y].entrancewest ? 2 : (grid[x, f, y].wallwest ? 1 : 0)
                     };
 
-                        bool got = false;
+                        GameObject baseObj = new GameObject("base");
+                        baseObj.transform.position = new Vector3(x * scale.x, f * scale.y, y * scale.z);
+                        baseObj.transform.SetParent(transform);
+                        baseObj.isStatic = true;
 
-                        GameObject hallbase = Instantiate(Resources.Load<GameObject>("halls/floorceil"));
-                        //hallbase.isStatic = true;
-                        hallbase.transform.position = new Vector3(x * scale.x, f * scale.y, y * scale.z);
-                        hallbase.transform.SetParent(transform);
+                        MeshFilter filter = baseObj.AddComponent<MeshFilter>();
+                        MeshCollider collider = baseObj.AddComponent<MeshCollider>();
+                        MeshRenderer render = baseObj.AddComponent<MeshRenderer>();
+                        render.material = allTextureMaterial;
+
+                        List<CombineInstance> combine = new List<CombineInstance>();
+
+                        CombineInstance CIfloor = new CombineInstance();
+                        CIfloor.mesh = Floor.GetComponent<MeshFilter>().sharedMesh;
+                        CIfloor.transform = Matrix4x4.TRS(Vector3.zero, Quaternion.identity, Vector3.one);
+                        combine.Add(CIfloor);
+
+                        CombineInstance CIceiling = new CombineInstance();
+                        CIceiling.mesh = Ceiling.transform.GetComponent<MeshFilter>().sharedMesh;
+                        CIceiling.transform = Matrix4x4.TRS(Vector3.zero, Quaternion.identity, Vector3.one);
+                        combine.Add(CIceiling);
 
                         for (int i = 0; i < 4; i++) {
                             if (walls[i] > 0) {
-                                GameObject wall = Instantiate(Resources.Load<GameObject>("halls/" + (walls[i] == 1 ? "wall" : "entrance")));
-                                wall.isStatic = true;
-                                wall.transform.SetParent(hallbase.transform);
-                                wall.transform.localPosition = Vector3.zero;
-                                wall.transform.localEulerAngles = new Vector3(0, (i - 1) * 90, 0);
-                                got = true;
+                                CombineInstance CIwall = new CombineInstance();
+                                CIwall.mesh = walls[i] == 1 ? Wall.GetComponent<MeshFilter>().sharedMesh : Entrance.GetComponent<MeshFilter>().sharedMesh;
+                                CIwall.transform = Matrix4x4.TRS(Vector3.zero, Quaternion.Euler(0, (i - 1) * 90, 0), Vector3.one);
+                                combine.Add(CIwall);
                             }
                         }
 
-                        if (!got) {
-                            print("" + walls[0] + " / " + walls[1] + " / " + walls[2] + " / " + walls[3] + " |");
-                        }
+                        Mesh mesh = new Mesh();
+                        mesh.CombineMeshes(combine.ToArray());
+                        filter.mesh = mesh;
+
+                        collider.sharedMesh = mesh;
+
+                        staticRooms.Add(baseObj);
                     }
                 }
             }
@@ -667,29 +709,66 @@ public class GridWorld : MonoBehaviour {
 
             RoomGrid room = go.GetComponent<RoomGrid>();
 
+            GameObject wallstuff = go.transform.GetChild(1).gameObject;
+
             foreach (int i in request.changeToEntrance) {
                 Vector3 pos = room.entranceObjects[i].transform.position;
                 Quaternion rot = room.entranceObjects[i].transform.rotation;
 
-                Destroy(room.entranceObjects[i]);
+                DestroyImmediate(room.entranceObjects[i]);
 
                 GameObject entrance = Instantiate(Resources.Load<GameObject>("halls/entrance"));
                 entrance.transform.position = pos;
                 entrance.transform.rotation = rot;
-                entrance.transform.SetParent(go.transform);
+                entrance.transform.SetParent(wallstuff.transform);
             }
 
             foreach (int i in request.changeToWall) {
                 Vector3 pos = room.entranceObjects[i].transform.position;
                 Quaternion rot = room.entranceObjects[i].transform.rotation;
 
-                Destroy(room.entranceObjects[i]);
+                DestroyImmediate(room.entranceObjects[i]);
 
                 GameObject entrance = Instantiate(Resources.Load<GameObject>("halls/wall"));
                 entrance.transform.position = pos;
                 entrance.transform.rotation = rot;
-                entrance.transform.SetParent(go.transform);
+                entrance.transform.SetParent(wallstuff.transform);
             }
+
+            MeshFilter meshFilter = wallstuff.AddComponent<MeshFilter>();
+            MeshCollider collider = wallstuff.AddComponent<MeshCollider>();
+            MeshRenderer render = wallstuff.AddComponent<MeshRenderer>();
+            render.material = allTextureMaterial;
+
+            List<CombineInstance> combine = new List<CombineInstance>();
+
+            foreach (var meshfilter in wallstuff.GetComponentsInChildren<MeshFilter>()) {
+                if (meshfilter == null || meshfilter.sharedMesh == null)
+                    continue;
+
+                CombineInstance instance = new CombineInstance();
+                instance.mesh = meshfilter.sharedMesh;
+
+                Vector3 pos = meshfilter.transform.localPosition;
+                if (meshfilter.transform.parent.gameObject != wallstuff) {
+                    pos = meshfilter.transform.parent.localPosition;
+                }
+
+                instance.transform = Matrix4x4.TRS(pos, meshfilter.transform.localRotation, meshfilter.transform.localScale);
+                combine.Add(instance);
+            }
+
+            Mesh mesh = new Mesh();
+            mesh.CombineMeshes(combine.ToArray());
+            meshFilter.mesh = mesh;
+
+            collider.sharedMesh = mesh;
+
+            foreach (Transform child in wallstuff.transform) {
+                Destroy(child.gameObject);
+            }
+
+            staticRooms.Add(wallstuff);
         } 
     }
 

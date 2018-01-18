@@ -349,9 +349,8 @@ MonoBehaviour:
   - {fileID: 1027183833371976, guid: 2d10fdab1185eaf44a7bf2cbf08e683c, type: 2}
   - {fileID: 1631832042557920, guid: 312756e28bd417d4ea9d3fb5cc0bff8e, type: 2}
   - {fileID: 1454784980704160, guid: 9673f797f661e05498778748d51ef271, type: 2}
-  - {fileID: 1424636339117482, guid: 6e64c13f9a57a6e46a3c64859a571b4d, type: 2}
+  - {fileID: 1027183833371976, guid: 2d10fdab1185eaf44a7bf2cbf08e683c, type: 2}
   changeIn: {x: 4, y: 10}
-  makeParent: 0
 --- !u!114 &114380873637079108
 MonoBehaviour:
   m_ObjectHideFlags: 1

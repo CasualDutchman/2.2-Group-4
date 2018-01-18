@@ -24,7 +24,7 @@ public class Player : MonoBehaviour {
 	}
 
     public void Hurt(float amount) {
-        health -= amount;
+        health -= amount * DemoScript.instance.enemyDamageMultiplier;
 
         UpdateHealthText();
     }

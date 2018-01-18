@@ -5,12 +5,18 @@ using UnityEngine.UI;
 
 public class OptionsMenu : MonoBehaviour {
 
+    public static OptionsMenu instance;
+
+    void Awake() { instance = this; }
+
     public GameObject graphical, keys;
 
     public Dropdown resolutionDropdown, qualityDropdown;
 
     Resolution[] resolutions;
-    
+
+    public float mouseSpeed = 4;
+
 	void Start () {
         resolutions = Screen.resolutions;
 
@@ -58,6 +64,10 @@ public class OptionsMenu : MonoBehaviour {
 
     public void SetFullscreen(bool isFullscreen) {
         Screen.fullScreen = isFullscreen;
+    }
+
+    public void SetMouseSpeed(float value) {
+        mouseSpeed = value;
     }
 
     public void ViewGraphical() {

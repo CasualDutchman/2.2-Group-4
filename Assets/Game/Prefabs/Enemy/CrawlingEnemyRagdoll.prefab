@@ -12308,7 +12308,7 @@ GameObject:
   - component: {fileID: 114293409255784202}
   m_Layer: 0
   m_Name: CrawlingEnemyRagdoll
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -35282,7 +35282,7 @@ BoxCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1573497966574658}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.003658781, y: 0.003344845, z: 0.002421318}
@@ -35306,7 +35306,7 @@ BoxCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1580228362226246}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.003658781, y: 0.0014520633, z: 0.002348071}
@@ -35339,8 +35339,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a0cbb491bb090c4186520b764ece9fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 100
-  maxHealth: 50
+  health: 20
+  maxHealth: 20
   target: {fileID: 0}
   DelayBetweenAttacks: 1
 --- !u!114 &114194804098882992
@@ -35355,7 +35355,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   connected: {fileID: 114192218397958834}
-  hitMultiplier: 0.5
+  hitMultiplier: 2
 --- !u!114 &114249880488251102
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -35407,7 +35407,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   connected: {fileID: 114192218397958834}
-  hitMultiplier: 0.65
+  hitMultiplier: 2
 --- !u!114 &114368261481036550
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -35420,7 +35420,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   connected: {fileID: 114192218397958834}
-  hitMultiplier: 0.1
+  hitMultiplier: 2
 --- !u!114 &114432047116173444
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -35433,7 +35433,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   connected: {fileID: 114192218397958834}
-  hitMultiplier: 0.75
+  hitMultiplier: 2
 --- !u!114 &114552519996103452
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -35446,7 +35446,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   connected: {fileID: 114192218397958834}
-  hitMultiplier: 0.1
+  hitMultiplier: 2
 --- !u!114 &114658388870420892
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -35459,7 +35459,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   connected: {fileID: 114192218397958834}
-  hitMultiplier: 0.9
+  hitMultiplier: 2
 --- !u!114 &114687473624317008
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -35472,7 +35472,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   connected: {fileID: 114192218397958834}
-  hitMultiplier: 0.5
+  hitMultiplier: 2
 --- !u!114 &114711022669914826
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -35485,7 +35485,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   connected: {fileID: 114192218397958834}
-  hitMultiplier: 0.75
+  hitMultiplier: 2
 --- !u!114 &114822268490294846
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -35498,7 +35498,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   connected: {fileID: 114192218397958834}
-  hitMultiplier: 0.75
+  hitMultiplier: 2
 --- !u!114 &114842612739537434
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -35511,7 +35511,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   connected: {fileID: 114192218397958834}
-  hitMultiplier: 1
+  hitMultiplier: 2
 --- !u!114 &114869635777776812
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -35524,7 +35524,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   connected: {fileID: 114192218397958834}
-  hitMultiplier: 0.65
+  hitMultiplier: 2
 --- !u!114 &114883256991495008
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -35537,7 +35537,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   connected: {fileID: 114192218397958834}
-  hitMultiplier: 0.9
+  hitMultiplier: 2
 --- !u!135 &135085491152834298
 SphereCollider:
   m_ObjectHideFlags: 1
@@ -35545,7 +35545,7 @@ SphereCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1268223539297604}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.0013

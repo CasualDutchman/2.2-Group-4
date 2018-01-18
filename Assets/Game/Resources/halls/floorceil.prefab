@@ -27,7 +27,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!1 &1868439941095662
 GameObject:
@@ -45,7 +45,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &4056856125255160
 Transform:
@@ -88,7 +88,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 3b1f334cb2ac49040abcd387a9d8a1c9, type: 2}
+  - {fileID: 2100000, guid: 781fe2e34ff898946813de9cc2848424, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -155,7 +155,7 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1127735368502070}
-  m_Mesh: {fileID: 4300002, guid: f242a6e4e09efce408805c54993ec814, type: 3}
+  m_Mesh: {fileID: 4300002, guid: d344436760469dd479ed1eb3fb9c8035, type: 3}
 --- !u!64 &64682684642076248
 MeshCollider:
   m_ObjectHideFlags: 1
