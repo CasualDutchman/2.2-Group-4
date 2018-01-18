@@ -31,7 +31,7 @@ public class MainMenu : MonoBehaviour {
 
     //normal
     public void Demo1() {
-        PlayerPrefs.SetInt("EnemySpawned", 50);
+        PlayerPrefs.SetInt("EnemySpawned", 65);
         PlayerPrefs.SetFloat("Multi", 1f);
         PlayerPrefs.SetFloat("EnemyMulti", 0.9f);
         PlayerPrefs.SetFloat("Speedy", 3f);

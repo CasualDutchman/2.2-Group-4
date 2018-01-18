@@ -2990,16 +2990,15 @@ MonoBehaviour:
   soundObject: {fileID: 1779455863775866, guid: 364e2c545d17ef64689b29d9b9e2ebf5,
     type: 2}
   playerCamera: {fileID: 20990909839166816}
-  mouseSpeed: 5
   aimMultiplier: 1
   yaw: 0
   pitch: 0
   invertY: 1
-  speed: 6
+  speed: 4
   crouchSpeed: 1
-  sprintSpeed: 10
-  crouchSprintSpeed: 4
-  jumpSpeed: 8
+  sprintSpeed: 7
+  crouchSprintSpeed: 2
+  jumpSpeed: 6
   gravity: 20
   walking: 0
   sprinting: 0

@@ -6,10 +6,10 @@ public class DemoScript : MonoBehaviour {
 
     public static DemoScript instance;
 
-    public float healthMultiplier;
-    public float damageMultiplier;
-    public float enemyDamageMultiplier;
-    public float speed;
+    public float healthMultiplier = 1;
+    public float damageMultiplier = 1;
+    public float enemyDamageMultiplier = 1;
+    public float speed = 3.5f;
 
 	void Awake () {
         instance = this;
