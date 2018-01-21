@@ -35,6 +35,9 @@ public class FirstPersonPlayerController : MonoBehaviour {
     public bool crouched = false;
     Vector3 originCameraPos;
 
+    public float stamina = 100;
+    public Image staminaImage;
+
     float walkTimer = 0;
 
     void Start () {
@@ -74,6 +77,16 @@ public class FirstPersonPlayerController : MonoBehaviour {
 
         sprinting = Input.GetKey(KeyCode.LeftShift);
 
+        if (sprinting && walking) {
+            stamina -= Time.deltaTime * 10;
+            if(stamina <= 0) {
+                sprinting = false;
+            }
+        }else{
+            stamina = Mathf.Clamp(stamina += Time.deltaTime * 12, 0, 100f);
+        }
+
+        staminaImage.fillAmount = stamina / 100.0f;
 
         //walking around
         if (controller.isGrounded) {

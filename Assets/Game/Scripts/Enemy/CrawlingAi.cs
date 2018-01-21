@@ -13,7 +13,7 @@ public class CrawlingAi : Enemy {
         if(target != null) {
             if (CheckIfPlayerSeesMe()) {
                 agent.ResetPath();
-            }else {
+            }else if(target != null) {
                 agent.SetDestination(target.position);
             }
         }

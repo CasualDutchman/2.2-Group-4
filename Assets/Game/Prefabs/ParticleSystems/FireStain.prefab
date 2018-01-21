@@ -226,7 +226,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyType: 0
   damage: 2
-  interval: 1
+  radDamage: 2
+  interval: 0.7
   canMakeExplode: 1
 --- !u!114 &114848265986910466
 MonoBehaviour:

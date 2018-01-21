@@ -31,15 +31,18 @@ public class MeleeAI : Enemy {
 
     IEnumerator AttackAnimation() {
         animator.SetTrigger("Attack1");
-        
+
+        source.clip = attackAudio;
+        source.Play();
+
         yield return new WaitForSeconds(0.4f);
         HurtWhenInRange();
-        //yield return null;
     }
 
     void HurtWhenInRange() {
         if ((transform.position - target.transform.position).magnitude < 2f) {
             target.GetComponent<Player>().Hurt(damageDone);
+            target.GetComponent<Player>().Radiate(damageDone * 0.5f);
         }
     }
 }

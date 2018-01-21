@@ -9,6 +9,7 @@ public class HurtOverTime : MonoBehaviour {
     public Selection enemyType;
 
     public float damage = 2;
+    public float radDamage = 3;
     public float interval = 1;
 
     public bool canMakeExplode = true;
@@ -25,6 +26,7 @@ public class HurtOverTime : MonoBehaviour {
                     if (col.GetComponent<Player>()) {
                         Player player = col.GetComponent<Player>();
                         player.Hurt(damage);
+                        player.Radiate(radDamage);
                     }
                 }
             }

@@ -14,6 +14,9 @@ public class GridWorld : MonoBehaviour {
 
     public GameObject[] weaponPrefabs;
 
+    public GameObject doorObj;
+    List<Vector3> doorLocations = new List<Vector3>();
+
     float timer;
     public float timeTillSpawn;
 
@@ -66,6 +69,12 @@ public class GridWorld : MonoBehaviour {
     List<GameObject> listOfFloorRooms = new List<GameObject>();
 
     List<GameObject> listOfHalls = new List<GameObject>();
+
+    public static GridWorld instance;
+
+    private void Awake() {
+        instance = this;
+    }
 
     void Start () {
         foreach (GameObject go in Resources.LoadAll<GameObject>("rooms")) {
@@ -130,83 +139,71 @@ public class GridWorld : MonoBehaviour {
     }
 
     void Update() {
-        /*
-        timer += Time.deltaTime;
-        if (timer >= timeTillSpawn) {
-            if (currentEnemyCount < maxEnemySpawned) {
-                timer -= timeTillSpawn;
-
-                GameObject go = Instantiate(enemies[Random.Range(0, enemies.Length)]);
-                go.transform.position = spawnpoints[Random.Range(0, spawnpoints.Count)].position;
-                go.GetComponent<NavMeshAgent>().enabled = true;
-
-                currentEnemyCount++;
-            }
-        }
-        */
-
         if (doneSpawning) {
             
             GetComponent<NavMeshSurface>().BuildNavMesh();
+
+            SpawnDoors();
 
             //SpawnWeapons();
             SpawnSpawnPoints();
             playerManager.Play();
 
+            
+
             doneSpawning = false;
         }
     }
 
-    void SpawnWeapons() {
-        for (int f = 0; f < floors; f++) {
-            for (int y = 0; y < gridSize; y++) {
-                for (int x = 0; x < gridSize; x++) {
-                    if (grid[x, f, y].floor && !grid[x, f, y].goesup) {
-                        if (Random.Range(0, 10) < 2) {
-                            GameObject go = Instantiate(weaponPrefabs[Random.Range(0, weaponPrefabs.Length)]);
-                            go.transform.position = new Vector3(x * scale.x, f * scale.y + 1, y * scale.z);
-                            go.transform.rotation = Quaternion.Euler(Random.value * 360f, Random.value * 360f, Random.value * 360f);
-                            go.transform.SetParent(transform);
-                        }
-                    }
-                }
-            }
+    public void OnPlayerDeath(Player player, int lives) {
+        playerManager.Respawn(player, lives);
+    }
+
+    void SpawnDoors() {
+        foreach (Vector3 doorLoc in doorLocations) {
+            if (Random.value < 0.3f)
+                continue;
+
+            Quaternion rot = Quaternion.Euler(0, doorLoc.z % 1 != 0 ? (Random.value < 0.5 ? 90 : -90) : (Random.value < 0.5 ? 0 : -180), 0);
+
+            GameObject go = Instantiate(doorObj, new Vector3(doorLoc.x * scale.x, doorLoc.y * scale.y, doorLoc.z * scale.z), rot);
+
+            go.transform.parent = transform;
         }
     }
 
     void SpawnSpawnPoints() {
         GameObject spawns = new GameObject("spawns");
+        List<Vector3> spawnpoints = new List<Vector3>();
         for (int f = 0; f < floors; f++) {
             for (int y = 0; y < gridSize; y++) {
                 for (int x = 0; x < gridSize; x++) {
                     if(grid[x, f, y].floor) {
-                        if (currentEnemyCount > maxEnemySpawned)
-                            return;
-
                         if (Random.Range(0, 5) > 0)
                             continue;
 
                         if (Vector3.Distance(playerManager.playerOneSpawn.position, new Vector3(x * scale.x, f * scale.y, y * scale.z)) < 16)
                             continue;
-                        
-                            /*
-                            if(Random.Range(0, 10) < 2) {
-                                GameObject spawnpoint = new GameObject();
-                                spawnpoint.transform.position = new Vector3(x * scale.x, f * scale.y, y * scale.z);
-                                spawnpoint.transform.SetParent(spawns.transform);
-                                spawnpoints.Add(spawnpoint.transform);
-                            }*/
 
-                            int rand = Random.Range(0, 100);
-                        int i = rand < 20 ? 2 : (rand < 40 ? 1 : 0);
-
-                        GameObject go = Instantiate(enemies[i]);
-                        go.transform.position = new Vector3(x * scale.x, f * scale.y, y * scale.z);
-                        go.GetComponent<NavMeshAgent>().enabled = true;
-                        currentEnemyCount++;
+                        spawnpoints.Add(new Vector3(x, f, y));
                     }
                 }
             }
+        }
+
+        for (int i = 0; i < maxEnemySpawned; i++) {
+            int index = Random.Range(0, spawnpoints.Count);
+            Vector3 spawn = spawnpoints[index];
+            spawnpoints.RemoveAt(index);
+
+            int rand = Random.Range(0, 100);
+            int enemytype = rand < 10 ? 2 : (rand < 20 ? 1 : 0);
+
+            GameObject go = Instantiate(enemies[enemytype]);
+            go.transform.position = new Vector3(spawn.x * scale.x, spawn.y * scale.y, spawn.z * scale.z);
+            go.GetComponent<NavMeshAgent>().enabled = true;
+            go.transform.parent = spawns.transform;
+            currentEnemyCount++;
         }
     }
 
@@ -513,6 +510,10 @@ public class GridWorld : MonoBehaviour {
                                     //===
                                     grid[x, f, y + 1].entrancesouth = true;
                                     changedRoomID.Add(grid[x, f, y].roomID);
+
+                                    if (!doorLocations.Contains(new Vector3(x, f, y + 0.5f))) {
+                                        doorLocations.Add(new Vector3(x, f, y + 0.5f));
+                                    }
                                 }
                             }
                         }
@@ -526,6 +527,10 @@ public class GridWorld : MonoBehaviour {
                                     //===
                                     grid[x, f, y - 1].entrancenorth = true;
                                     changedRoomID.Add(grid[x, f, y].roomID);
+
+                                    if (!doorLocations.Contains(new Vector3(x, f, y - 0.5f))) {
+                                        doorLocations.Add(new Vector3(x, f, y - 0.5f));
+                                    }
                                 }
                             }
                         }
@@ -539,6 +544,10 @@ public class GridWorld : MonoBehaviour {
                                     //===
                                     grid[x + 1, f, y].entrancewest = true;
                                     changedRoomID.Add(grid[x, f, y].roomID);
+
+                                    if (!doorLocations.Contains(new Vector3(x + 0.5f, f, y))) {
+                                        doorLocations.Add(new Vector3(x + 0.5f, f, y));
+                                    }
                                 }
                             }
                         }
@@ -552,6 +561,10 @@ public class GridWorld : MonoBehaviour {
                                     //===
                                     grid[x - 1, f, y].entranceeast = true;
                                     changedRoomID.Add(grid[x, f, y].roomID);
+
+                                    if (!doorLocations.Contains(new Vector3(x - 0.5f, f, y))) {
+                                        doorLocations.Add(new Vector3(x - 0.5f, f, y));
+                                    }
                                 }
                             }
                         }

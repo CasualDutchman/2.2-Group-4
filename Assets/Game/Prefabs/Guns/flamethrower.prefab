@@ -549,10 +549,12 @@ MonoBehaviour:
   maxAmmoMagazine: 100
   ammo: 100
   holdingmaxAmmo: 200
-  reloadTime: 4.5
+  reloadTime: 2
+  damageDone: 10
   bulletShell: {fileID: 0}
   muzzle: {fileID: 4642629221042492}
   muzzleFlash: {fileID: 0}
+  throwableObj: {fileID: 0}
 --- !u!198 &198345222855545828
 ParticleSystem:
   m_ObjectHideFlags: 1

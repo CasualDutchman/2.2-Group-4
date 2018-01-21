@@ -368,7 +368,7 @@ MonoBehaviour:
   maxAmmoMagazine: 8
   ammo: 8
   holdingmaxAmmo: 40
-  reloadTime: 5
+  reloadTime: 2
   damageDone: 15
   bulletShell: {fileID: 1090355652680246, guid: 4d49bc6238ef55e4a85b571e88b1e94f,
     type: 2}

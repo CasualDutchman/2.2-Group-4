@@ -13,7 +13,7 @@ public class SpittingAI : Enemy {
         if (!CanFollowPlayer) {
             DetectPlayerLineOfSight();
         }
-        else {
+        else if(target != null) {
             if ((transform.position - target.transform.position).magnitude > SpittingDistance) {
                 agent.SetDestination(target.position);
             }
@@ -66,13 +66,16 @@ public class SpittingAI : Enemy {
     IEnumerator AttackAnimation() {
         animator.SetTrigger("Attack1");
 
-        yield return new WaitForSeconds(0.4f);
+        source.clip = attackAudio;
+        source.Play();
+
+        yield return new WaitForSeconds(0.5f);
         Spitting();
         //yield return null;
     }
 
     void Spitting() {
-        if ((transform.position - target.transform.position).magnitude > SpittingDistance) {
+        if ((transform.position - target.transform.position).magnitude > SpittingDistance - 1) {
             Transform Spit = Instantiate(SpitClass, spitBegin.position, Quaternion.identity);
             Spit.GetComponent<Rigidbody>().velocity = CalculateSpitVelocity(target.GetChild(0), Spit.position);
         }

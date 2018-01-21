@@ -19,6 +19,10 @@ public abstract class Enemy : MonoBehaviour {
     protected NavMeshAgent agent;
     protected Animator animator;
 
+    public AudioClip[] audioIdle;
+    public AudioClip attackAudio;
+    protected AudioSource source;
+
     //for animations
     protected bool isAttacking = false;
 
@@ -29,7 +33,10 @@ public abstract class Enemy : MonoBehaviour {
         agent = GetComponent<NavMeshAgent>();
         agent.speed = DemoScript.instance.speed;
 
-        StartCoroutine(pathing());
+        source = GetComponent<AudioSource>();
+
+        StartCoroutine(Pathing());
+        StartCoroutine(IdleSound());
     }
 
     void Update() {
@@ -39,14 +46,26 @@ public abstract class Enemy : MonoBehaviour {
 
     protected virtual void UpdateAnimations() { }
 
-	void FixedUpdate () {
+    IEnumerator IdleSound() {
+        float rand = Random.Range(5.0f, 8.5f);
+        while (true) {
+            if (!isAttacking) {
+                source.clip = audioIdle[Random.Range(0, audioIdle.Length)];
+                source.Play();
+            }
+            yield return new WaitForSeconds(rand);
+            rand = Random.Range(5.0f, 8.5f);
+        }
+    }
+
+    void FixedUpdate () {
         //UpdateFindingPath();
     }
 
-    IEnumerator pathing() {
+    IEnumerator Pathing() {
         while (true) {
             UpdateFindingPath();
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.3f);
         }
     }
 
@@ -54,7 +73,7 @@ public abstract class Enemy : MonoBehaviour {
         if (!isAttacking) {
             if (!CanFollowPlayer) {
                 DetectPlayerLineOfSight();
-            } else {
+            } else if (target != null) {
                 if ((transform.position - target.transform.position).magnitude < 1.5f) {
                     agent.ResetPath();
                     Attack();

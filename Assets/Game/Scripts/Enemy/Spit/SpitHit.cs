@@ -17,7 +17,8 @@ public class SpitHit : MonoBehaviour {
         Ray ray = new Ray(transform.position, Vector3.down);
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit)) {
-            Instantiate(stainObj, hit.point, Quaternion.identity);
+            int ymultiplier = Mathf.FloorToInt(hit.point.y / 2.5f);
+            Instantiate(stainObj, new Vector3(hit.point.x, ymultiplier * 2.5f, hit.point.z), Quaternion.identity);
         }
 
         Destroy(gameObject);

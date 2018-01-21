@@ -348,6 +348,7 @@ MonoBehaviour:
   openCloseTime: 0.4
   closedStateTransform: {fileID: 4195069063056970}
   openStateTransform: {fileID: 4870238513080072}
+  negativeOpenState: 0
   curve:
     serializedVersion: 2
     m_Curve:
@@ -384,6 +385,5 @@ MonoBehaviour:
   spawnables:
   - {fileID: 1392123624235774, guid: f259aa9353c332640b72d0c6166e127b, type: 2}
   - {fileID: 1328066921973470, guid: e272687bd11709f42babc0736d4a92eb, type: 2}
-  - {fileID: 1328066921973470, guid: e272687bd11709f42babc0736d4a92eb, type: 2}
+  - {fileID: 1395642117786204, guid: 82910553163bbff41a288236113f3454, type: 2}
   changeIn: {x: 2, y: 3}
-  makeParent: 1

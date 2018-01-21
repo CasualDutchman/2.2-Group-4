@@ -26,7 +26,11 @@ public class MainMenu : MonoBehaviour {
 
     public void OnTwoPlay() {
         PlayerPrefs.SetInt("PlayerCount", 2);
-        StartCoroutine(Play());
+        StartCoroutine(Play(1));
+    }
+
+    public void OnTutorial() {
+        StartCoroutine(Play(2));
     }
 
     //normal
@@ -37,7 +41,7 @@ public class MainMenu : MonoBehaviour {
         PlayerPrefs.SetFloat("Speedy", 3f);
         PlayerPrefs.SetFloat("HPMulti", 1f);
 
-        //OnPlay();
+        OnPlay();
     }
 
     //a lot, faster killing, fast, faster!
@@ -64,12 +68,11 @@ public class MainMenu : MonoBehaviour {
 
     public void OnPlay() {
         PlayerPrefs.SetInt("PlayerCount", 1);
-        Demo1();
-        StartCoroutine(Play());
+        StartCoroutine(Play(1));
     }
 
-    IEnumerator Play() {
-        AsyncOperation async = SceneManager.LoadSceneAsync(1);
+    IEnumerator Play(int i) {
+        AsyncOperation async = SceneManager.LoadSceneAsync(i);
         //async.allowSceneActivation = false;
 
         while (!async.isDone) {
