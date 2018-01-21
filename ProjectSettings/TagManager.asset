@@ -4,13 +4,12 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Bullet
-  - PlayerArms
-  - PlayerCamera
-  - PlayerBulletSpawnPoint
-  - Enemy
   - Walkable
-  - Spit
+  - Gun
+  - Enemy
+  - PlayerBulletSpawnPoint
+  - PlayerCamera
+  - PlayerArms
   layers:
   - Default
   - TransparentFX
@@ -20,8 +19,8 @@ TagManager:
   - UI
   - 
   - 
-  - Room
-  - 
+  - Interactable
+  - InteractableCol
   - 
   - 
   - 

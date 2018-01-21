@@ -1,0 +1,282 @@
+fileFormatVersion: 2
+guid: f36093a55fdc4c541b66b01a4e0b3e6b
+timeCreated: 1513308207
+licenseType: Free
+ModelImporter:
+  serializedVersion: 22
+  fileIDToRecycleName:
+    100000: flamethrower
+    100002: flamethrower magazine
+    100004: //RootNode
+    100006: machinegun
+    100008: machinegun bullet
+    100010: machinegun bullet shell
+    100012: maginegun magazine
+    100014: pistol
+    100016: pistol bar
+    100018: pistol bullet
+    100020: pistol bullet shell
+    100022: shotgun
+    100024: shotgun bullet
+    100026: shotgun handle
+    400000: flamethrower
+    400002: flamethrower magazine
+    400004: //RootNode
+    400006: machinegun
+    400008: machinegun bullet
+    400010: machinegun bullet shell
+    400012: maginegun magazine
+    400014: pistol
+    400016: pistol bar
+    400018: pistol bullet
+    400020: pistol bullet shell
+    400022: shotgun
+    400024: shotgun bullet
+    400026: shotgun handle
+    2300000: flamethrower
+    2300002: flamethrower magazine
+    2300004: machinegun
+    2300006: machinegun bullet
+    2300008: machinegun bullet shell
+    2300010: maginegun magazine
+    2300012: pistol
+    2300014: pistol bar
+    2300016: pistol bullet
+    2300018: pistol bullet shell
+    2300020: shotgun
+    2300022: shotgun bullet
+    2300024: shotgun handle
+    3300000: flamethrower
+    3300002: flamethrower magazine
+    3300004: machinegun
+    3300006: machinegun bullet
+    3300008: machinegun bullet shell
+    3300010: maginegun magazine
+    3300012: pistol
+    3300014: pistol bar
+    3300016: pistol bullet
+    3300018: pistol bullet shell
+    3300020: shotgun
+    3300022: shotgun bullet
+    3300024: shotgun handle
+    4300000: flamethrower magazine
+    4300002: flamethrower
+    4300004: maginegun magazine
+    4300006: machinegun
+    4300008: pistol
+    4300010: pistol bar
+    4300012: shotgun
+    4300014: shotgun handle
+    4300016: machinegun bullet
+    4300018: machinegun bullet shell
+    4300020: pistol bullet
+    4300022: pistol bullet shell
+    4300024: shotgun bullet
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Brick_Red.001
+    second: {fileID: 2100000, guid: 87d3d9da0dd77404faa8255ea0b373f3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: FrontColor.001
+    second: {fileID: 2100000, guid: 4837b2ec61920ec4793db06dac7c42c7, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Gold
+    second: {fileID: 2100000, guid: 2e4839c519a0cb64980fe06573811746, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Gold.001
+    second: {fileID: 2100000, guid: 87914a730b1f68644b1a9703f4fb9823, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Gold.002
+    second: {fileID: 2100000, guid: c0f8c4434e371324e9c230acdbee51cd, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Gray4.002
+    second: {fileID: 2100000, guid: e5bf8d6e4853baa429a91455a2f1dfa5, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Gray4.003
+    second: {fileID: 2100000, guid: 7396a328422e2bb4ea7bd9db4bc77a3e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Gray5.003
+    second: {fileID: 2100000, guid: b53fb2754ceb7444f9e8f82dfc131877, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Gray5.004
+    second: {fileID: 2100000, guid: 7e1e70c8bcca3c541a8943202570c4c6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Gray5.005
+    second: {fileID: 2100000, guid: 16bd1e02d93bc20439cdb70236b91645, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Gray6.004
+    second: {fileID: 2100000, guid: a9b8b191635a47048bb6f815fbfa37a4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Gray6.005
+    second: {fileID: 2100000, guid: a3e4ae90ceff44b46b032059253ea7b5, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Gray6.006
+    second: {fileID: 2100000, guid: 4b0468ad20f88dd4191142f767c8f226, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Gray6.007
+    second: {fileID: 2100000, guid: 2babf1f8b6662434cae063d009917a1a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Gray8.004
+    second: {fileID: 2100000, guid: 8f0d2bb75b2124d4d9240b5870db522f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Gray8.005
+    second: {fileID: 2100000, guid: afa97d5503ce1b3458cf3df00966ceff, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Gray8.006
+    second: {fileID: 2100000, guid: 16ca72ccf9fb42249b32935cfac110ed, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Gray8.007
+    second: {fileID: 2100000, guid: da77196d2d2dc044bbd272981b483c83, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Gray8.008
+    second: {fileID: 2100000, guid: 438608f5dba4c2e48985e279a3e94da7, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Gray8.009
+    second: {fileID: 2100000, guid: 7c3a2c10a3c3e554d84d5997e1764066, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Gray8.010
+    second: {fileID: 2100000, guid: 2020ddd41c0d484468d5e43c6575f4a2, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Red
+    second: {fileID: 2100000, guid: a7ff3770afee3b94b8982b15bb5cd1d2, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Redwood
+    second: {fileID: 2100000, guid: 16417ffdf3ac4eb4897ccf0acd5fe512, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Redwood.001
+    second: {fileID: 2100000, guid: 04b505e8eebbcb14cbdefa63dfb6a468, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: WarmGray6.001
+    second: {fileID: 2100000, guid: 16dd1c1b52b041e47971cb72f9d55b9f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: WarmGray8.001
+    second: {fileID: 2100000, guid: 71cf1da53166f3743a7ae9733a82d6f3, type: 2}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 0
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 0.5
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
