@@ -157,6 +157,7 @@ public class GridWorld : MonoBehaviour {
 
     public void OnPlayerDeath(Player player, int lives) {
         playerManager.Respawn(player, lives);
+        SpawnEnemy(0, player.transform.position, transform);
     }
 
     void SpawnDoors() {
@@ -199,12 +200,18 @@ public class GridWorld : MonoBehaviour {
             int rand = Random.Range(0, 100);
             int enemytype = rand < 10 ? 2 : (rand < 20 ? 1 : 0);
 
-            GameObject go = Instantiate(enemies[enemytype]);
-            go.transform.position = new Vector3(spawn.x * scale.x, spawn.y * scale.y, spawn.z * scale.z);
-            go.GetComponent<NavMeshAgent>().enabled = true;
-            go.transform.parent = spawns.transform;
-            currentEnemyCount++;
+            SpawnEnemy(enemytype, new Vector3(spawn.x * scale.x, spawn.y * scale.y, spawn.z * scale.z), spawns.transform);
         }
+    }
+
+    Enemy SpawnEnemy(int index, Vector3 pos, Transform parent) {
+        GameObject go = Instantiate(enemies[index]);
+        go.transform.position = pos;
+        go.GetComponent<NavMeshAgent>().enabled = true;
+        go.transform.parent = parent;
+        currentEnemyCount++;
+
+        return go.GetComponent<Enemy>();
     }
 
     void Check() {
