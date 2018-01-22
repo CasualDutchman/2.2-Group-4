@@ -1209,6 +1209,7 @@ ModelImporter:
     102402: VIS_upper_arm_ik_pole.L_end
     102404: VIS_upper_arm_ik_pole.R
     102406: VIS_upper_arm_ik_pole.R_end
+    102408: Sphere.001
     400000: breast.L
     400002: breast.L 1
     400004: breast.L_end
@@ -2413,7 +2414,11 @@ ModelImporter:
     402402: VIS_upper_arm_ik_pole.L_end
     402404: VIS_upper_arm_ik_pole.R
     402406: VIS_upper_arm_ik_pole.R_end
+    402408: Sphere.001
+    2300000: Sphere.001
+    3300000: Sphere.001
     4300000: HUMAN
+    4300002: Sphere.001
     9500000: //RootNode
     13700000: HUMAN
   externalObjects:

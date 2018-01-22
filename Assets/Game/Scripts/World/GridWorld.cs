@@ -157,7 +157,10 @@ public class GridWorld : MonoBehaviour {
 
     public void OnPlayerDeath(Player player, int lives) {
         playerManager.Respawn(player, lives);
-        SpawnEnemy(0, player.transform.position, transform);
+        Enemy enemy = SpawnEnemy(0, player.transform.position, transform);
+        enemy.health = 60;
+        enemy.maxHealth = 60;
+        enemy.SetSpeed(1f);
     }
 
     void SpawnDoors() {

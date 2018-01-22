@@ -32,13 +32,24 @@ public class Player : MonoBehaviour {
 
     public int lives = 1;
 
-	void Start () {
+    private int Grabbers = 0;
+
+    void Start () {
         UpdateBars();
     }
 	
-	void Update () {
-		
-	}
+	public void BeGrabbed() {
+        Grabbers++;
+    }
+
+    public void DecrementGrabbers() {
+        Grabbers--;
+        if (Grabbers < 0) Grabbers = 0;
+    }
+
+    public int GetGrabbers() {
+        return Grabbers;
+    }
 
     public void Hurt(float amount) {
         health -= amount * DemoScript.instance.enemyDamageMultiplier;

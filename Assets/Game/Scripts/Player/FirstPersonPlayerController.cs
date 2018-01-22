@@ -10,7 +10,7 @@ public class FirstPersonPlayerController : MonoBehaviour {
     int lastStepIndex;
 
     CharacterController controller;
-    Player player;
+    public Player player;
     public Camera playerCamera;
 
     public float aimMultiplier = 1;
@@ -23,6 +23,7 @@ public class FirstPersonPlayerController : MonoBehaviour {
     public float crouchSpeed = 1.0f;
     public float sprintSpeed = 10.0f;
     public float crouchSprintSpeed = 4.0f;
+    public float GrabSpeed = 1.5f;
 
     public float jumpSpeed = 8.0F;
     public float gravity = 20.0F;
@@ -47,10 +48,6 @@ public class FirstPersonPlayerController : MonoBehaviour {
         Cursor.lockState = CursorLockMode.Locked;
 
         originCameraPos = playerCamera.transform.localPosition;
-
-        foreach (string s in Input.GetJoystickNames()) {
-            print(s);
-        }
 
         Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Ignore Raycast"), LayerMask.NameToLayer("Interactable"));
         Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Ignore Raycast"), LayerMask.NameToLayer("Water"));
@@ -96,7 +93,7 @@ public class FirstPersonPlayerController : MonoBehaviour {
             }
             moveDirection = new Vector3(Input.GetAxis(player.controlType.ToString() + " Horizontal"), 0, Input.GetAxis(player.controlType.ToString() + " Vertical"));
             moveDirection = transform.TransformDirection(moveDirection);
-            moveDirection *= crouched ? (sprinting ? crouchSprintSpeed : crouchSpeed) : (sprinting ? sprintSpeed : speed);
+            moveDirection *= crouched ? (sprinting ? crouchSprintSpeed : crouchSpeed) : player.GetGrabbers() > 0 ? GrabSpeed : (sprinting ? sprintSpeed : speed);
             if (Input.GetButton(player.controlType.ToString() + " Jump")) {
                 moveDirection.y = jumpSpeed;
                 jumping = true;

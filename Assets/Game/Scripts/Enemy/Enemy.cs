@@ -39,6 +39,10 @@ public abstract class Enemy : MonoBehaviour {
         StartCoroutine(IdleSound());
     }
 
+    public void SetSpeed(float f) {
+        agent.speed = f;
+    }
+
     void Update() {
         UpdateLastAttackTime();
         UpdateAnimations();
@@ -100,7 +104,7 @@ public abstract class Enemy : MonoBehaviour {
         }
     }
 
-    public void OnDeath() {
+    public virtual void OnDeath() {
         GetComponent<RagdollManager>().EnableRagdoll();
 
         Destroy(GetComponent<NavMeshAgent>());
