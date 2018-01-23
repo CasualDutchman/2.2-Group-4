@@ -58,7 +58,7 @@ GameObject:
   - component: {fileID: 114633348788232862}
   m_Layer: 0
   m_Name: Stain
-  m_TagString: Untagged
+  m_TagString: Acid
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -158,9 +158,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b62199cd6024e4e49b03335c8b7d1450, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyType: 2
-  damage: 2
+  enemyType: 0
+  damage: 1
+  radDamage: 4
   interval: 1
+  canMakeExplode: 1
 --- !u!114 &114633348788232862
 MonoBehaviour:
   m_ObjectHideFlags: 1

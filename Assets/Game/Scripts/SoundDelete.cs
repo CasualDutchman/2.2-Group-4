@@ -8,6 +8,7 @@ public class SoundDelete : MonoBehaviour {
 
 	void Start () {
         source = GetComponent<AudioSource>();
+        source.Play();
     }
 	
 	void Update () {

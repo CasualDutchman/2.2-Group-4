@@ -20011,7 +20011,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1912285588986478}
-  m_LocalRotation: {x: 0.8224085, y: -0.52115625, z: -0.10692419, w: 0.20151307}
+  m_LocalRotation: {x: 0.8224086, y: -0.5211563, z: -0.106924206, w: 0.2015131}
   m_LocalPosition: {x: -1.6763806e-10, y: 0.0002230744, z: 0}
   m_LocalScale: {x: 0.99999994, y: 0.9999997, z: 0.99999994}
   m_Children:
@@ -35265,6 +35265,8 @@ MonoBehaviour:
   maxHealth: 100
   target: {fileID: 0}
   DelayBetweenAttacks: 1
+  audioIdle: []
+  attackAudio: {fileID: 0}
   damageDone: 10
 --- !u!114 &114806170607064742
 MonoBehaviour:

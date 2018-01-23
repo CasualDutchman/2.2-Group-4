@@ -7,7 +7,7 @@ public class CrawlingAi : Enemy {
     public float GrabbingDistance = 2;
 
     public bool IsGrabbingPlayer = false;
-    public Vector3 PlayerOffset = new Vector3(0,0,0);
+    public Vector3 PlayerOffset = new Vector3(0, 0, 0);
 
     protected override void UpdateAnimations() {
         animator.SetFloat("Blend", agent.velocity.normalized.magnitude);
@@ -15,19 +15,29 @@ public class CrawlingAi : Enemy {
 
     protected override void UpdateFindingPath() {
         if (target != null) {
-            if(!IsGrabbingPlayer) {
+            if (!IsGrabbingPlayer) {
                 if (CheckIfPlayerSeesMe()) {
                     agent.ResetPath();
-                }else {
+                }
+                else {
                     agent.SetDestination(target.position);
                 }
-                if ((transform.position - target.position).magnitude < GrabbingDistance) {
+                if ((transform.position - target.position).magnitude < GrabbingDistance && CheckIfPlayerSeesMe()) {
                     IsGrabbingPlayer = true;
                     PlayerOffset = transform.position - target.position;
                     PlayerScript.player.BeGrabbed();
                 }
-            } else { 
+            }
+            else {
                 transform.position = target.position;
+                if (target != null) {
+                    if (CheckIfPlayerSeesMe()) {
+                        agent.ResetPath();
+                    }
+                    else if (target != null) {
+                        agent.SetDestination(target.position);
+                    }
+                }
             }
         }
         /*TimeSinceLastAttack += Time.deltaTime;
@@ -36,13 +46,12 @@ public class CrawlingAi : Enemy {
 
     protected override void Attack() {
         /*if (TimeSinceLastAttack >= DelayBetweenAttacks) {
-            TimeSinceLastAttack = 0.0f;
+            TimeSinceLastAttack = 0.0f;*/
             //PlayerScript.BeAttacked();
-        }*/
+        //}
     }
 
     public override void OnDeath() {
-        Debug.Log("test");
         PlayerScript.player.DecrementGrabbers();
         base.OnDeath();
     }

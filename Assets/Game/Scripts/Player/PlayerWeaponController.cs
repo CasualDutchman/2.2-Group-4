@@ -82,6 +82,11 @@ public class PlayerWeaponController : MonoBehaviour {
 
         if (Input.GetKeyDown(KeyCode.R) && currentWeapon != null && CanReload()) {
             isReloading = true;
+
+            combinedIK.localPosition = new Vector3(0.3f, 0, 0);
+            aimDownSights = false;
+            player.GetMovementController.playerCamera.fieldOfView = 60;
+            player.GetMovementController.aimMultiplier = 1f;
         }
 
         if (isReloading) {
@@ -267,11 +272,11 @@ public class PlayerWeaponController : MonoBehaviour {
     }
 
     bool CanAimDownSights() {
-        return currentWeapon != null && (currentWeapon.fireMode != Weapon.FireMode.Throwable || currentWeapon.fireMode != Weapon.FireMode.Melee);
+        return currentWeapon != null && (currentWeapon.fireMode != Weapon.FireMode.Throwable || currentWeapon.fireMode != Weapon.FireMode.Melee) && !GetComponent<FirstPersonPlayerController>().sprinting;
     }
 
     bool CanShoot() {
-        return currentWeapon.ammo > 0;
+        return currentWeapon.ammo > 0 && !GetComponent<FirstPersonPlayerController>().sprinting;
     }
 
     bool CanReload() {
@@ -279,6 +284,23 @@ public class PlayerWeaponController : MonoBehaviour {
     }
 
     public void PickUpGun(Weapon weapon) {
+        if (currentWeapon != null && currentWeapon.weaponName.Equals(weapon.weaponName)) {
+            currentWeapon.holdingmaxAmmo += weapon.holdingmaxAmmo + weapon.ammo;
+            UpdateAmmoCounter();
+            Destroy(weapon.gameObject);
+            return;
+        }
+        else if (secondaryWeapon != null && secondaryWeapon.weaponName.Equals(weapon.weaponName)) {
+            secondaryWeapon.holdingmaxAmmo += weapon.holdingmaxAmmo + weapon.ammo;
+            Destroy(weapon.gameObject);
+            return;
+        } 
+        else if (primaryWeapon != null && primaryWeapon.weaponName.Equals(weapon.weaponName)) {
+            primaryWeapon.holdingmaxAmmo += weapon.holdingmaxAmmo + weapon.ammo;
+            Destroy(weapon.gameObject);
+            return;
+        }
+
         if (weapon.preveredSlot == WeaponSlot.primary) {
             if (primaryWeapon == null) {
                 primaryWeapon = weapon;

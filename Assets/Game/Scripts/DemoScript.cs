@@ -11,15 +11,20 @@ public class DemoScript : MonoBehaviour {
     public float enemyDamageMultiplier = 1;
     public float speed = 3.5f;
 
+    public bool usePlayerPref = true;
+
 	void Awake () {
         instance = this;
 
-        GetComponent<GridWorld>().maxEnemySpawned = PlayerPrefs.GetInt("EnemySpawned");
-        damageMultiplier = PlayerPrefs.GetFloat("Multi");
-        enemyDamageMultiplier = PlayerPrefs.GetFloat("EnemyMulti");
-        speed = PlayerPrefs.GetFloat("Speedy");
+        if (usePlayerPref) {
+            if (GetComponent<GridWorld>())
+                GetComponent<GridWorld>().maxEnemySpawned = PlayerPrefs.GetInt("EnemySpawned");
 
-        healthMultiplier = PlayerPrefs.GetFloat("HPMulti");
+            damageMultiplier = PlayerPrefs.GetFloat("Multi");
+            enemyDamageMultiplier = PlayerPrefs.GetFloat("EnemyMulti");
+            speed = PlayerPrefs.GetFloat("Speedy");
 
+            healthMultiplier = PlayerPrefs.GetFloat("HPMulti");
+        }
     }
 }

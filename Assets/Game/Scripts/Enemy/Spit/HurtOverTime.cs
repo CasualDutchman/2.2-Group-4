@@ -9,7 +9,9 @@ public class HurtOverTime : MonoBehaviour {
     public Selection enemyType;
 
     public float damage = 2;
+    public float radDamage = 3;
     public float interval = 1;
+    public float EnemySlowSpeed = 1.0f;
 
     public bool canMakeExplode = true;
 
@@ -25,6 +27,7 @@ public class HurtOverTime : MonoBehaviour {
                     if (col.GetComponent<Player>()) {
                         Player player = col.GetComponent<Player>();
                         player.Hurt(damage);
+                        player.Radiate(radDamage);
                     }
                 }
             }
@@ -32,7 +35,11 @@ public class HurtOverTime : MonoBehaviour {
                 if (col.CompareTag("Enemy")) {
                     if (col.GetComponent<EnemyPart>()) {
                         EnemyPart enemy = col.GetComponent<EnemyPart>();
-                        enemy.Damage(5, null);
+                        //enemy.Damage(5, null);
+                        enemy.connected.Hurt(1);
+                        if (gameObject.CompareTag("Acid")) {
+                            enemy.connected.GetAgent().speed = EnemySlowSpeed;
+                        }
                     }
                 }
             }
@@ -52,6 +59,19 @@ public class HurtOverTime : MonoBehaviour {
                     go.transform.position = col.transform.position;
 
                     Destroy(col.gameObject);
+                }
+            }
+        }
+    }
+
+    void OnTriggerExit(Collider col) {
+        if (enemyType == Selection.Enemy || enemyType == Selection.Both) {
+            if (col.CompareTag("Enemy")) {
+                if (col.GetComponent<EnemyPart>()) {
+                    EnemyPart enemy = col.GetComponent<EnemyPart>();
+                    if (gameObject.CompareTag("Acid")) {
+                        enemy.connected.GetAgent().speed = DemoScript.instance.speed;
+                    }
                 }
             }
         }

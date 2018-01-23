@@ -10,6 +10,8 @@ TagManager:
   - PlayerBulletSpawnPoint
   - PlayerCamera
   - PlayerArms
+  - Spit
+  - Acid
   layers:
   - Default
   - TransparentFX

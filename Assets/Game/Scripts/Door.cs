@@ -14,6 +14,8 @@ public class Door : Item {
 
     public Transform closedStateTransform, openStateTransform;
 
+    public bool negativeOpenState = false;
+
     public AnimationCurve curve;
 
     public Door connectedDoor;
@@ -54,11 +56,11 @@ public class Door : Item {
             if (moveToState) {
                 transform.localPosition = Vector3.Lerp(closedStateTransform.localPosition, openStateTransform.localPosition, curve.Evaluate(timer));
 
-                transform.localEulerAngles = Vector3.Lerp(closedStateTransform.localEulerAngles, openStateTransform.localEulerAngles, curve.Evaluate(timer));
+                transform.localEulerAngles = Vector3.Lerp(closedStateTransform.localEulerAngles, openStateTransform.localEulerAngles * (negativeOpenState ? -1 : 1), curve.Evaluate(timer));
             } else {
                 transform.localPosition = Vector3.Lerp(openStateTransform.localPosition, closedStateTransform.localPosition, curve.Evaluate(timer));
 
-                transform.localEulerAngles = Vector3.Lerp(openStateTransform.localEulerAngles, closedStateTransform.localEulerAngles, curve.Evaluate(timer));
+                transform.localEulerAngles = Vector3.Lerp(openStateTransform.localEulerAngles * (negativeOpenState ? -1 : 1), closedStateTransform.localEulerAngles, curve.Evaluate(timer));
             }
 
             if (timer >= 1) {

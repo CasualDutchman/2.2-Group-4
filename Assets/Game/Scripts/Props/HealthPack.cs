@@ -9,7 +9,7 @@ public class HealthPack : Item {
 
     public override void Interact(Player player) {
         player.health = Mathf.Clamp(player.health + healthToGive, 0, player.maxHealth);
-        player.UpdateHealthText();
+        player.UpdateBars();
 
         if (oneTimeUse) {
             Destroy(gameObject);
