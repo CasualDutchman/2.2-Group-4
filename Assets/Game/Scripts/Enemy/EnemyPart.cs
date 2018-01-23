@@ -21,6 +21,7 @@ public class EnemyPart : MonoBehaviour {
     void OnParticleCollision(GameObject other) {
         if (connected.health > 0) {
             connected.Hurt(0.25f);
+            connected.SetFire();
         }
     }
 }

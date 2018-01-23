@@ -5,26 +5,26 @@ using UnityEngine.AI;
 
 public class GridWorld : MonoBehaviour {
 
+    //enemy amount limit
     public int maxEnemySpawned = 60;
     int currentEnemyCount;
 
+    //Different obejcts the generator can use to spawn
     public GameObject[] enemies;
 
     List<Transform> spawnpoints = new List<Transform>();
 
-    public GameObject[] weaponPrefabs;
-
     public GameObject doorObj;
     List<Vector3> doorLocations = new List<Vector3>();
 
-    float timer;
-    public float timeTillSpawn;
-
+    //The size of the level
     public int gridSize = 20;
     public int floors = 1;
 
+    //The most important part! This will contain all the information about the level before spawn
     Element[,,] grid;
 
+    //Objects the corridor system can use (Instead of resources, because we only need the mesh)
     public GameObject Floor, Ceiling, Wall, Entrance;
     public Material allTextureMaterial;
 
@@ -60,6 +60,7 @@ public class GridWorld : MonoBehaviour {
 
     bool doneSpawning = false;
 
+    //Lists used in generation
     List<Vector3Int> checkopen = new List<Vector3Int>();
     List<Vector3Int> checkclosed = new List<Vector3Int>();
 
@@ -77,6 +78,7 @@ public class GridWorld : MonoBehaviour {
     }
 
     void Start () {
+        //Setup all the rooms that the generator can use
         foreach (GameObject go in Resources.LoadAll<GameObject>("rooms")) {
             if (!go.GetComponent<RoomGrid>().secondFloor) {
                 listOfFloorRooms.Add(go);
@@ -94,7 +96,7 @@ public class GridWorld : MonoBehaviour {
         GenerateGrid();
     }
 
-    [ContextMenu("Test")]
+    //Generate the level.
     void GenerateGrid() {
         grid = new Element[gridSize, floors, gridSize];
         for (int f = 0; f < floors; f++) {
@@ -111,26 +113,37 @@ public class GridWorld : MonoBehaviour {
 
         backup = 0;
 
+        //Generate rooms at different locations
         GenerateRooms();
-        //we need to change the actual wall for an entrance if needed
 
+        //Check is entrances are connecting
         CheckEntrances(false);
 
+        //Fill all the remaining empty elements with walls
         FillRemaining();
 
+        //create a maze through the filled elements
         CreateMaze();
 
+        //Check if entrances connect to the mze
         CheckEntrances(true);
 
         doneGenerating = true;
 
-        Check();
+        //Check();
 
+        //Clean dead ends, so the player can not get blocked in by enemies
         CleanDeadEnds();
 
         if (spawnObjects) {
+            //Spawn all the room elements
             Spawn();
+
+            //Spawn all the corridor elements
             PrepareHalls();
+
+            //Because we made the rooms and the corridors into their own static meshes, we can set them to static.
+            //This way Unity can render them in a better way. FPS gained: about 20
 
             StaticBatchingUtility.Combine(staticRooms.ToArray(), gameObject);
 
@@ -138,23 +151,26 @@ public class GridWorld : MonoBehaviour {
         }
     }
 
+    //Do all the last calculations // When this was in start, the navmesh would not build correctly
     void Update() {
         if (doneSpawning) {
-            
+            //Build the navmesh for the enemies to walk on
             GetComponent<NavMeshSurface>().BuildNavMesh();
 
+            //Spawn doors in entrances (random)
             SpawnDoors();
 
-            //SpawnWeapons();
-            SpawnSpawnPoints();
-            playerManager.Play();
+            //Spawn enemies in the level
+            SpawnEnemies();
 
-            
+            //Spawn the player
+            playerManager.Play();
 
             doneSpawning = false;
         }
     }
 
+    //When a player dies, spawn a big enemy
     public void OnPlayerDeath(Player player, int lives) {
         playerManager.Respawn(player, lives);
         Enemy enemy = SpawnEnemy(0, player.transform.position, transform);
@@ -163,6 +179,7 @@ public class GridWorld : MonoBehaviour {
         enemy.SetSpeed(1f);
     }
 
+    //Spawn a door at every location a door can spawn
     void SpawnDoors() {
         foreach (Vector3 doorLoc in doorLocations) {
             if (Random.value < 0.3f)
@@ -176,8 +193,11 @@ public class GridWorld : MonoBehaviour {
         }
     }
 
-    void SpawnSpawnPoints() {
+    //Spawn all the enemies in the scene
+    void SpawnEnemies() {
         GameObject spawns = new GameObject("spawns");
+
+        //first add spawnpoints to a list
         List<Vector3> spawnpoints = new List<Vector3>();
         for (int f = 0; f < floors; f++) {
             for (int y = 0; y < gridSize; y++) {
@@ -195,6 +215,7 @@ public class GridWorld : MonoBehaviour {
             }
         }
 
+        //Then spawn an enemy at a random spawnpoint in the list and remove that spawnpoint
         for (int i = 0; i < maxEnemySpawned; i++) {
             int index = Random.Range(0, spawnpoints.Count);
             Vector3 spawn = spawnpoints[index];
@@ -207,6 +228,7 @@ public class GridWorld : MonoBehaviour {
         }
     }
 
+    //spawn an enemy at a location
     Enemy SpawnEnemy(int index, Vector3 pos, Transform parent) {
         GameObject go = Instantiate(enemies[index]);
         go.transform.position = pos;
@@ -217,9 +239,8 @@ public class GridWorld : MonoBehaviour {
         return go.GetComponent<Enemy>();
     }
 
+    //Function used to check if the whole level was connected to each other // not needed anymore, only for debugging
     void Check() {
-        //Vector2Int ve = new Vector2Int(Random.Range(0, gridSize), Random.Range(0, gridSize));
-
         checkopen.Clear();
         checkclosed.Clear();
 
@@ -277,6 +298,7 @@ public class GridWorld : MonoBehaviour {
         }
     }
 
+    //Spawn corridor components in the scene
     void PrepareHalls() {
         for (int f = 0; f < floors; f++) {
             for (int y = 0; y < gridSize; y++) {
@@ -333,6 +355,7 @@ public class GridWorld : MonoBehaviour {
         }
     }
 
+    //Clean all the dead ends, so nobody gets lost in the maze
     void CleanDeadEnds() {
         for (int i = 0; i < cleanDeadEndTries; i++) {
             for (int f = 0; f < floors; f++) {
@@ -341,6 +364,7 @@ public class GridWorld : MonoBehaviour {
                         if (!grid[x, f, y].floor || grid[x, f, y].roomID > 0)
                             continue;
 
+                        //When an element has 3 walls, it is a dead end
                         int wallAmount = 0;
                         int direction = 0;
 
@@ -393,6 +417,7 @@ public class GridWorld : MonoBehaviour {
         }
     }
 
+    //break the wall between elements
     void BreakWall(Vector3Int current, Vector3Int neighbour) {
         Vector3Int dif = neighbour - current;
 
@@ -416,13 +441,13 @@ public class GridWorld : MonoBehaviour {
         }
     }
 
+    //Create a maze outside of the rooms
     void CreateMaze() {
-    //void Update(){
         while (visited < maxElementSize) {
-
-            if (buildingMaze) {
+            if (buildingMaze) {//When we still need to generate the maze
                 List<Vector3Int> possibleChecks = new List<Vector3Int>();
 
+                //Check if it can be destoyed
                 if (currentCheck.x - 1 >= 0 && grid[currentCheck.x - 1, currentCheck.y, currentCheck.z].roomID == -1)
                     possibleChecks.Add(new Vector3Int(-1, 0, 0));
 
@@ -435,11 +460,11 @@ public class GridWorld : MonoBehaviour {
                 if (currentCheck.z + 1 < gridSize && grid[currentCheck.x, currentCheck.y, currentCheck.z + 1].roomID == -1)
                     possibleChecks.Add(new Vector3Int(0, 0, 1));
 
+                //When we need to backup
                 if (possibleChecks.Count <= 0) {
                     if (backup < 0) {
                         grid[currentCheck.x, currentCheck.y, currentCheck.z].floor = false;
                         visited += 1;
-                        //continue;
                         return;
                     }
 
@@ -451,7 +476,8 @@ public class GridWorld : MonoBehaviour {
                     if (backup < 0)
                         buildingMaze = false;
                 } else {
-                    
+                    //break the walls in the list
+
                     Element currentElement = grid[currentCheck.x, currentCheck.y, currentCheck.z];
                     Vector3Int neighbourcheck = currentCheck + possibleChecks[Random.Range(0, possibleChecks.Count)];
                     Element neighbourElement = grid[neighbourcheck.x, neighbourcheck.y, neighbourcheck.z];
@@ -464,7 +490,6 @@ public class GridWorld : MonoBehaviour {
                         visited += 1;
 
                         closedList.Add(currentCheck);
-                        //openList.Remove(currentCheck);
 
                         currentCheck = neighbourcheck;
 
@@ -484,6 +509,7 @@ public class GridWorld : MonoBehaviour {
         }
     }
 
+    //Fill all the empty grid elements to an element with walls
     void FillRemaining() {
         for (int f = 0; f < floors; f++) {
             for (int y = 0; y < gridSize; y++) {
@@ -497,6 +523,7 @@ public class GridWorld : MonoBehaviour {
         }
     }
 
+    //false=change connecting posilibities next to entrances to entrance // true=change all walls next to possibilities to entrances
     void CheckEntrances(bool breakWalls) {
         for (int f = 0; f < floors; f++) {
             for (int y = 0; y < gridSize; y++) {
@@ -510,7 +537,8 @@ public class GridWorld : MonoBehaviour {
 
                         if (changedRoomID.Contains(grid[x, f, y].roomID))
                             continue;
-
+                        
+                        //If it is a possibility and it is within bounds, change the wall
                         if (grid[x, f, y].entranceposiblilitynorth && y + 1 < gridSize) {
                             if (grid[x, f, y + 1].roomID == 0 ? grid[x, f, y + 1].wallsouth : grid[x, f, y + 1].entranceposiblilitysouth) {
                                 if ((x + 1 < gridSize && !grid[x + 1, f, y].entrancenorth) && (x - 1 >= 0 && !grid[x - 1, f, y].entrancenorth)) {
@@ -597,14 +625,12 @@ public class GridWorld : MonoBehaviour {
                                 } else {
                                     grid[x, f, y].entrancewest = false;
                                     grid[x, f, y].entranceposiblilitywest = true;
-                                    //roomsToSpawn.Add(new SpawnRequest(0, new Vector3(x, 0, y), "halls/endwest"));
                                     ChangeToWall(grid[x, f, y].roomID, x, f, y, false);
                                 }
                             }
                         } else {
                             grid[x, f, y].entrancewest = false;
                             grid[x, f, y].entranceposiblilitywest = true;
-                            //roomsToSpawn.Add(new SpawnRequest(0, new Vector3(x, 0, y), "halls/endwest"));
                             ChangeToWall(grid[x, f, y].roomID, x, f, y, false);
                         }
                     }
@@ -625,14 +651,12 @@ public class GridWorld : MonoBehaviour {
                                 } else {
                                     grid[x, f, y].entranceeast = false;
                                     grid[x, f, y].entranceposiblilityeast = true;
-                                    //roomsToSpawn.Add(new SpawnRequest(0, new Vector3(x, 0, y), "halls/endeast"));
                                     ChangeToWall(grid[x, f, y].roomID, x, f, y, false);
                                 }
                             }
                         } else {
                             grid[x, f, y].entranceeast = false;
                             grid[x, f, y].entranceposiblilityeast = true;
-                            //roomsToSpawn.Add(new SpawnRequest(0, new Vector3(x, 0, y), "halls/endeast"));
                             ChangeToWall(grid[x, f, y].roomID, x, f, y, false);
                         }
                     }
@@ -653,14 +677,12 @@ public class GridWorld : MonoBehaviour {
                                 } else {
                                     grid[x, f, y].entrancenorth = false;
                                     grid[x, f, y].entranceposiblilitynorth = true;
-                                    //roomsToSpawn.Add(new SpawnRequest(0, new Vector3(x, 0, y), "halls/endnorth"));
                                     ChangeToWall(grid[x, f, y].roomID, x, f, y, false);
                                 }
                             }
                         } else {
                             grid[x, f, y].entrancenorth = false;
                             grid[x, f, y].entranceposiblilitynorth = true;
-                            //roomsToSpawn.Add(new SpawnRequest(0, new Vector3(x, 0, y), "halls/endnorth"));
                             ChangeToWall(grid[x, f, y].roomID, x, f, y, false);
                         }
                     }
@@ -681,14 +703,12 @@ public class GridWorld : MonoBehaviour {
                                 } else {
                                     grid[x, f, y].entrancesouth = false;
                                     grid[x, f, y].entranceposiblilitysouth = true;
-                                    //roomsToSpawn.Add(new SpawnRequest(0, new Vector3(x, 0, y), "halls/endsouth"));
                                     ChangeToWall(grid[x, f, y].roomID, x, f, y, false);
                                 }
                             }
                         } else {
                             grid[x, f, y].entrancesouth = false;
                             grid[x, f, y].entranceposiblilitysouth = true;
-                            //roomsToSpawn.Add(new SpawnRequest(0, new Vector3(x, 0, y), "halls/endsouth"));
                             ChangeToWall(grid[x, f, y].roomID, x, f, y, false);
                         }
                     }
@@ -697,6 +717,7 @@ public class GridWorld : MonoBehaviour {
         }
     }
 
+    //Change a wall to a wall or entrance
     void ChangeToWall(int roomID, int x, int y, int z, bool entrance) {
         if (roomID <= 0)
             return;
@@ -719,6 +740,7 @@ public class GridWorld : MonoBehaviour {
         }
     }
 
+    //spawn rooms according to their spawnrequests
     void Spawn() {
         foreach(SpawnRequest request in roomsToSpawn) {
             GameObject go;
@@ -733,6 +755,8 @@ public class GridWorld : MonoBehaviour {
             RoomGrid room = go.GetComponent<RoomGrid>();
 
             GameObject wallstuff = go.transform.GetChild(1).gameObject;
+
+            //Change walls if needed
 
             foreach (int i in request.changeToEntrance) {
                 Vector3 pos = room.entranceObjects[i].transform.position;
@@ -795,8 +819,9 @@ public class GridWorld : MonoBehaviour {
         } 
     }
 
+    //randomly place rooms, if they intersect, dont place it
     void GenerateRooms() {
-        if (spawnRoomTries > 0) {
+        if (spawnRoomTries > 0) {//random patrern
             for (int i = 0; i < spawnRoomTries; i++) {
 
                 int x2 = Random.Range(0, gridSize);
@@ -813,7 +838,7 @@ public class GridWorld : MonoBehaviour {
 
                 AddRoom(floor, new Vector3(x2, y2, z2));
             }
-        } else {
+        } else {//grid pattern // weird
             for (int f = 0; f < floors; f++) {
                 for (int y = 0; y < gridSize; y++) {
                     for (int x = 0; x < gridSize; x++) {
@@ -829,10 +854,11 @@ public class GridWorld : MonoBehaviour {
         }
     }
 
+    //Add a room to the current grid
     void AddRoom(GameObject go, Vector3 position) {
         RoomGrid room = go.GetComponent<RoomGrid>();
 
-        Element[,,] old = (Element[,,])grid.Clone();
+        Element[,,] old = (Element[,,])grid.Clone(); // clone the current grid, so we can change it back, if needed
 
         int roomsize = 0;
 
@@ -854,7 +880,7 @@ public class GridWorld : MonoBehaviour {
                         return;
                     }
 
-                    Element element = new Element() {
+                    Element element = new Element() { // add the element according to the room planning
                         roomID = currentSpawnID,
 
                         floor = room.grid[(y * RoomGrid.size) + x] > 0,
@@ -894,7 +920,7 @@ public class GridWorld : MonoBehaviour {
                     roomsize++;
                 }
 
-                if (room.secondFloor && room.gridsecond[(y * RoomGrid.size) + x] > 0) {
+                if (room.secondFloor && room.gridsecond[(y * RoomGrid.size) + x] > 0) { // when a room had 2 floors
                     int height = (int)position.y + 1;
 
                     if ((int)position.x + x >= gridSize || (int)position.z + y >= gridSize) { // if the room is going off the edges, dont put it there
@@ -963,13 +989,14 @@ public class GridWorld : MonoBehaviour {
 
         Vector3 key = new Vector3(position.x, position.y, position.z);
 
+        //add a spawnrequest
         SpawnRequest request = new SpawnRequest(currentSpawnID, key, go);
-
         roomsToSpawn.Add(request);
 
         currentSpawnID++;
     }
 
+    //Draw the grid when selected, used for debugging
     private void OnDrawGizmosSelected() {
         if (grid == null)
             return;
@@ -1012,6 +1039,7 @@ public class GridWorld : MonoBehaviour {
     }
 }
 
+//contains information about the placing of a room
 public struct SpawnRequest {
     public int roomID;
     public List<int> changeToWall;
@@ -1044,28 +1072,29 @@ public struct SpawnRequest {
     }
 }
 
-[SerializeField]
+//contains information about a current element/cell/grid item
 public struct Element {
+    //some default states
     public static Element justFloor = new Element() { roomID = -1, floor = true };
     public static Element allwalls = new Element() { roomID = -1, floor = true, walleast = true, wallnorth = true, wallsouth = true, wallwest = true };
 
     public int roomID; // 0 is hallway
     public bool floor;
 
-    public bool goesup;
+    public bool goesup; // when there are stairs
     public bool goesdown;
 
-    public bool wallnorth;
+    public bool wallnorth; // where walls need to go
     public bool walleast;
     public bool wallsouth;
     public bool wallwest;
 
-    public bool entrancenorth;
+    public bool entrancenorth; // where entrances are
     public bool entranceeast;
     public bool entrancesouth;
     public bool entrancewest;
 
-    public bool entranceposiblilitynorth;
+    public bool entranceposiblilitynorth; // where entrances could be
     public bool entranceposiblilityeast;
     public bool entranceposiblilitysouth;
     public bool entranceposiblilitywest;

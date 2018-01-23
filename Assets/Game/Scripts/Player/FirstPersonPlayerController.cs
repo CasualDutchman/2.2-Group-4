@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class FirstPersonPlayerController : MonoBehaviour {
 
+    //footstep info
     public AudioClip[] footsteps;
     public GameObject soundObject;
     int lastStepIndex;
@@ -13,12 +14,14 @@ public class FirstPersonPlayerController : MonoBehaviour {
     public Player player;
     public Camera playerCamera;
 
+    //current rotations
     public float aimMultiplier = 1;
     public float yaw = 0.0f;
     public float pitch = 0.0f;
 
     public bool invertY = false;
 
+    //different speeds
     public float speed = 6.0F;
     public float crouchSpeed = 1.0f;
     public float sprintSpeed = 10.0f;
@@ -31,16 +34,19 @@ public class FirstPersonPlayerController : MonoBehaviour {
 
     bool jumping = false;
 
+    //state info
     public bool walking = false;
     public bool sprinting = false;
     public bool crouched = false;
     Vector3 originCameraPos;
 
+    //stamina info
     public float stamina = 100;
     public Image staminaImage;
 
     float walkTimer = 0;
 
+    //setup
     void Start () {
         controller = GetComponent<CharacterController>();
         player = GetComponent<Player>();
@@ -56,13 +62,14 @@ public class FirstPersonPlayerController : MonoBehaviour {
     void Update () {
         float mouseSpeed = OptionsMenu.instance != null ? OptionsMenu.instance.mouseSpeed : 4;
 
-        if (Time.deltaTime > 0) {
+        if (Time.deltaTime > 0) {//When timescale > 0
             yaw += Input.GetAxis(player.controlType.ToString() + " X") * mouseSpeed * aimMultiplier;
             pitch = Mathf.Clamp(pitch + (Input.GetAxis(player.controlType.ToString() + " Y") * mouseSpeed * aimMultiplier * (invertY ? -1 : 1)), -90, 90);
         }
         transform.GetChild(0).localEulerAngles = new Vector3(pitch, 0, 0);
         transform.localEulerAngles = new Vector3(0, yaw, 0);
 
+        //crouching
         if (Input.GetKeyDown(KeyCode.LeftControl)) {
             crouched = true;
             playerCamera.transform.localPosition = new Vector3(0, 1, 0);
@@ -72,6 +79,7 @@ public class FirstPersonPlayerController : MonoBehaviour {
             playerCamera.transform.localPosition = originCameraPos;
         }
 
+        //sprinting
         sprinting = Input.GetKey(KeyCode.LeftShift);
 
         if (sprinting && walking) {
@@ -93,6 +101,7 @@ public class FirstPersonPlayerController : MonoBehaviour {
             }
             moveDirection = new Vector3(Input.GetAxis(player.controlType.ToString() + " Horizontal"), 0, Input.GetAxis(player.controlType.ToString() + " Vertical"));
             moveDirection = transform.TransformDirection(moveDirection);
+            //change the speed based on the standing state and on the amount of attached crawl enemies
             moveDirection *= crouched ? (sprinting ? crouchSprintSpeed : crouchSpeed) : player.GetGrabbers() > 0 ? GrabSpeed : (sprinting ? sprintSpeed : speed);
             if (Input.GetButton(player.controlType.ToString() + " Jump")) {
                 moveDirection.y = jumpSpeed;
@@ -109,6 +118,7 @@ public class FirstPersonPlayerController : MonoBehaviour {
             WalkUpdate();
     }
 
+    //Do sounds
     void WalkUpdate() {
         walkTimer += Time.deltaTime;
 
@@ -131,6 +141,7 @@ public class FirstPersonPlayerController : MonoBehaviour {
         }
     }
 
+    //special jump sound, so 2 walk sound play rapidly, creating the illusion of falling on 2 feet
     IEnumerator JumpFallSound() {
         int firstindex;
         int index;

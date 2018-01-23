@@ -10,10 +10,7 @@ public class SpittingAI : Enemy {
     public Transform spitBegin;
 
     protected override void UpdateFindingPath() {
-        if (!CanFollowPlayer) {
-            DetectPlayerLineOfSight();
-        }
-        else if(target != null) {
+        if(target != null) {
             if ((transform.position - target.transform.position).magnitude > SpittingDistance) {
                 agent.SetDestination(target.position);
             }

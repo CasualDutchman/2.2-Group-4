@@ -1,10 +1,30 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class MeleeAI : Enemy {
 
     public float damageDone = 10;
+
+    protected override void OnStart() {
+        SetSpeed(Random.Range(1.5f, 5.0f));
+    }
+
+    protected override void UpdateFindingPath() {
+        base.UpdateFindingPath();
+
+        Vector3 halfExtents = new Vector3(2 / 2f, 1, 2 / 2f);
+
+        Collider[] colliders = Physics.OverlapBox(transform.position + Vector3.up, halfExtents, transform.rotation);
+        foreach (Collider hit in colliders) {
+            if (hit.GetComponent<EnemyPart>() && hit.GetComponent<EnemyPart>().connected is MeleeAI) {
+                if (hit.GetComponent<EnemyPart>().connected.GetComponent<NavMeshAgent>().speed > GetComponent<NavMeshAgent>().speed) {
+                    SetSpeed(hit.GetComponent<EnemyPart>().connected.GetComponent<NavMeshAgent>().speed);
+                }
+            }
+        }
+    }
 
     protected override void UpdateAnimations() {
         animator.SetFloat("Blend", agent.velocity.normalized.magnitude);

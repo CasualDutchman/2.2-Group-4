@@ -5,9 +5,16 @@ using UnityEngine.AI;
 
 public abstract class Enemy : MonoBehaviour {
 
+    //components
+    protected NavMeshAgent agent;
+    protected Animator animator;
+    protected AudioSource source;
+
+    //health info
     public float health = 100;
     public float maxHealth = 100;
 
+    //target info
     public Transform target;
     protected FirstPersonPlayerController PlayerScript;
 
@@ -16,16 +23,22 @@ public abstract class Enemy : MonoBehaviour {
     public float DelayBetweenAttacks = 1.0f;
     protected float TimeSinceLastAttack = 1.1f;
 
-    protected NavMeshAgent agent;
-    protected Animator animator;
-
+    //sound info
     public AudioClip[] audioIdle;
     public AudioClip attackAudio;
-    protected AudioSource source;
 
     //for animations
     protected bool isAttacking = false;
 
+    //fire info
+    public GameObject bodyFire;
+    GameObject currentFire;
+    float fireTimer = 0;
+
+    //check if already slown down (fixed that speed went to 0)
+    bool isSlowedDown = false;
+
+    //setup
     protected virtual void Start () {
         health = maxHealth * DemoScript.instance.healthMultiplier;
 
@@ -37,19 +50,48 @@ public abstract class Enemy : MonoBehaviour {
 
         StartCoroutine(Pathing());
         StartCoroutine(IdleSound());
+
+        OnStart();
     }
 
+    //Can be called in the child classes if stuff needs to be set up
+    protected virtual void OnStart() { }
+
+    //Set on fire
+    public void SetFire() {
+        fireTimer = 5;
+        if (currentFire == null) {
+            currentFire = Instantiate(bodyFire, transform);
+        }
+    }
+
+    //Change speed
     public void SetSpeed(float f) {
         agent.speed = f;
+    }
+
+    //Lower the speed to a certain percent of the current speed
+    public void LowerSpeed(float percent) {
+        if(!isSlowedDown){
+            agent.speed = agent.speed * percent;
+            isSlowedDown = true;
+        }
     }
 
     void Update() {
         UpdateLastAttackTime();
         UpdateAnimations();
+
+        if (fireTimer > 0) {//when on fire, hurt the enemy
+            fireTimer -= Time.deltaTime;
+            Hurt(0.5f * Time.deltaTime);
+        }
     }
 
+    //Update animations in respective classes
     protected virtual void UpdateAnimations() { }
 
+    //Idle Sounds
     IEnumerator IdleSound() {
         float rand = Random.Range(5.0f, 8.5f);
         while (true) {
@@ -62,10 +104,7 @@ public abstract class Enemy : MonoBehaviour {
         }
     }
 
-    void FixedUpdate () {
-        //UpdateFindingPath();
-    }
-
+    //Pathing was in update and fixedupdate, but works just as fine here and takes less processing power
     IEnumerator Pathing() {
         while (true) {
             UpdateFindingPath();
@@ -73,11 +112,10 @@ public abstract class Enemy : MonoBehaviour {
         }
     }
 
+    //used to find a new path
     protected virtual void UpdateFindingPath() {
         if (!isAttacking) {
-            if (!CanFollowPlayer) {
-                DetectPlayerLineOfSight();
-            } else if (target != null) {
+            if (target != null) {
                 if ((transform.position - target.transform.position).magnitude < 1.5f) {
                     agent.ResetPath();
                     Attack();
@@ -88,29 +126,25 @@ public abstract class Enemy : MonoBehaviour {
         }
     }
 
+    //update attack time
     protected void UpdateLastAttackTime() {
         TimeSinceLastAttack += Time.deltaTime;
         if (TimeSinceLastAttack >= 10.0f) TimeSinceLastAttack = DelayBetweenAttacks + 1;
     }
 
-    protected void DetectPlayerLineOfSight() {
-        RaycastHit OutHit;
-        if (target != null) {
-            //if (Physics.Linecast(transform.position, target.transform.position, out OutHit)) {
-                //if (OutHit.collider.gameObject.tag == "Player") {
-                    CanFollowPlayer = true;
-                //}
-            //}
-        }
-    }
-
+    //what happens on death
     public virtual void OnDeath() {
         GetComponent<RagdollManager>().EnableRagdoll();
+
+        if (currentFire) {
+            Destroy(currentFire);
+        }
 
         Destroy(GetComponent<NavMeshAgent>());
         Destroy(this);
     }
 
+    //When the enemy is hurt
     public void Hurt(float amount) {
         health -= amount * DemoScript.instance.damageMultiplier;
         if (health <= 0) {

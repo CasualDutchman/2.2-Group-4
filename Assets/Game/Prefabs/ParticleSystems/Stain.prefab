@@ -87,7 +87,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1581697277445920}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -21.516172, y: 0, z: -8.833094}
+  m_LocalPosition: {x: -11.07, y: 1.9614154e-16, z: -8.26}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4610749968221610}
@@ -163,6 +163,7 @@ MonoBehaviour:
   radDamage: 4
   interval: 1
   canMakeExplode: 1
+  slowDownEnemy: 1
 --- !u!114 &114633348788232862
 MonoBehaviour:
   m_ObjectHideFlags: 1

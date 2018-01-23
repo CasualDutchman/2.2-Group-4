@@ -3176,7 +3176,6 @@ MonoBehaviour:
   decal: {fileID: 1669129734097648, guid: f943de650def1724198bb829b7debe12, type: 2}
   maxDecals: 50
   maxBulletsOnGround: 50
-  maxMagazinesOnGround: 50
   muzzleFlashes:
   - {fileID: 1221884111287584, guid: a1fc9a28f4a10834aa6f43f0a1061d75, type: 2}
   - {fileID: 1973783410848276, guid: 389042661307a3745b2546dc614456cf, type: 2}
@@ -3195,6 +3194,30 @@ MonoBehaviour:
   primaryWeapon: {fileID: 0}
   secondaryWeapon: {fileID: 0}
   recoilCrosshair: {fileID: 0}
+  meleeAnimationCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 0.5
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1.0028986
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
   ammoText: {fileID: 0}
   pickUpText: {fileID: 0}
   shooting: 0
@@ -3231,6 +3254,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 3c9b60fe5044a6b42bc3241a05bcea6c, type: 3}
   soundObject: {fileID: 1779455863775866, guid: 364e2c545d17ef64689b29d9b9e2ebf5,
     type: 2}
+  player: {fileID: 0}
   playerCamera: {fileID: 20990909839166816}
   aimMultiplier: 1
   yaw: 0
@@ -3240,6 +3264,7 @@ MonoBehaviour:
   crouchSpeed: 1
   sprintSpeed: 7
   crouchSprintSpeed: 2
+  GrabSpeed: 1.5
   jumpSpeed: 6
   gravity: 20
   walking: 0

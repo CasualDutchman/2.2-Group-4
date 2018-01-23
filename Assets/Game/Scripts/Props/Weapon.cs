@@ -49,6 +49,7 @@ public class Weapon : Item {
         weaponcontroller.PickUpGun(this);
     }
 
+    //If this is a molotov cocktail and it is on the ground, explode
     void OnParticleCollision(GameObject other) {
         if (fireMode == Weapon.FireMode.Throwable && weaponName.ToLower().StartsWith("molo")) {
             GameObject go = Instantiate(throwableObj);

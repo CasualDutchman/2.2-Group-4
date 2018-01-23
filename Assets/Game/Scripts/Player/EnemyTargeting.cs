@@ -19,6 +19,7 @@ public class EnemyTargeting : MonoBehaviour {
         weaponController = GetComponent<PlayerWeaponController>();
     }
 	
+    //Change the size of the detecting area based on the state (standing, sprinting, crouching)
 	void FixedUpdate () {
         halfExtents = new Vector3(normalSize / 2f, 1, normalSize / 2f);
 
@@ -44,6 +45,7 @@ public class EnemyTargeting : MonoBehaviour {
         }
     }
 
+    //see the detection area when the player is selected
     void OnDrawGizmosSelected() {
         Gizmos.DrawWireCube(transform.position + Vector3.up, halfExtents * 2);
     }
