@@ -22,10 +22,10 @@ public class EndGame : Item {
 
     public void GoToGame() {
         //from demo 2
-        PlayerPrefs.SetInt("EnemySpawned", 100);
-        PlayerPrefs.SetFloat("Multi", 1.6f);
-        PlayerPrefs.SetFloat("EnemyMulti", 2f);
-        PlayerPrefs.SetFloat("Speedy", 4f);
+        PlayerPrefs.SetInt("EnemySpawned", 110);
+        PlayerPrefs.SetFloat("Multi", 1f);
+        PlayerPrefs.SetFloat("EnemyMulti", 0.9f);
+        PlayerPrefs.SetFloat("Speedy", 3.5f);
         PlayerPrefs.SetFloat("HPMulti", 1.8f);
 
         PlayerPrefs.SetInt("PlayerCount", 1);

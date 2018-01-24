@@ -39,7 +39,7 @@ public abstract class Enemy : MonoBehaviour {
     bool isSlowedDown = false;
 
     //setup
-    protected virtual void Start () {
+    void Start () {
         health = maxHealth * DemoScript.instance.healthMultiplier;
 
         animator = GetComponent<Animator>();

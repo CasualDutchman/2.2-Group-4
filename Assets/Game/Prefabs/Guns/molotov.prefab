@@ -40,7 +40,7 @@ GameObject:
   - component: {fileID: 33549638143443842}
   - component: {fileID: 23928616828936116}
   m_Layer: 8
-  m_Name: molotovmesh
+  m_Name: molotovmesh (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -66,13 +66,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1947397992929628}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: -0.102, z: 0}
+  m_LocalScale: {x: 0.79999995, y: 0.8000004, z: 1.7000009}
   m_Children: []
   m_Father: {fileID: 4631962605583324}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!23 &23928616828936116
 MeshRenderer:
   m_ObjectHideFlags: 1
@@ -87,7 +87,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 450c5c646d654bf44a915b90a1c437d1, type: 2}
+  - {fileID: 2100000, guid: e20f4c11ebd31e04fa98669f617a0389, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -113,7 +113,7 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1947397992929628}
-  m_Mesh: {fileID: 4300000, guid: 0ec4f4dde61acc946bb8bdd67af4922c, type: 3}
+  m_Mesh: {fileID: 4300000, guid: c2413e04c1e99514e8b49ecf9c72c51b, type: 3}
 --- !u!54 &54972621182770410
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -169,6 +169,7 @@ MonoBehaviour:
   ammo: 1
   holdingmaxAmmo: 1
   reloadTime: 0
+  damageDone: 10
   bulletShell: {fileID: 0}
   muzzle: {fileID: 0}
   muzzleFlash: {fileID: 0}

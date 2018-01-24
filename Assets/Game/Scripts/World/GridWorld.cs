@@ -172,11 +172,12 @@ public class GridWorld : MonoBehaviour {
 
     //When a player dies, spawn a big enemy
     public void OnPlayerDeath(Player player, int lives) {
-        playerManager.Respawn(player, lives);
         Enemy enemy = SpawnEnemy(0, player.transform.position, transform);
         enemy.health = 60;
         enemy.maxHealth = 60;
         enemy.SetSpeed(1f);
+
+        playerManager.Respawn(player, lives);
     }
 
     //Spawn a door at every location a door can spawn

@@ -472,7 +472,7 @@ public class PlayerWeaponController : MonoBehaviour {
 
         Ray ray = new Ray(player.GetMovementController.playerCamera.transform.position, player.GetMovementController.playerCamera.transform.forward);
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, 5)) {
+        if (Physics.Raycast(ray, out hit, 2)) {
             Hit(hit, true, true);
         }
 

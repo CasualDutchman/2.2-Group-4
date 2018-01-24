@@ -6114,6 +6114,23 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1315422198009386
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4165984964023118}
+  - component: {fileID: 33309518159427218}
+  - component: {fileID: 23963072790224144}
+  m_Layer: 0
+  m_Name: Sphere.001 (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1316181886847760
 GameObject:
   m_ObjectHideFlags: 1
@@ -20951,6 +20968,19 @@ Transform:
   m_Father: {fileID: 4969831785039332}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4165984964023118
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1315422198009386}
+  m_LocalRotation: {x: -0.70710677, y: -4.0967324e-15, z: -1.2962703e-14, w: 0.7071068}
+  m_LocalPosition: {x: 0.000265, y: 0.000976, z: 0.000532}
+  m_LocalScale: {x: 0.028225629, y: 0.028225638, z: 0.028225636}
+  m_Children: []
+  m_Father: {fileID: 4918950146344154}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4166825369443194
 Transform:
   m_ObjectHideFlags: 1
@@ -31821,7 +31851,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1423172673599014}
-  m_LocalRotation: {x: 0.8224086, y: -0.5211563, z: -0.106924206, w: 0.2015131}
+  m_LocalRotation: {x: 0.8224085, y: -0.52115625, z: -0.10692419, w: 0.20151307}
   m_LocalPosition: {x: -1.6763806e-10, y: 0.0002230744, z: 0}
   m_LocalScale: {x: 0.99999994, y: 0.9999997, z: 0.99999994}
   m_Children:
@@ -33674,6 +33704,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4991380943285036}
+  - {fileID: 4165984964023118}
   m_Father: {fileID: 4015434420230854}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -35111,6 +35142,47 @@ Transform:
   m_Father: {fileID: 4774462366539824}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!23 &23963072790224144
+MeshRenderer:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1315422198009386}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_Materials:
+  - {fileID: 2100000, guid: 590c87eebd6a8464eac093c6b101896c, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!33 &33309518159427218
+MeshFilter:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1315422198009386}
+  m_Mesh: {fileID: 4300002, guid: f0bbc0e7c59d8a040a6d91ae85e348b0, type: 3}
 --- !u!54 &54065979842470710
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -35324,7 +35396,7 @@ AudioSource:
     type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 0.5
+  m_Volume: 1
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -35333,7 +35405,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 5
+  MaxDistance: 9
   Pan2D: 0
   rolloffMode: 2
   BypassEffects: 0
@@ -35441,6 +35513,10 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 93ad7af4c89d0cb4791f83f6e7222002, type: 3}
   - {fileID: 8300000, guid: 7591423d6539a9c4f92276439ad7e0d6, type: 3}
   attackAudio: {fileID: 0}
+  bodyFire: {fileID: 1209578443310946, guid: 33e77ffc221e26e459a9c9f19389af31, type: 2}
+  GrabbingDistance: 2
+  IsGrabbingPlayer: 0
+  PlayerOffset: {x: 0, y: 0, z: 0}
 --- !u!114 &114194804098882992
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -35453,7 +35529,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   connected: {fileID: 114192218397958834}
-  hitMultiplier: 2
+  hitMultiplier: 1
 --- !u!114 &114249880488251102
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -35466,7 +35542,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   connected: {fileID: 114192218397958834}
-  hitMultiplier: 2
+  hitMultiplier: 1
 --- !u!114 &114293409255784202
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -35505,7 +35581,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   connected: {fileID: 114192218397958834}
-  hitMultiplier: 2
+  hitMultiplier: 1
 --- !u!114 &114368261481036550
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -35518,7 +35594,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   connected: {fileID: 114192218397958834}
-  hitMultiplier: 2
+  hitMultiplier: 1
 --- !u!114 &114432047116173444
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -35531,7 +35607,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   connected: {fileID: 114192218397958834}
-  hitMultiplier: 2
+  hitMultiplier: 1
 --- !u!114 &114552519996103452
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -35544,7 +35620,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   connected: {fileID: 114192218397958834}
-  hitMultiplier: 2
+  hitMultiplier: 1
 --- !u!114 &114658388870420892
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -35557,7 +35633,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   connected: {fileID: 114192218397958834}
-  hitMultiplier: 2
+  hitMultiplier: 1
 --- !u!114 &114687473624317008
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -35570,7 +35646,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   connected: {fileID: 114192218397958834}
-  hitMultiplier: 2
+  hitMultiplier: 1
 --- !u!114 &114711022669914826
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -35583,7 +35659,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   connected: {fileID: 114192218397958834}
-  hitMultiplier: 2
+  hitMultiplier: 1
 --- !u!114 &114822268490294846
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -35596,7 +35672,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   connected: {fileID: 114192218397958834}
-  hitMultiplier: 2
+  hitMultiplier: 1
 --- !u!114 &114842612739537434
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -35609,7 +35685,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   connected: {fileID: 114192218397958834}
-  hitMultiplier: 2
+  hitMultiplier: 1
 --- !u!114 &114869635777776812
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -35622,7 +35698,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   connected: {fileID: 114192218397958834}
-  hitMultiplier: 2
+  hitMultiplier: 1
 --- !u!114 &114883256991495008
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -35635,7 +35711,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   connected: {fileID: 114192218397958834}
-  hitMultiplier: 2
+  hitMultiplier: 1
 --- !u!135 &135085491152834298
 SphereCollider:
   m_ObjectHideFlags: 1
