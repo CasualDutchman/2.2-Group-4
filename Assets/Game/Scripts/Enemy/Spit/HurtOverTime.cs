@@ -2,20 +2,26 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//Author: Pieter
 public class HurtOverTime : MonoBehaviour {
 
+    //Which character to hurt
     public enum Selection { Both, Enemy, Player };
 
     public Selection enemyType;
 
+    //The amound of damage done over time
     public float damage = 2;
     public float radDamage = 3;
     public float interval = 1;
 
+    //Can explode barrels and motolov Cocktails
     public bool canMakeExplode = true;
 
+    //Can slow down the melee enemy
     public bool slowDownEnemy = false;
 
+    //Can set enemies on fire
     public bool setsOnFire = false;
 
     float timer;

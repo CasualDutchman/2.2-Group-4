@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//Author: Pieter
 public class SpitHit : MonoBehaviour {
 
     public GameObject stainObj;

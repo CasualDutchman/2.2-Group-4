@@ -3,16 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+//Author: Pieter
 public class PauseMenu : MonoBehaviour {
 
+    //different screens
     public GameObject pauseMenu, optionsMenu, reallyQuit;
 
-	void Start () {
-		
-	}
-
-    void Update() {
-        if (Input.GetKeyDown(KeyCode.Escape)) {
+	void Update() {
+        if (Input.GetKeyDown(KeyCode.Escape)) { //what happens when pressing escape
             if (pauseMenu.activeSelf) {
                 Resume();
             } 
@@ -28,6 +26,7 @@ public class PauseMenu : MonoBehaviour {
         }
     }
 
+    //Pause the game, show the mouse and set the timescale to 0
     public void Pause() {
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
@@ -35,6 +34,7 @@ public class PauseMenu : MonoBehaviour {
         Time.timeScale = 0;
     }
 
+    //Resume the game, hide the mouse and set the timescale to 1
     public void Resume() {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -42,6 +42,7 @@ public class PauseMenu : MonoBehaviour {
         Time.timeScale = 1;
     }
 
+    //show the options screen
     public void OnOptions() {
         if (!optionsMenu.activeSelf) {
             optionsMenu.SetActive(true);
@@ -49,6 +50,7 @@ public class PauseMenu : MonoBehaviour {
         }
     }
 
+    //Show the pause screen
     public void OnPauseMenu() {
         if (!pauseMenu.activeSelf) {
             pauseMenu.SetActive(true);
@@ -56,6 +58,7 @@ public class PauseMenu : MonoBehaviour {
         }
     }
 
+    //When the Quit button is pressed
     public void OnQuit() {
         if (!reallyQuit.activeSelf) {
             reallyQuit.SetActive(true);
@@ -63,6 +66,7 @@ public class PauseMenu : MonoBehaviour {
         }
     }
 
+    //When you dont want to quit after a confirmation
     public void OnCancelQuit() {
         if (!pauseMenu.activeSelf) {
             pauseMenu.SetActive(true);
@@ -70,6 +74,7 @@ public class PauseMenu : MonoBehaviour {
         }
     }
 
+    //When you want to go to the main menu after the confirmation
     public void OnReallyQuit() {
         Time.timeScale = 1;
         Cursor.lockState = CursorLockMode.None;

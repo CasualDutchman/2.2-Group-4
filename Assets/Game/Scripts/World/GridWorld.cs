@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+//Author: Pieter
 public class GridWorld : MonoBehaviour {
 
     //enemy amount limit

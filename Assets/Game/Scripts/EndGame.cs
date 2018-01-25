@@ -3,8 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+//Author: Pieter
 public class EndGame : Item {
 
+    //This is currently only used in the tutorial, to exit the tutorial and start the game.
+    //In future can be used in the generation, to have an exit in the game
+
+    //End game screen ui
     public GameObject EndGui;
 
 	public override string Message() {
@@ -36,10 +41,12 @@ public class EndGame : Item {
         StartCoroutine(Play(0));
     }
 
+    //change scene
     IEnumerator Play(int i) {
         AsyncOperation async = SceneManager.LoadSceneAsync(i);
 
         while (!async.isDone) {
+            Time.timeScale = 1;
             yield return null;
         }
     }

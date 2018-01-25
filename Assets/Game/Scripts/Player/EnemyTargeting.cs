@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//Author: Pieter
 public class EnemyTargeting : MonoBehaviour {
 
+    //different sizes of detection box
     public float normalSize = 4;
     public float crouchedSize = 2;
     public float sprintSize = 10;
     public float shootSize = 30;
 
+    //components
     FirstPersonPlayerController movementController;
     PlayerWeaponController weaponController;
 

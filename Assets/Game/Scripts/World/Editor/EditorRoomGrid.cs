@@ -6,6 +6,8 @@ using UnityEditor;
 [CustomEditor(typeof(RoomGrid))]
 public class EditorRoomGrid : Editor {
 
+    //This editor script allows for designers/artists/however makes rooms, to create them easily.
+
     RoomGrid room;
 
     void OnEnable() {
@@ -16,9 +18,9 @@ public class EditorRoomGrid : Editor {
         GUILayout.BeginVertical();
         for (int y = RoomGrid.size - 1; y >= 0; y--) {
             GUILayout.BeginHorizontal();
+            //First floot layout
             for (int x = 0; x < RoomGrid.size; x++) {
                 GUILayout.Space(3);
-                //room.grid2[(y * RoomGrid.size) + x].floor = EditorGUILayout.Toggle(room.grid2[(y * RoomGrid.size) + x].floor, GUILayout.MaxWidth(13));
                 if (GUILayout.Button(GetTexture(room.grid[(y * RoomGrid.size) + x]), GUIStyle.none, GUILayout.MaxWidth(15), GUILayout.MaxHeight(15))) {
 
                     if(Event.current.modifiers == EventModifiers.Control) {
@@ -63,6 +65,7 @@ public class EditorRoomGrid : Editor {
         }
         GUILayout.EndVertical();
 
+        //second floor layout
         room.secondFloor = EditorGUILayout.Toggle("Has second floor", room.secondFloor);
 
         if (room.secondFloor) {
@@ -71,7 +74,6 @@ public class EditorRoomGrid : Editor {
                 GUILayout.BeginHorizontal();
                 for (int x = 0; x < RoomGrid.size; x++) {
                     GUILayout.Space(3);
-                    //room.grid2[(y * RoomGrid.size) + x].floor = EditorGUILayout.Toggle(room.grid2[(y * RoomGrid.size) + x].floor, GUILayout.MaxWidth(13));
                     if (GUILayout.Button(GetTexture(room.gridsecond[(y * RoomGrid.size) + x]), GUIStyle.none, GUILayout.MaxWidth(15), GUILayout.MaxHeight(15))) {
 
                         if (Event.current.modifiers == EventModifiers.Control) {

@@ -2,9 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//Author: Pieter
 public class Barrel : MonoBehaviour {
 
+    //Object with particleSystem to spawn
     public GameObject soundObj;
+
+    //Sound information
     public AudioClip explosionSound;
     public UnityEngine.Audio.AudioMixerGroup effectsMixerGroup;
 
@@ -14,10 +18,12 @@ public class Barrel : MonoBehaviour {
 
     bool exploded = false;
 
+    //When it explodes
 	public void Explode() {
         if (!exploded) { //stackoverflow fix
             exploded = true;
 
+            //add sound
             GameObject shotSoundobj = Instantiate(soundObj, transform.position, Quaternion.identity);
             AudioSource source = shotSoundobj.GetComponent<AudioSource>();
 
@@ -25,12 +31,12 @@ public class Barrel : MonoBehaviour {
             source.clip = explosionSound;
             source.Play();
 
+            //Interact with all the rigidbodys in the area
             Vector3 explosionPos = transform.position;
             Collider[] colliders = Physics.OverlapSphere(explosionPos, 5);
             foreach (Collider hit in colliders) {
 
                 if (hit.GetComponent<Enemy>()) {
-                    print("ENEMY");
                     hit.GetComponent<Enemy>().Hurt(100);
                 }
 
@@ -47,6 +53,7 @@ public class Barrel : MonoBehaviour {
         }
     }
 
+    //When hit with a flamethrower
     void OnParticleCollision(GameObject other) {
         health -= 0.1f;
 

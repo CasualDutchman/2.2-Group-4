@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+//Author: Pieter
 public class PlayerWeaponController : MonoBehaviour {
 
     Player player;

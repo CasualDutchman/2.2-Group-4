@@ -2,21 +2,28 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//Author: Pieter
 public class Weapon : Item {
 
+    //What is the mode of the weapon
     public enum FireMode { Semi, Burst, Auto, ShotGun, Flamethrower, Melee, Throwable }
 
+    //name of the weapon
     public string weaponName;
 
+    //What slot of the weapon controller the weapon will occupie
     public PlayerWeaponController.WeaponSlot preveredSlot;
 
     [HideInInspector]
     public AudioSource audioSource;
 
+    //audioclips per state
     public AudioClip shoot, begin, end;
 
+    //Where the left hand goes
     public Transform secondHand;
 
+    //properties
     public FireMode fireMode;
     public float rateOfFire = 1;
     public float affectedByRecoilFactor = 1;
@@ -26,8 +33,10 @@ public class Weapon : Item {
     public float reloadTime;
     public float damageDone = 10;
 
+    //what bulletshell to eject, after shooting
     public GameObject bulletShell;
 
+    //Where to shoot from and where to spawn the muzzleflash
     [HideInInspector]
     public Transform muzzle;
 
@@ -40,10 +49,12 @@ public class Weapon : Item {
         audioSource = GetComponent<AudioSource>();
     }
 
+    //What to display when hover over
     public override string Message() {
         return "Pick up " + weaponName;
     }
 
+    //What happens when you press the interact button
     public override void Interact(Player player) {
         PlayerWeaponController weaponcontroller = player.GetWeaponController;
         weaponcontroller.PickUpGun(this);

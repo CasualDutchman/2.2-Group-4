@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//Author: Pieter
 public class AmmoBox : Item {
 
     public bool oneTimeUse = false;
 
     public int bulletAmount = 0;
 
+    //Give ammo when interacting with it
     public override void Interact(Player player) {
         PlayerWeaponController weaponcontroller = player.GetWeaponController;
         if (weaponcontroller.currentWeapon != null) {
@@ -24,6 +26,7 @@ public class AmmoBox : Item {
         }
     }
 
+    //message
     public override string Message() {
         return "Get Ammo" + (bulletAmount <= 0 ? "" : "(" +  bulletAmount.ToString() + ")") ;
     }

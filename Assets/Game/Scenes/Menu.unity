@@ -5134,8 +5134,8 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1545945682}
-  - component: {fileID: 1545945683}
   - component: {fileID: 1545945684}
+  - component: {fileID: 1545945683}
   m_Layer: 0
   m_Name: CameraJig
   m_TagString: Untagged
@@ -5165,10 +5165,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1545945681}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d524798d7a718ab44a36d4fa87351e12, type: 3}
+  m_Script: {fileID: 11500000, guid: 4358f2027f500454fbdc49d567f9355f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotateSpeed: 2.5
+  angleSpeed: {x: 0, y: 2, z: 0}
 --- !u!82 &1545945684
 AudioSource:
   m_ObjectHideFlags: 0
@@ -5237,7 +5237,7 @@ AudioSource:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
-    m_RotationOrder: 4
+    m_RotationOrder: 0
   reverbZoneMixCustomCurve:
     serializedVersion: 2
     m_Curve:

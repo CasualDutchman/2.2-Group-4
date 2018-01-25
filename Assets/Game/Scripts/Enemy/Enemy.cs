@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+//Author: Cristina // Modified: Pieter
 public abstract class Enemy : MonoBehaviour {
 
     //components

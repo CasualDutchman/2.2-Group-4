@@ -2,7 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//Author: Pieter
 public class HandController : MonoBehaviour {
+
+    //The animations of the hand is done with Inverse Kinematics.
+    //This way all the animations can be made in code, because only the IK transforms need to move
 
     Animator anim;
 
@@ -30,11 +34,5 @@ public class HandController : MonoBehaviour {
 
         anim.SetIKRotation(AvatarIKGoal.LeftHand, leftIKTarget.rotation);
         anim.SetIKRotation(AvatarIKGoal.RightHand, rightIKTarget.rotation);
-
-        //anim.SetIKHintPositionWeight(AvatarIKHint.LeftElbow, ikWieght);
-        //anim.SetIKHintPositionWeight(AvatarIKHint.RightElbow, ikWieght);
-
-        //anim.SetIKHintPosition(AvatarIKHint.LeftElbow, leftHint.position);
-        //anim.SetIKHintPosition(AvatarIKHint.RightElbow, rightHint.position);
     }
 }

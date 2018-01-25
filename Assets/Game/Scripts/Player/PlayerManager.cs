@@ -3,21 +3,28 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+//Author: Pieter
 public class PlayerManager : MonoBehaviour {
 
+    //normally controlled by gridWorld when the world is done generating.
+    //When true, player spawns on awake
     public bool onAwake = false;
 
-    public Player.playertype type;
+    public Player.playertype type; //how many players?
 
+    //controls for every player
     public Player.Controltype playerOneControls;
     public Player.Controltype playerTwoControls;
 
+    //spawnable player objects
     public GameObject playerprefab;
     public GameObject onePlayerHudPrefab;
     public GameObject twoPlayerHudPrefab;
 
+    //canvas to be the parent
     public Transform canvas;
 
+    //spawn location for the player
     public Transform playerOneSpawn, playerTwoSpawn;
 
 	void Start () {
@@ -26,12 +33,16 @@ public class PlayerManager : MonoBehaviour {
     }
 
     public void Play() {
-        if (!onAwake)
+        if (!onAwake) //Get the amount of players from the Playerprefs
             type = PlayerPrefs.GetInt("PlayerCount") == 2 ? Player.playertype.PlayerTwo : Player.playertype.PlayerOne;
 
         if (type == Player.playertype.PlayerTwo && playerOneControls == playerTwoControls) {
             Debug.LogError("Players controls are the same");
         }
+
+        //What this does:
+        //It spawns 1 or 2 players, as specified.
+        //It will attach all the Hud elements accordingly, so those classes can change the elements when they need to
 
         HudProperties properties;
         GameObject playerOneObj = Instantiate(playerprefab, playerOneSpawn.position, playerOneSpawn.rotation);
@@ -92,6 +103,7 @@ public class PlayerManager : MonoBehaviour {
         weaponControllerOne.recoilCrosshair = properties.p1Crosshair.GetComponent<RectTransform>();
     }
 
+    //When the player respawns, place a new player
     public void Respawn(Player player, int lives) {
         DestroyImmediate(player.hudElement);
         DestroyImmediate(player.gameObject);

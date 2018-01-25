@@ -4,19 +4,16 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
+//Author: Pieter
 public class MainMenu : MonoBehaviour {
 
+    //eventSystem is used for controller input, but is not used in the end. Still kept it in, in case we wanted splitscreen
     public EventSystem eventSystem;
+    GameObject lastHoverOver;
 
     public GameObject optionsObjects, mainMenuOptions;
 
-    GameObject lastHoverOver;
-
-	void Start () {
-
-	}
-	
-	void Update () {
+    void Update () {
         if (eventSystem.currentSelectedGameObject != null)
             lastHoverOver = eventSystem.currentSelectedGameObject;
 
@@ -24,15 +21,18 @@ public class MainMenu : MonoBehaviour {
             eventSystem.SetSelectedGameObject(lastHoverOver);
     }
 
+    //When you want to play with 2 players
     public void OnTwoPlay() {
         PlayerPrefs.SetInt("PlayerCount", 2);
         StartCoroutine(Play(1));
     }
 
+    //When you want to play the tutorial
     public void OnTutorial() {
         StartCoroutine(Play(2));
     }
 
+    //Demo functions were used to test different styles of enemies during testing
     //normal
     public void Demo1() {
         PlayerPrefs.SetInt("EnemySpawned", 65);
@@ -66,23 +66,22 @@ public class MainMenu : MonoBehaviour {
         OnPlay();
     }
 
+    //When you want to play on your own
     public void OnPlay() {
         PlayerPrefs.SetInt("PlayerCount", 1);
         StartCoroutine(Play(1));
     }
 
+    //Start the loading of the scene
     IEnumerator Play(int i) {
         AsyncOperation async = SceneManager.LoadSceneAsync(i);
-        //async.allowSceneActivation = false;
 
         while (!async.isDone) {
-            //if (async.progress >= 0.9) {
-                //async.allowSceneActivation = true;
-                yield return null;
-            //}
+            yield return null;
         }
     }
 
+    //When you want to show the option screen
     public void OnOptions() {
         if (!optionsObjects.activeSelf) {
             optionsObjects.SetActive(true);
@@ -90,6 +89,7 @@ public class MainMenu : MonoBehaviour {
         }
     }
 
+    //When you want to go back to the main screen from the options
     public void OnMainMenu() {
         if (!mainMenuOptions.activeSelf) {
             mainMenuOptions.SetActive(true);
@@ -97,6 +97,7 @@ public class MainMenu : MonoBehaviour {
         }
     }
 
+    //When you want to quit the game
     public void OnQuit() {
         Application.Quit();
     }
